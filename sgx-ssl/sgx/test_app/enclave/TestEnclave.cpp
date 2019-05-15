@@ -273,18 +273,11 @@ void priv_free(void* addr, const char *file, int line)
 
 void t_sgxssl_call_apis()
 {
-    //todo read timestamp cycles counter test
-    //uint64_t tick = rdtsc(), endTick = 0;  // tick before
-    /*sgx_time_t start, end;
-    sgx_time_source_nonce_t nonce1, nonce2;
-    sgx_get_trusted_time(&start, &nonce1);*///Todo sgx_get_trusted_time test
 
     int ret = 0;
 
     printf("Start tests\n");
 
-    /*endTick = rdtsc();
-    printf("total time elapsed doing nothing %d \n", endTick-tick);*/    //todo read timestamp cycles counter test
 
 
     SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
@@ -296,14 +289,7 @@ void t_sgxssl_call_apis()
     
     rsa_key_gen();
     printf("test rsa_key_gen completed\n");
-    /*sgx_get_trusted_time(&end, &nonce2); //Todo sgx_get_trusted_time test
-    if(nonce1==nonce2)
-        printf("sgx trusted time is %ld", end - start);*/
 
-    /*endTick = rdtsc();
-    printf("total time elapsed after rsa key generation %d \n", endTick-tick);    //todo read timestamp cycles counter test
-
-*/
     ec_key_gen();
 	printf("test ec_key_gen completed\n");
 	
@@ -378,8 +364,6 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test threads_test completed\n");
-	/*endTick = rdtsc();
-	printf("total time elapsed %d \n", endTick-tick);*/    //todo read timestamp cycles counter test
 
 }
 
