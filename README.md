@@ -1,3 +1,3 @@
 # SGX-AppsBench
 
-This project implements multiple application benchmarks for SGX 
+This is originally a project thesis and its target is to implement multiple application benchmarks for SGX 
