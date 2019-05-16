@@ -158,6 +158,14 @@ void print_error_message(sgx_status_t ret)
         printf("Error: Unexpected error occurred [0x%x].\n", ret);
 }
 
+void print_ret_error(sgx_status_t ret) {
+    if (ret != SGX_SUCCESS)
+    {
+        fprintf(stderr, "SGX error: 0x%x\n", ret);
+        exit(-1);
+    }
+}
+
 /* Initialize the enclave:
  *   Step 1: retrive the launch token saved by last transaction
  *   Step 2: call sgx_create_enclave to initialize an enclave instance
@@ -206,6 +214,7 @@ int initialize_enclave(void)
 
     if (ret != SGX_SUCCESS) {
         print_error_message(ret);
+        printf("something LOOOOOOOOONG");
         if (fp != NULL) fclose(fp);
 
         return -1;
@@ -229,6 +238,164 @@ int initialize_enclave(void)
 
     return 0;
 }
+
+static volatile int do_bench = 0;
+static volatile int abort_measure = 0;
+volatile uint64_t counter = 0;
+uint64_t RATE = 100000;
+uint64_t BEFORE_PATCH = 50000;
+uint64_t AFTER_PATCH = 50000;
+
+static inline uint64_t rdtscp( uint32_t & aux )
+{
+    uint64_t rax,rdx;
+    asm volatile ( "rdtscp\n" : "=a" (rax), "=d" (rdx), "=c" (aux) : : );
+    return (rdx << 32) + rax;
+}
+
+typedef struct {
+    uint64_t tsc;
+    uint64_t diff;
+} measurement_t;
+
+measurement_t *array;
+#define ARRAY_SIZE (1000000)
+uint64_t cur_elem = 0;
+uint32_t a;
+
+
+static inline void add_measurement(uint64_t diff)
+{
+    array[cur_elem].diff = diff;
+    array[cur_elem].tsc = rdtscp(a);
+    ++cur_elem;
+    if (cur_elem >= ARRAY_SIZE)
+        cur_elem = 0;
+}
+
+// "print" to array
+
+void *measure_thread(void *args)
+{
+    printf("# RATE: %lu µs\n", RATE);
+    uint64_t last = 0, diff;
+    uint64_t next = 0;
+    while(do_bench == 0)
+    {
+        __asm__("pause");
+    }
+    while(abort_measure == 0)
+    {
+        next = rdtscp(a) + RATE;
+        diff = counter - last;
+        last = counter;
+        add_measurement(diff);
+        while(rdtscp(a) < next)
+        {
+            __asm__("pause");
+        }
+    }
+
+    return nullptr;
+}
+
+uint64_t WORKER_THREADS = 1;
+pthread_barrier_t worker_barrier;
+
+void *worker_thread(void *args)
+{
+    pthread_barrier_wait(&worker_barrier);
+    while(do_bench == 0)
+    {
+        __asm__("pause");
+    }
+
+    sgx_status_t ret = t_sgxssl_call_apis(global_eid);
+    print_ret_error(ret);
+
+    return nullptr;
+}
+
+static void print_array()
+{
+    // print array
+    uint64_t end = cur_elem - 1;
+    if (end < 0)
+    {
+        end = ARRAY_SIZE - 1;
+    }
+    uint64_t prev_elem = end;
+    uint64_t start_tsc = 0;
+    while (cur_elem != end)
+    {
+        if (array[cur_elem].tsc != 0)
+        {
+            if (start_tsc == 0)
+                start_tsc = array[cur_elem].tsc;
+
+            printf("%lu, %lu, %lu\n", array[cur_elem].tsc - start_tsc, array[cur_elem].diff, array[cur_elem].tsc - array[prev_elem].tsc);
+        }
+        ++cur_elem;
+        ++prev_elem;
+        if (cur_elem >= ARRAY_SIZE)
+        {
+            cur_elem = 0;
+        }
+        if (prev_elem >= ARRAY_SIZE)
+        {
+            prev_elem = 0;
+        }
+    }
+}
+
+static void exec_bench()
+{
+    sgx_status_t ret = SGX_SUCCESS;
+    initialize_enclave();
+
+    pthread_t measure, worker[WORKER_THREADS];
+    pthread_create(&measure, nullptr, measure_thread, nullptr);
+    pthread_barrier_init(&worker_barrier, nullptr, WORKER_THREADS + 1);
+    for (int i = 0; i < WORKER_THREADS; ++i)
+    {
+        pthread_create(worker+i, nullptr, worker_thread, nullptr);
+    }
+    pthread_barrier_wait(&worker_barrier);
+
+    fprintf(stderr, "Starting benchmark \n");
+    counter = 0;
+    array = (measurement_t *)calloc(ARRAY_SIZE, sizeof(measurement_t));
+    ret = ecall_start_bench(global_eid, (uint64_t *)&counter);
+    print_ret_error(ret);
+    do_bench = 1;
+
+    //getchar();
+    //do_bench = 2;
+    usleep(BEFORE_PATCH);
+    ret = ecall_run_bench(global_eid);
+    print_ret_error(ret);
+    usleep(AFTER_PATCH);
+    //do_bench = 3;
+    //usleep(1000);
+    //getchar();
+//	do_bench = 0;
+    ret = ecall_stop_bench(global_eid);
+    print_ret_error(ret);
+
+    for (int i = 0; i < WORKER_THREADS; ++i)
+    {
+        fprintf(stderr, "Joining worker %d\n", i);
+        pthread_join(worker[i], nullptr);
+    }
+    sgx_destroy_enclave(global_eid);
+
+    abort_measure = 1;
+    fprintf(stderr, "Joining measure \n");
+    pthread_join(measure, nullptr);
+
+    print_array();
+}
+
 
 /* OCall functions */
 void uprint(const char *str)
@@ -278,24 +445,19 @@ int main(int argc, char *argv[])
     	return 1;
 
     /* Initialize the enclave */
-    if (initialize_enclave() < 0)
+    /*if (initialize_enclave() < 0)
         return 1;
 
-    clock_t begin = clock();
-    //srand(time(NULL));
 
     sgx_status_t status = t_sgxssl_call_apis(global_eid);
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("total clocks are %ld \n", end-begin);
-    printf("total time elapsed is %f \n", time_spent);
+
 
     if (status != SGX_SUCCESS) {
         printf("Call to t_sgxssl_call_apis has failed.\n");
         return 1;    //Test failed
-    }
-
-    sgx_destroy_enclave(global_eid);
+    }*/
+    exec_bench();
+    //sgx_destroy_enclave(global_eid);
     
     return 0;
 }

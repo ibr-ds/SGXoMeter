@@ -270,6 +270,33 @@ void priv_free(void* addr, const char *file, int line)
 }
 */
 
+static volatile int do_bench = 0;
+volatile uint64_t *bench_counter = 0;
+
+extern "C" void ecall_start_bench(uint64_t *ctr)
+{
+    bench_counter = ctr;
+    do_bench = 1;
+}
+
+extern "C" void ecall_stop_bench(void)
+{
+    do_bench = 2;
+}
+
+extern "C" void ecall_run_bench(void)
+{
+
+    while(do_bench == 0)
+    { __asm__("pause");}
+
+    while(do_bench == 1)
+    {
+        t_sgxssl_call_apis();
+        __sync_fetch_and_add(bench_counter, 1);
+    }
+}
+
 
 void t_sgxssl_call_apis()
 {

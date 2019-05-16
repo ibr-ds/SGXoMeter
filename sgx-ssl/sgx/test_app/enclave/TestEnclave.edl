@@ -35,6 +35,18 @@ enclave {
     
 from "sgx_tsgxssl.edl" import *;
 
+
+
+     trusted {
+            public void t_sgxssl_call_apis();
+            public void new_thread_func();
+            public void ecall_start_bench([user_check] uint64_t *ctr);
+            public void ecall_stop_bench();
+            public void ecall_run_bench();
+
+     };
+
+
     /* 
      * uprint - invokes OCALL to display string buffer inside the enclave.
      *  [in]: copy the string buffer to App outside.
@@ -47,9 +59,5 @@ from "sgx_tsgxssl.edl" import *;
     };
 
 
-    trusted {
-        public void t_sgxssl_call_apis();
-        public void new_thread_func();
- 
-    };
+
 };
