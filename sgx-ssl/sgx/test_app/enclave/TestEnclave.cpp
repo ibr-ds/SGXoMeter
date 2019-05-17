@@ -273,6 +273,8 @@ void priv_free(void* addr, const char *file, int line)
 static volatile int do_bench = 0;
 volatile uint64_t *bench_counter = 0;
 
+static int HUNDRED_TESTS = 100;
+
 extern "C" void ecall_start_bench(uint64_t *ctr)
 {
     bench_counter = ctr;
@@ -290,10 +292,17 @@ extern "C" void ecall_run_bench(void)
     while(do_bench == 0)
     { __asm__("pause");}
 
+    printf("Start tests\n");
+    int counter = 0;
     while(do_bench == 1)
     {
         t_sgxssl_call_apis();
         __sync_fetch_and_add(bench_counter, 1);
+        counter++;
+
+        if(counter == HUNDRED_TESTS)
+            do_bench = 0;
+
     }
 }
 
@@ -303,7 +312,7 @@ void t_sgxssl_call_apis()
 
     int ret = 0;
 
-    printf("Start tests\n");
+   // printf("Start tests\n");
 
 
 
@@ -314,11 +323,11 @@ void t_sgxssl_call_apis()
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
     
-    rsa_key_gen();
+    /*rsa_key_gen();
     printf("test rsa_key_gen completed\n");
 
     ec_key_gen();
-	printf("test ec_key_gen completed\n");
+	printf("test ec_key_gen completed\n");*/
 	
     ret = rsa_test();
     if (ret != 0)
@@ -328,7 +337,7 @@ void t_sgxssl_call_apis()
     }
 	printf("test rsa_test completed\n");
 
-	ret = ec_test();
+	/*ret = ec_test();
 	if (ret != 0)
     {
     	printf("test ec_test returned error %d\n", ret);
@@ -390,7 +399,7 @@ void t_sgxssl_call_apis()
     	printf("test threads_test returned error %d\n", ret);
     	exit(ret);
     }
-	printf("test threads_test completed\n");
+	printf("test threads_test completed\n");*/
 
 }
 

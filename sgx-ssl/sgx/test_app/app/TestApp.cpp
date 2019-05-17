@@ -44,6 +44,7 @@
 
 
 #include <sgx_urts.h>
+#include <csignal>
 
 #include "TestApp.h"
 
@@ -397,6 +398,13 @@ static void exec_bench()
 }
 
 
+void intHandler(int dummy) {
+    (void)dummy;
+    //do_bench = 0;
+    //ecall_stop_bench(global_eid);
+}
+
+
 /* OCall functions */
 void uprint(const char *str)
 {
@@ -428,13 +436,13 @@ int ucreate_thread()
 	return res;
 }
 
-
 /* Application entry */
 int main(int argc, char *argv[])
 {
     (void)(argc);
     (void)(argv);
 
+    signal(SIGINT, intHandler);
     /* Changing dir to where the executable is.*/
     char absolutePath[MAX_PATH];
     char *ptr = NULL;
