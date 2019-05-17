@@ -1,10 +1,12 @@
 # SGX-AppsBench
 
 ### **Description**
+-------------------
 
 This is originally a project thesis and its target is to implement multiple application benchmarks for SGX 
 
 ### **Prerequisites, Setup & Run**
+-----------------------------------
 
 1. SGX driver & SGX-SDK version 2.3  
 2. Source [Path of SGX-SDK]/environment   (default: source /opt/intel/sgxsdk/environment)
