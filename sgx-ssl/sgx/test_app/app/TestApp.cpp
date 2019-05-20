@@ -419,7 +419,6 @@ int get_num_of_iterations()
     } else {
         printf("The benchmark will run indefinitely!. Please consider pressing 'Ctrl+C' inorder to stop the benchmarks\n ");
     }
-    printf("");
     fflush(stdout);
     return iterNr;
 }
