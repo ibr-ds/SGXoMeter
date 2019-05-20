@@ -46,6 +46,8 @@
 #include <sgx_tae_service.h>
 
 #define ADD_ENTROPY_SIZE	32
+//#define PRINT_CHECKS 1   //ToDo for debugging and ocall_print_out checks
+
 
 /* 
  * printf: 
@@ -126,6 +128,7 @@ void rsa_key_gen()
 	unsigned char *tbuf = buf;
 	i2d_PublicKey(evp_pkey, &tbuf);
 
+#ifdef PRINT_CHECKS
 	// print public key
 	printf ("{\"public\":\"");
 	int i;
@@ -133,7 +136,7 @@ void rsa_key_gen()
 	    printf("%02x", (unsigned char) buf[i]);
 	}
 	printf("\"}\n");
-
+#endif
 	free(buf);
 
 	// private key - string
@@ -142,13 +145,15 @@ void rsa_key_gen()
 	tbuf = buf;
 	i2d_PrivateKey(evp_pkey, &tbuf);
 
-	// print private key
+
+#ifdef PRINT_CHECKS
+    // print private key
 	printf ("{\"private\":\"");
 	for (i = 0; i < len; i++) {
 	    printf("%02x", (unsigned char) buf[i]);
 	}
 	printf("\"}\n");
-
+#endif
 	free(buf);
 
 	BN_free(bn);
@@ -197,14 +202,16 @@ void ec_key_gen()
 	unsigned char *tbuf = buf;
 	i2d_PublicKey(ec_pkey, &tbuf);
 
-	// print public key
+
+#ifdef PRINT_CHECKS
+    // print public key
 	printf ("{\"public\":\"");
 	int i;
 	for (i = 0; i < len; i++) {
 	    printf("%02x", (unsigned char) buf[i]);
 	}
 	printf("\"}\n");
-
+#endif
 	free(buf);
 
 	// private key - string
@@ -213,13 +220,14 @@ void ec_key_gen()
 	tbuf = buf;
 	i2d_PrivateKey(ec_pkey, &tbuf);
 
+#ifdef PRINT_CHECKS
 	// print private key
 	printf ("{\"private\":\"");
 	for (i = 0; i < len; i++) {
 	    printf("%02x", (unsigned char) buf[i]);
 	}
 	printf("\"}\n");
-
+#endif
 	free(buf);
 
 	EVP_PKEY_free(ec_pkey);
@@ -249,36 +257,41 @@ extern "C" int CRYPTO_set_mem_functions(
 void* priv_malloc(size_t size, const char *file, int line)
 {
 	void* addr = malloc(size);
-	
+
 	printf("[malloc:%s:%d] size: %d, addr: %p\n", file, line, size, addr);
-	
+
 	return addr;
 }
 void* priv_realloc(void* old_addr, size_t new_size, const char *file, int line)
 {
 	void* new_addr = realloc(old_addr, new_size);
-	
+
 	printf("[realloc:%s:%d] old_addr: %p, new_size: %d, new_addr: %p\n", file, line, old_addr, new_size, new_addr);
-	
+
 	return new_addr;
 }
 void priv_free(void* addr, const char *file, int line)
 {
 	printf("[free:%s:%d] addr: %p\n", file, line, addr);
-	
+
 	free(addr);
 }
 */
 
 static volatile int do_bench = 0;
 volatile uint64_t *bench_counter = 0;
+static int NUM_OF_ITER = 0;
 
-static int HUNDRED_TESTS = 100;
 
-extern "C" void ecall_start_bench(uint64_t *ctr)
+extern "C" void ecall_start_bench(uint64_t *ctr, int iterNr)
 {
     bench_counter = ctr;
     do_bench = 1;
+    if(iterNr > 0)
+    {
+        #define NUMBER_OF_ITERATIONS iterNr
+        NUM_OF_ITER=iterNr;
+    }
 }
 
 extern "C" void ecall_stop_bench(void)
@@ -292,17 +305,19 @@ extern "C" void ecall_run_bench(void)
     while(do_bench == 0)
     { __asm__("pause");}
 
+#ifdef NUMBER_OF_ITERATIONS
+    int iterCounter = 0;
+#endif
     printf("Start tests\n");
-    int counter = 0;
     while(do_bench == 1)
     {
         t_sgxssl_call_apis();
         __sync_fetch_and_add(bench_counter, 1);
-        counter++;
-
-        if(counter == HUNDRED_TESTS)
-            do_bench = 0;
-
+#ifdef NUMBER_OF_ITERATIONS
+        iterCounter++;
+        if(iterCounter == NUM_OF_ITER)
+            break;
+#endif
     }
 }
 
@@ -322,20 +337,23 @@ void t_sgxssl_call_apis()
 
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
-    
-    /*rsa_key_gen();
-    printf("test rsa_key_gen completed\n");
 
-    ec_key_gen();
-	printf("test ec_key_gen completed\n");*/
-	
-    ret = rsa_test();
+    rsa_key_gen();
+#ifdef PRINT_CHECKS
+    printf("test rsa_key_gen completed\n");
+#endif
+    /*ec_key_gen();
+#ifdef PRINT_CHECKS
+	printf("test ec_key_gen completed\n");
+#endif
+	*/
+    /*ret = rsa_test();
     if (ret != 0)
     {
     	printf("test rsa_test returned error %d\n", ret);
     	exit(ret);
     }
-	printf("test rsa_test completed\n");
+	printf("test rsa_test completed\n");*/
 
 	/*ret = ec_test();
 	if (ret != 0)
@@ -344,7 +362,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test ec_test completed\n");
-	
+
 	ret = ecdh_test();
 	if (ret != 0)
     {
@@ -352,7 +370,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test ecdh_test completed\n");
-	
+
 	ret = ecdsa_test();
 	if (ret != 0)
     {
@@ -384,7 +402,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test sha256_test completed\n");
-	
+
 	ret = sha1_test();
 	if (ret != 0)
     {
@@ -392,7 +410,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 	printf("test sha1_test completed\n");
-	
+
 	ret = threads_test();
 	if (ret != 0)
     {

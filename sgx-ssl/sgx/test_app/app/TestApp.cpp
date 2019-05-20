@@ -244,8 +244,6 @@ static volatile int do_bench = 0;
 static volatile int abort_measure = 0;
 volatile uint64_t counter = 0;
 uint64_t RATE = 100000;
-uint64_t BEFORE_PATCH = 50000;
-uint64_t AFTER_PATCH = 50000;
 
 static inline uint64_t rdtscp( uint32_t & aux )
 {
@@ -300,7 +298,7 @@ void *measure_thread(void *args)
     return nullptr;
 }
 
-uint64_t WORKER_THREADS = 1;
+uint64_t WORKER_THREADS = 1; //ToDo this should probably be 2 not 1
 pthread_barrier_t worker_barrier;
 
 void *worker_thread(void *args)
@@ -310,10 +308,8 @@ void *worker_thread(void *args)
     {
         __asm__("pause");
     }
-
-    sgx_status_t ret = t_sgxssl_call_apis(global_eid);
+    sgx_status_t ret = ecall_run_bench(global_eid);
     print_ret_error(ret);
-
     return nullptr;
 }
 
@@ -349,13 +345,19 @@ static void print_array()
     }
 }
 
-static void exec_bench()
+static void exec_bench_setup(int iterNr)
 {
     sgx_status_t ret = SGX_SUCCESS;
-    initialize_enclave();
+
+    /* Initialize the enclave */
+    if (initialize_enclave() != 0)
+    {
+        printf("Enclave Initialization Error\n");
+        return;
+    }
 
     pthread_t measure, worker[WORKER_THREADS];
-    pthread_create(&measure, nullptr, measure_thread, nullptr);
+    pthread_create(&measure, nullptr, measure_thread, nullptr); // start the measure thread
     pthread_barrier_init(&worker_barrier, nullptr, WORKER_THREADS + 1);
     for (int i = 0; i < WORKER_THREADS; ++i)
     {
@@ -366,22 +368,10 @@ static void exec_bench()
     fprintf(stderr, "Starting benchmark \n");
     counter = 0;
     array = (measurement_t *)calloc(ARRAY_SIZE, sizeof(measurement_t));
-    ret = ecall_start_bench(global_eid, (uint64_t *)&counter);
+    ret = ecall_start_bench(global_eid, (uint64_t *)&counter, iterNr);
     print_ret_error(ret);
     do_bench = 1;
 
-    //getchar();
-    //do_bench = 2;
-    usleep(BEFORE_PATCH);
-    ret = ecall_run_bench(global_eid);
-    print_ret_error(ret);
-    usleep(AFTER_PATCH);
-    //do_bench = 3;
-    //usleep(1000);
-    //getchar();
-//	do_bench = 0;
-    ret = ecall_stop_bench(global_eid);
-    print_ret_error(ret);
 
     for (int i = 0; i < WORKER_THREADS; ++i)
     {
@@ -397,13 +387,42 @@ static void exec_bench()
     print_array();
 }
 
-
-void intHandler(int dummy) {
+/*  SIGINT handler in order to stop the benchmark with Ctrl+C   */
+void intHandler(int dummy)
+{
     (void)dummy;
-    //do_bench = 0;
-    //ecall_stop_bench(global_eid);
+    sgx_status_t ret = SGX_SUCCESS;
+    ret = ecall_stop_bench(global_eid);
+    print_ret_error(ret);
 }
 
+/*  provide the number of the wanted benchmark iterations       */
+int get_num_of_iterations()
+{
+    int iterNr=0;
+    printf("Please insert the desired number of iterations?\n ");
+    int result = scanf("%d", &iterNr);
+
+    if (result == EOF)
+    {
+        printf("stdin ERROR while reading!\n Number of iteration is set to unlimited\n");
+    }
+    if (result == 0) //in case of invalid input like out of context string or anything rather than an int
+    {
+        while (fgetc(stdin) != '\n') // Read until a newline is found
+            ;
+        printf("nothing is read, Therefore Number of iteration will be unlimited.\n Please consider pressing 'Ctrl+C' inorder to stop the benchmarks\n");
+    }
+    if(iterNr > 0)
+    {
+        printf("The benchmark will run with %d iterations!\n", iterNr);
+    } else {
+        printf("The benchmark will run indefinitely!. Please consider pressing 'Ctrl+C' inorder to stop the benchmarks\n ");
+    }
+    printf("");
+    fflush(stdout);
+    return iterNr;
+}
 
 /* OCall functions */
 void uprint(const char *str)
@@ -436,6 +455,7 @@ int ucreate_thread()
 	return res;
 }
 
+
 /* Application entry */
 int main(int argc, char *argv[])
 {
@@ -443,29 +463,12 @@ int main(int argc, char *argv[])
     (void)(argv);
 
     signal(SIGINT, intHandler);
-    /* Changing dir to where the executable is.*/
-    char absolutePath[MAX_PATH];
-    char *ptr = NULL;
-
-    ptr = realpath(dirname(argv[0]), absolutePath);
-
-    if (ptr == NULL || chdir(absolutePath) != 0)
-    	return 1;
-
-    /* Initialize the enclave */
-    /*if (initialize_enclave() < 0)
-        return 1;
 
 
-    sgx_status_t status = t_sgxssl_call_apis(global_eid);
+    int iterNr = get_num_of_iterations();
 
+    /* Initialize the enclave and execute the benchmarking setup */
+    exec_bench_setup(iterNr);
 
-    if (status != SGX_SUCCESS) {
-        printf("Call to t_sgxssl_call_apis has failed.\n");
-        return 1;    //Test failed
-    }*/
-    exec_bench();
-    //sgx_destroy_enclave(global_eid);
-    
     return 0;
 }

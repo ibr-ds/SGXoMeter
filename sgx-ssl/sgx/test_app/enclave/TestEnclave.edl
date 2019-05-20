@@ -40,7 +40,7 @@ from "sgx_tsgxssl.edl" import *;
      trusted {
             public void t_sgxssl_call_apis();
             public void new_thread_func();
-            public void ecall_start_bench([user_check] uint64_t *ctr);
+            public void ecall_start_bench([user_check] uint64_t *ctr, int iterNr);
             public void ecall_stop_bench();
             public void ecall_run_bench();
 
