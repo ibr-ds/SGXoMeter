@@ -411,13 +411,13 @@ int get_num_of_iterations()
     {
         while (fgetc(stdin) != '\n') // Read until a newline is found
             ;
-        printf("nothing is read, Therefore Number of iteration will be unlimited.\n Please consider pressing 'Ctrl+C' inorder to stop the benchmarks\n");
+        printf("nothing or invalid input is read!.\n");
     }
     if(iterNr > 0)
     {
         printf("The benchmark will run with %d iterations!\n", iterNr);
     } else {
-        printf("The benchmark will run indefinitely!. Please consider pressing 'Ctrl+C' inorder to stop the benchmarks\n ");
+        printf("The benchmark will run indefinitely!.Therefore, please consider pressing 'Ctrl+C' in order to stop the benchmark\n");
     }
     fflush(stdout);
     return iterNr;
