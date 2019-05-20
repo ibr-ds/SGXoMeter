@@ -59,6 +59,8 @@
 #include <openssl/sha.h>
 #include <openssl/evp.h>
 
+#include "Macros.h"
+
 #define stdout ((void*)1)
 #define stderr ((void*)2)
 
@@ -112,17 +114,19 @@ int sha256_test()
     unsigned char md[SHA256_DIGEST_LENGTH];
     int i;
     EVP_MD_CTX *evp;
-
+#ifdef PRINT_CHECKS
     fprintf(stdout, "Testing SHA-256 ");
-
+#endif
     EVP_Digest("abc", 3, md, NULL, EVP_sha256(), NULL);
     if (memcmp(md, app_b1, sizeof(app_b1))) {
         fflush(stdout);
         fprintf(stderr, "\nTEST 1 of 3 failed.\n");
         return 1;
     } else
+#ifdef PRINT_CHECKS
         fprintf(stdout, ".");
     fflush(stdout);
+#endif
 
     EVP_Digest("abcdbcde" "cdefdefg" "efghfghi" "ghijhijk"
                "ijkljklm" "klmnlmno" "mnopnopq", 56, md, NULL, EVP_sha256(),
@@ -132,8 +136,10 @@ int sha256_test()
         fprintf(stderr, "\nTEST 2 of 3 failed.\n");
         return 1;
     } else
+#ifdef PRINT_CHECKS
         fprintf(stdout, ".");
     fflush(stdout);
+#endif
 
     evp = EVP_MD_CTX_new();
     if (evp == NULL) {
@@ -160,6 +166,7 @@ int sha256_test()
         fprintf(stderr, "\nTEST 3 of 3 failed.\n");
         return 1;
     } else
+#ifdef PRINT_CHECKS
         fprintf(stdout, ".");
     fflush(stdout);
 
@@ -167,6 +174,7 @@ int sha256_test()
     fflush(stdout);
 
     fprintf(stdout, "Testing SHA-224 ");
+#endif
 
     EVP_Digest("abc", 3, md, NULL, EVP_sha224(), NULL);
     if (memcmp(md, addenum_1, sizeof(addenum_1))) {
@@ -174,8 +182,10 @@ int sha256_test()
         fprintf(stderr, "\nTEST 1 of 3 failed.\n");
         return 1;
     } else
+#ifdef PRINT_CHECKS
         fprintf(stdout, ".");
     fflush(stdout);
+#endif
 
     EVP_Digest("abcdbcde" "cdefdefg" "efghfghi" "ghijhijk"
                "ijkljklm" "klmnlmno" "mnopnopq", 56, md, NULL, EVP_sha224(),
@@ -185,8 +195,10 @@ int sha256_test()
         fprintf(stderr, "\nTEST 2 of 3 failed.\n");
         return 1;
     } else
+#ifdef PRINT_CHECKS
         fprintf(stdout, ".");
     fflush(stdout);
+#endif
 
     EVP_MD_CTX_reset(evp);
     EVP_DigestInit_ex(evp, EVP_sha224(), NULL);
@@ -202,11 +214,12 @@ int sha256_test()
         fprintf(stderr, "\nTEST 3 of 3 failed.\n");
         return 1;
     } else
+#ifdef PRINT_CHECKS
         fprintf(stdout, ".");
     fflush(stdout);
 
     fprintf(stdout, " passed.\n");
     fflush(stdout);
-
+#endif
     return 0;
 }

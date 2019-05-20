@@ -45,8 +45,8 @@
 #include <openssl/rand.h>
 #include <sgx_tae_service.h>
 
+#include "Macros.h"
 #define ADD_ENTROPY_SIZE	32
-//#define PRINT_CHECKS 1   //ToDo for debugging and ocall_print_out checks
 
 
 /* 
@@ -338,10 +338,10 @@ void t_sgxssl_call_apis()
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
 
-    rsa_key_gen();
+ /*   rsa_key_gen();
 #ifdef PRINT_CHECKS
     printf("test rsa_key_gen completed\n");
-#endif
+#endif*/
     /*ec_key_gen();
 #ifdef PRINT_CHECKS
 	printf("test ec_key_gen completed\n");
@@ -353,7 +353,9 @@ void t_sgxssl_call_apis()
     	printf("test rsa_test returned error %d\n", ret);
     	exit(ret);
     }
-	printf("test rsa_test completed\n");*/
+#ifdef PRINT_CHECKS
+	printf("test rsa_test completed\n");
+#endif */
 
 	/*ret = ec_test();
 	if (ret != 0)
@@ -361,7 +363,9 @@ void t_sgxssl_call_apis()
     	printf("test ec_test returned error %d\n", ret);
     	exit(ret);
     }
+#ifdef PRINT_CHECKS
 	printf("test ec_test completed\n");
+#endif
 
 	ret = ecdh_test();
 	if (ret != 0)
@@ -369,7 +373,9 @@ void t_sgxssl_call_apis()
     	printf("test ecdh_test returned error %d\n", ret);
     	exit(ret);
     }
+#ifdef PRINT_CHECKS
 	printf("test ecdh_test completed\n");
+#endif
 
 	ret = ecdsa_test();
 	if (ret != 0)
@@ -377,7 +383,9 @@ void t_sgxssl_call_apis()
     	printf("test ecdsar_test returned error %d\n", ret);
     	exit(ret);
     }
+#ifdef PRINT_CHECKS
 	printf("test ecdsa_test completed\n");
+#endif
 
 	ret = bn_test();
 	if (ret != 0)
@@ -385,7 +393,9 @@ void t_sgxssl_call_apis()
     	printf("test bn_test returned error %d\n", ret);
     	exit(ret);
     }
+#ifdef PRINT_CHECKS
 	printf("test bn_test completed\n");
+#endif
 
 	ret = dh_test();
 	if (ret != 0)
@@ -393,31 +403,36 @@ void t_sgxssl_call_apis()
     	printf("test dh_test returned error %d\n", ret);
     	exit(ret);
     }
+#ifdef PRINT_CHECKS
 	printf("test dh_test completed\n");
-
+#endif
+    */
 	ret = sha256_test();
 	if (ret != 0)
     {
     	printf("test sha256_test returned error %d\n", ret);
     	exit(ret);
     }
+#ifdef PRINT_CHECKS
 	printf("test sha256_test completed\n");
-
-	ret = sha1_test();
+#endif
+	/*ret = sha1_test();
 	if (ret != 0)
     {
     	printf("test sha1_test returned error %d\n", ret);
     	exit(ret);
     }
+#ifdef PRINT_CHECKS
 	printf("test sha1_test completed\n");
-
+#endif
 	ret = threads_test();
 	if (ret != 0)
     {
     	printf("test threads_test returned error %d\n", ret);
     	exit(ret);
     }
-	printf("test threads_test completed\n");*/
-
+#ifdef PRINT_CHECKS
+	printf("test threads_test completed\n");
+#endif*/
 }
 
