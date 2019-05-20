@@ -356,17 +356,22 @@ void t_sgxssl_call_apis()
 
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
-
- /*   rsa_key_gen();
+#ifdef RSA_KEY_GEN
+    rsa_key_gen();
 #ifdef PRINT_CHECKS
     printf("test rsa_key_gen completed\n");
-#endif*/
-    /*ec_key_gen();
+#endif
+#endif
+
+#ifdef ELLIPTIC_CURVE_KEY_GEN
+    ec_key_gen();
 #ifdef PRINT_CHECKS
 	printf("test ec_key_gen completed\n");
 #endif
-	*/
-    /*ret = rsa_test();
+#endif
+
+#ifdef RSA_TESTS
+    ret = rsa_test();
     if (ret != 0)
     {
     	printf("test rsa_test returned error %d\n", ret);
@@ -374,9 +379,11 @@ void t_sgxssl_call_apis()
     }
 #ifdef PRINT_CHECKS
 	printf("test rsa_test completed\n");
-#endif */
+#endif
+#endif
 
-	/*ret = ec_test();
+#if ELLIPTIC_CURVE_TESTS
+	ret = ec_test();
 	if (ret != 0)
     {
     	printf("test ec_test returned error %d\n", ret);
@@ -385,7 +392,9 @@ void t_sgxssl_call_apis()
 #ifdef PRINT_CHECKS
 	printf("test ec_test completed\n");
 #endif
+#endif
 
+#ifdef ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
 	ret = ecdh_test();
 	if (ret != 0)
     {
@@ -395,7 +404,9 @@ void t_sgxssl_call_apis()
 #ifdef PRINT_CHECKS
 	printf("test ecdh_test completed\n");
 #endif
+#endif
 
+#ifdef ELLIPTIC_CURVE_DSA_TESTS
 	ret = ecdsa_test();
 	if (ret != 0)
     {
@@ -405,7 +416,9 @@ void t_sgxssl_call_apis()
 #ifdef PRINT_CHECKS
 	printf("test ecdsa_test completed\n");
 #endif
+#endif
 
+#ifdef BN_TESTS
 	ret = bn_test();
 	if (ret != 0)
     {
@@ -415,7 +428,9 @@ void t_sgxssl_call_apis()
 #ifdef PRINT_CHECKS
 	printf("test bn_test completed\n");
 #endif
+#endif
 
+#ifdef DEFFIE_HELLMAN_TESTS
 	ret = dh_test();
 	if (ret != 0)
     {
@@ -425,7 +440,9 @@ void t_sgxssl_call_apis()
 #ifdef PRINT_CHECKS
 	printf("test dh_test completed\n");
 #endif
-    */
+#endif
+
+#ifdef SECURE_HASH_ALGORITHM_256
 	ret = sha256_test();
 	if (ret != 0)
     {
@@ -435,7 +452,10 @@ void t_sgxssl_call_apis()
 #ifdef PRINT_CHECKS
 	printf("test sha256_test completed\n");
 #endif
-	/*ret = sha1_test();
+#endif
+
+#ifdef SECURE_HASH_ALGORITHM_1
+	ret = sha1_test();
 	if (ret != 0)
     {
     	printf("test sha1_test returned error %d\n", ret);
@@ -444,6 +464,9 @@ void t_sgxssl_call_apis()
 #ifdef PRINT_CHECKS
 	printf("test sha1_test completed\n");
 #endif
+#endif
+
+#ifdef THREAD_TESTS
 	ret = threads_test();
 	if (ret != 0)
     {
@@ -452,6 +475,7 @@ void t_sgxssl_call_apis()
     }
 #ifdef PRINT_CHECKS
 	printf("test threads_test completed\n");
-#endif*/
+#endif
+#endif
 }
 
