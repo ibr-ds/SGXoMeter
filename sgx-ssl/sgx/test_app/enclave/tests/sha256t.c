@@ -59,7 +59,7 @@
 #include <openssl/sha.h>
 #include <openssl/evp.h>
 
-#include "Macros.h"
+#include "GlobalMacros.h"
 
 #define stdout ((void*)1)
 #define stderr ((void*)2)

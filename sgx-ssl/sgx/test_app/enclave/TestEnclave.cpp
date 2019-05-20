@@ -45,7 +45,8 @@
 #include <openssl/rand.h>
 #include <sgx_tae_service.h>
 
-#include "Macros.h"
+#include "GlobalMacros.h"
+#include "TestMacros.h"
 #define ADD_ENTROPY_SIZE	32
 
 
@@ -280,18 +281,24 @@ void priv_free(void* addr, const char *file, int line)
 
 static volatile int do_bench = 0;
 volatile uint64_t *bench_counter = 0;
+#ifdef WITH_ITERATION_QUERY
 static int NUM_OF_ITER = 0;
+#endif
 
-
-extern "C" void ecall_start_bench(uint64_t *ctr, int iterNr)
+extern "C" void ecall_start_bench(uint64_t *ctr
+#ifdef WITH_ITERATION_QUERY
+        , int iterNr
+#endif
+)
 {
     bench_counter = ctr;
     do_bench = 1;
+#ifdef WITH_ITERATION_QUERY
     if(iterNr > 0)
     {
-        #define NUMBER_OF_ITERATIONS iterNr
         NUM_OF_ITER=iterNr;
     }
+#endif
 }
 
 extern "C" void ecall_stop_bench(void)
@@ -305,17 +312,29 @@ extern "C" void ecall_run_bench(void)
     while(do_bench == 0)
     { __asm__("pause");}
 
-#ifdef NUMBER_OF_ITERATIONS
+#if defined WITH_ITERATION_QUERY || defined NUMBER_OF_ITERATIONS
     int iterCounter = 0;
 #endif
+
     printf("Start tests\n");
     while(do_bench == 1)
     {
         t_sgxssl_call_apis();
         __sync_fetch_and_add(bench_counter, 1);
-#ifdef NUMBER_OF_ITERATIONS
+
+#if defined WITH_ITERATION_QUERY || defined NUMBER_OF_ITERATIONS
         iterCounter++;
-        if(iterCounter == NUM_OF_ITER)
+        //check the counter either against the given one with a query or the one set globally
+        if(iterCounter ==
+#ifdef WITH_ITERATION_QUERY
+NUM_OF_ITER
+#elif defined NUMBER_OF_ITERATIONS
+            NUMBER_OF_ITERATIONS
+#else
+#error "Neither global number of iteration nor queried one is set!"
+#endif
+                )
+
             break;
 #endif
     }

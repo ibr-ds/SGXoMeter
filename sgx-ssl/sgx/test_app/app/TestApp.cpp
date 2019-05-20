@@ -42,12 +42,12 @@
 
 # define MAX_PATH FILENAME_MAX
 
+#include "../GlobalMacros.h"
 
 #include <sgx_urts.h>
 #include <csignal>
 
 #include "TestApp.h"
-
 #include "TestEnclave_u.h"
 
 
@@ -345,7 +345,11 @@ static void print_array()
     }
 }
 
-static void exec_bench_setup(int iterNr)
+static void exec_bench_setup(
+#ifdef WITH_ITERATION_QUERY
+        int iterNr
+#endif
+)
 {
     sgx_status_t ret = SGX_SUCCESS;
 
@@ -368,7 +372,11 @@ static void exec_bench_setup(int iterNr)
     fprintf(stderr, "Starting benchmark \n");
     counter = 0;
     array = (measurement_t *)calloc(ARRAY_SIZE, sizeof(measurement_t));
-    ret = ecall_start_bench(global_eid, (uint64_t *)&counter, iterNr);
+    ret = ecall_start_bench(global_eid, (uint64_t *)&counter
+#ifdef WITH_ITERATION_QUERY
+           , iterNr
+#endif
+);
     print_ret_error(ret);
     do_bench = 1;
 
@@ -396,6 +404,7 @@ void intHandler(int dummy)
     print_ret_error(ret);
 }
 
+#ifdef WITH_ITERATION_QUERY
 /*  provide the number of the wanted benchmark iterations       */
 int get_num_of_iterations()
 {
@@ -422,6 +431,7 @@ int get_num_of_iterations()
     fflush(stdout);
     return iterNr;
 }
+#endif
 
 /* OCall functions */
 void uprint(const char *str)
@@ -463,11 +473,16 @@ int main(int argc, char *argv[])
 
     signal(SIGINT, intHandler);
 
-
+#ifdef WITH_ITERATION_QUERY
     int iterNr = get_num_of_iterations();
+#endif
 
     /* Initialize the enclave and execute the benchmarking setup */
-    exec_bench_setup(iterNr);
+    exec_bench_setup(
+            #ifdef WITH_ITERATION_QUERY
+    iterNr
+            #endif
+            );
 
     return 0;
 }
