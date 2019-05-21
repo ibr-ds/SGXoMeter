@@ -330,8 +330,6 @@ extern "C" void ecall_run_bench(void)
 NUM_OF_ITER
 #elif defined NUMBER_OF_ITERATIONS
             NUMBER_OF_ITERATIONS
-#else
-#error "Neither global number of iteration nor queried one is set!"
 #endif
                 )
 
