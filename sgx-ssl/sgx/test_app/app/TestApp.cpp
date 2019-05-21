@@ -313,6 +313,16 @@ void *worker_thread(void *args)
 
 static void print_array()
 {
+
+#ifdef WRITE_LOG_FILE
+    FILE *fp;
+    fp = fopen(PLOTDATA_FILE_NAME, "w");
+    if (fp == NULL)
+    {
+	fprintf(stderr, "Couldnt open or create a file for the plot data!\n");
+    }	    
+#endif
+
     // print array
     uint64_t end = cur_elem - 1;
     if (end < 0)
@@ -328,8 +338,13 @@ static void print_array()
             if (start_tsc == 0)
                 start_tsc = array[cur_elem].tsc;
 
+#ifdef WRITE_LOG_FILE
+	    fprintf(fp,"%lu,%lu\n",array[cur_elem].tsc - start_tsc, array[cur_elem].diff);
+#else
             printf("%lu, %lu, %lu\n", array[cur_elem].tsc - start_tsc, array[cur_elem].diff, array[cur_elem].tsc - array[prev_elem].tsc);
-        }
+#endif	          
+       
+	}
         ++cur_elem;
         ++prev_elem;
         if (cur_elem >= ARRAY_SIZE)
@@ -341,6 +356,9 @@ static void print_array()
             prev_elem = 0;
         }
     }
+#ifdef WRITE_LOG_FILE
+    fclose(fp);
+#endif
 }
 
 static void exec_bench_setup(
