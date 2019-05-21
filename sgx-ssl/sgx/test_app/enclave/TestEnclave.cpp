@@ -316,7 +316,10 @@ extern "C" void ecall_run_bench(void)
     int iterCounter = 0;
 #endif
 
+#ifdef PRINT_CHECKS
     printf("Start tests\n");
+#endif
+
     while(do_bench == 1)
     {
         t_sgxssl_call_apis();

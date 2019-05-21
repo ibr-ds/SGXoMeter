@@ -14,8 +14,9 @@
 
 
 /*  Global Values  */
-#define NUMBER_OF_ITERATIONS  10//ToDo: This is
-
+#define NUMBER_OF_ITERATIONS  50 //ToDo: This will be done later in cmake
+#define CYCLES_RATE 1000000 //ToDo: This should also be done in cmake later
+#define ARRAY_SIZE (1000000)
 
 
 

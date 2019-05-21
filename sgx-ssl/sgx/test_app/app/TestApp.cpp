@@ -197,7 +197,7 @@ int initialize_enclave(void)
     if (fp == NULL && (fp = fopen(token_path, "wb")) == NULL) {
         printf("Warning: Failed to create/open the launch token file \"%s\".\n", token_path);
     }
-    printf("token_path: %s\n", token_path);
+    fprintf(stderr, "token_path: %s\n", token_path);
     if (fp != NULL) {
         /* read the token from saved file */
         size_t read_num = fread(token, 1, sizeof(sgx_launch_token_t), fp);
@@ -215,7 +215,6 @@ int initialize_enclave(void)
 
     if (ret != SGX_SUCCESS) {
         print_error_message(ret);
-        printf("something LOOOOOOOOONG");
         if (fp != NULL) fclose(fp);
 
         return -1;
@@ -243,7 +242,7 @@ int initialize_enclave(void)
 static volatile int do_bench = 0;
 static volatile int abort_measure = 0;
 volatile uint64_t counter = 0;
-uint64_t RATE = 100000;
+uint64_t RATE = CYCLES_RATE;
 
 static inline uint64_t rdtscp( uint32_t & aux )
 {
@@ -258,7 +257,6 @@ typedef struct {
 } measurement_t;
 
 measurement_t *array;
-#define ARRAY_SIZE (1000000)
 uint64_t cur_elem = 0;
 uint32_t a;
 
@@ -276,7 +274,7 @@ static inline void add_measurement(uint64_t diff)
 
 void *measure_thread(void *args)
 {
-    printf("# RATE: %lu µs\n", RATE);
+    fprintf(stderr, "# RATE: %lu µs\n", RATE);
     uint64_t last = 0, diff;
     uint64_t next = 0;
     while(do_bench == 0)

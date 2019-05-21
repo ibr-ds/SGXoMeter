@@ -4,16 +4,20 @@
 
 
 /*  Available Benchmark Tests  */
-#define RSA_KEY_GEN
-/*#define ELLIPTIC_CURVE_KEY_GEN
+
+//#define RSA_KEY_GEN
+//#define ELLIPTIC_CURVE_KEY_GEN
 #define RSA_TESTS
-#define ELLIPTIC_CURVE_TESTS
+/*#define ELLIPTIC_CURVE_TESTS
 #define ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
 #define ELLIPTIC_CURVE_DSA_TESTS
 #define BN_TESTS
 #define DEFFIE_HELLMAN_TESTS
 #define SECURE_HASH_ALGORITHM_256
 #define SECURE_HASH_ALGORITHM_1
-#define THREAD_TESTS*/
+#define THREAD_TESTS
+#define DNA_PATTERN_MATCHING
+
+ */
 
 #endif
