@@ -382,7 +382,7 @@ void t_sgxssl_call_apis()
 #endif
 #endif
 
-#if ELLIPTIC_CURVE_TESTS
+#ifdef ELLIPTIC_CURVE_TESTS
 	ret = ec_test();
 	if (ret != 0)
     {
