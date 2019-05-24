@@ -27,6 +27,6 @@ int seeq_test() {
     args.all       = ALL_FLAG;
     args.memory    = MEMORY_ARG;
 
-    return seeq(expr, input, args);
+    return seeq(PATTERN, INPUT_DNA, args);
 
 }
