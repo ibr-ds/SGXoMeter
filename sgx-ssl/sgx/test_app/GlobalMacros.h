@@ -22,9 +22,14 @@
 
 
 
-/* Global Conditions */
+/*  Global Conditions */
 #if defined WITH_ITERATION_QUERY && NUMBER_OF_ITERATIONS
 #error "Choose either the interactive approach or the fixed one"
 #endif
+
+#if !defined WRITE_LOG_FILE
+#undef PLOTDATA_FILE_NAME
+#endif
+
 
 #endif

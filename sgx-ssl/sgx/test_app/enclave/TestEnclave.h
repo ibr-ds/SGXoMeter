@@ -64,6 +64,7 @@ int dh_test();
 int sha256_test();
 int sha1_test();
 int threads_test();
+int seeq_test();
 
 #if defined(__cplusplus)
 }

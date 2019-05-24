@@ -250,34 +250,6 @@ int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
 	return res;
 }
 
-/*
-extern "C" int CRYPTO_set_mem_functions(
-        void *(*m)(size_t, const char *, int),
-        void *(*r)(void *, size_t, const char *, int),
-        void (*f)(void *, const char *, int));
-void* priv_malloc(size_t size, const char *file, int line)
-{
-	void* addr = malloc(size);
-
-	printf("[malloc:%s:%d] size: %d, addr: %p\n", file, line, size, addr);
-
-	return addr;
-}
-void* priv_realloc(void* old_addr, size_t new_size, const char *file, int line)
-{
-	void* new_addr = realloc(old_addr, new_size);
-
-	printf("[realloc:%s:%d] old_addr: %p, new_size: %d, new_addr: %p\n", file, line, old_addr, new_size, new_addr);
-
-	return new_addr;
-}
-void priv_free(void* addr, const char *file, int line)
-{
-	printf("[free:%s:%d] addr: %p\n", file, line, addr);
-
-	free(addr);
-}
-*/
 
 static volatile int do_bench = 0;
 volatile uint64_t *bench_counter = 0;
