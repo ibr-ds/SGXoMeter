@@ -3,7 +3,6 @@
 //
 
 #include "../seeq/seeq.h"
-#include "../TestMacros.h"
 #include "../TestEnclave.h"
 
 int seeq_test() {

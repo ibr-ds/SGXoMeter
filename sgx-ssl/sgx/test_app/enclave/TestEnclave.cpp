@@ -45,8 +45,7 @@
 #include <openssl/rand.h>
 #include <sgx_tae_service.h>
 
-#include "GlobalMacros.h"
-#include "TestMacros.h"
+
 #define ADD_ENTROPY_SIZE	32
 
 

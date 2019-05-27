@@ -12,6 +12,7 @@
 /*  Available Features   */
 //#define WITH_ITERATION_QUERY
 #define WRITE_LOG_FILE
+#define MEMSET_SGX
 
 
 /*  Global Values  */
