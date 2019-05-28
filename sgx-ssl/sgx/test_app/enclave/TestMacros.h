@@ -44,7 +44,7 @@
     #define INVERT_FLAG		1       //Returns the non-matching lines. When specified, all other options except 'lines' and 'count', are ignored
     #define COMPACT_FLAG	1       //Uses compact output format
     #define DIST_FLAG		1       //Defines the maximum Levenshtein distance for pattern matching. Default is 0. It should be a positive integer if set
-    #define VERBOSE_FLAG	1       //Verbose. Prints verbose information to the standard error channel.
+    #define VERBOSE_FLAG	0       //Verbose. Prints verbose information to the standard error channel.
     #define END_LINE_FLAG	1       //Prints only the last part of the matched lines, starting after (not including) the matched part.
     #define PREFIX_FLAG		1       //Prints only the beginning of the matched lines, ending before (not including) the matched part.
     #define BEST_FLAG		1       //Forces seeq to find the best matching position of each line

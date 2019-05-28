@@ -306,8 +306,9 @@ NUM_OF_ITER
             NUMBER_OF_ITERATIONS
 #endif
                 )
-
+        {
             break;
+        }
 #endif
     }
 }
@@ -330,14 +331,14 @@ void t_sgxssl_call_apis()
     OPENSSL_init_crypto(0, NULL);
 
 #ifdef DNA_PATTERN_MATCHING
-    if( seeq_test() == 0 ) {
+    ret = seeq_test();
+
+#ifdef PRINT_CHECKS
+    if( ret == 0 ) {
         printf("test dna_pattern completed\n");
     } else {
         printf("test dna_pattern error\n");
     }
-
-#ifdef PRINT_CHECKS
-    printf("test dna_pattern completed\n");
 #endif
 #endif
 
