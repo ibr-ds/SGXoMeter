@@ -379,7 +379,7 @@ static void exec_bench_setup(
     pthread_t measure, worker[WORKER_THREADS];
     pthread_create(&measure, nullptr, measure_thread, nullptr); // start the measure thread
     pthread_barrier_init(&worker_barrier, nullptr, WORKER_THREADS + 1);
-    for (int i = 0; i < WORKER_THREADS; ++i)
+    for (int i = 0; i < (int)WORKER_THREADS; ++i)
     {
         pthread_create(worker+i, nullptr, worker_thread, nullptr);
     }
@@ -397,7 +397,7 @@ static void exec_bench_setup(
     do_bench = 1;
 
 
-    for (int i = 0; i < WORKER_THREADS; ++i)
+    for (int i = 0; i < (int)WORKER_THREADS; ++i)
     {
         fprintf(stderr, "Joining worker %d\n", i);
         pthread_join(worker[i], nullptr);

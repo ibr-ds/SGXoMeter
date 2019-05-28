@@ -332,13 +332,12 @@ void t_sgxssl_call_apis()
 
 #ifdef DNA_PATTERN_MATCHING
     ret = seeq_test();
-
-#ifdef PRINT_CHECKS
-    if( ret == 0 ) {
-        printf("test dna_pattern completed\n");
-    } else {
+    if( ret != 0 )
+    {
         printf("test dna_pattern error\n");
     }
+#ifdef PRINT_CHECKS
+    printf("test dna_pattern completed\n");
 #endif
 #endif
 
@@ -366,6 +365,7 @@ void t_sgxssl_call_apis()
     	exit(ret);
     }
 #ifdef PRINT_CHECKS
+
 	printf("test rsa_test completed\n");
 #endif
 #endif

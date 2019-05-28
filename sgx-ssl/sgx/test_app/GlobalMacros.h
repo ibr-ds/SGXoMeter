@@ -17,7 +17,7 @@
 
 /*  Global Values  */
 #define PLOTDATA_FILE_NAME "plotdata.txt"
-#define NUMBER_OF_ITERATIONS  100 //ToDo: This will be done later in cmake
+#define NUMBER_OF_ITERATIONS  1000 //ToDo: This will be done later in cmake
 #define CYCLES_RATE 1000000 //ToDo: This should also be done in cmake later
 #define ARRAY_SIZE (1000000)
 
