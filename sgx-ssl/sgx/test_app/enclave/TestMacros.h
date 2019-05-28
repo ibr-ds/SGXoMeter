@@ -34,6 +34,8 @@
                             "CATOGTTACAAATAAAGCAATAGCATCA\n"\
                             "ACCTCGTAAAAGCTATAGACTTG"
 
+    #define INPUT_DNA_SIZE sizeof(INPUT_DNA)
+
     #define COUNT_FLAG		1       //Returns only the count of matching lines. When specified, all other options are ignored
     #define SHOW_DIST_FLAG 	1       //Shows the Levenshtein distance of the match
     #define SHOW_POS_FLAG	1       //Shows the position of the match in the text

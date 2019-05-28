@@ -262,6 +262,29 @@ seeqClose
    return 0;
 }
 
+/*
+ * Util Method to read the lines from String buffer (strp) and returns the number of characters read till the next newline "\n"
+ * It also writes the read line inside the string array/pointer (s) and closes that array with "\0"
+ * ToDo: i wrote this method to replace the getline method call in the seeqFileMatch function
+ */
+ssize_t *sgets(char *s, int n, const char **strp){
+    if(**strp == '\0')return 0;
+    int i;
+    for(i=0;i<n-1;++i, ++(*strp)){
+        s[i] = **strp;
+        if(**strp == '\0')
+            break;
+        if(**strp == '\n'){
+            s[i+1]='\0';
+            ++(*strp);
+            break;
+        }
+    }
+    if(i==n-1)
+        s[i] = '\0';
+    return i;
+}
+
 long
 seeqFileMatch
 (
@@ -323,12 +346,20 @@ seeqFileMatch
       return -1;
    }*/
 
+   //ToDo: i added this as a replacement of the code above (still needs testing)
+   if(sqfile->dnaInputString == NULL) {
+       seeqerr = 10;
+       return -1;
+   }
+   const char **p = &sqfile->dnaInputString;
+
    // Aux vars.
    long count = 0;
    size_t startline = sqfile->line;
    ssize_t readsz;
 
-   while ((readsz = getline(&(sq->string), &(sq->bufsz), sqfile->fdi)) > 0) { // ToDo change this to read the line from the given string in the macro
+   //while ((readsz = getline(&(sq->string), &(sq->bufsz), sqfile->fdi)) > 0) { // ToDo change this to read the line from the given string in the macro
+   while ((readsz = sgets(sq->string, INPUT_DNA_SIZE, p)) > 0) {
       sqfile->line++;
       // Remove newline.
       char * data = sq->string;
