@@ -53,7 +53,7 @@ struct seeqarg_t {
 
 struct seeqfile_t {
    size_t  line;
-   //FILE  * fdi;    //ToDo change this to the given String
+   //FILE  * fdi;    //ToDo changed this to the given String
    const char *dnaInputString;
 };
 

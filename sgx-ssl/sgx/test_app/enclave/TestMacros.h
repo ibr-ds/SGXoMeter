@@ -8,7 +8,7 @@
 //#define RSA_KEY_GEN
 //#define ELLIPTIC_CURVE_KEY_GEN
 //#define RSA_TESTS
-#define ELLIPTIC_CURVE_TESTS
+//#define ELLIPTIC_CURVE_TESTS
 /*#define ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
 #define ELLIPTIC_CURVE_DSA_TESTS
 #define BN_TESTS
@@ -24,7 +24,7 @@
 #ifdef DNA_PATTERN_MATCHING
     /*   The checked pattern     */
 
-    #define PATTERN         "ACT"
+    #define PATTERN         "CAT"
 
     /*   The checked DNA with the given pattern       */
     #define INPUT_DNA       "ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCTCGT\n"\

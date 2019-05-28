@@ -328,6 +328,21 @@ void t_sgxssl_call_apis()
 
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
+
+#ifdef DNA_PATTERN_MATCHING
+    if( seeq_test() == 0 ) {
+        printf("test dna_pattern completed\n");
+    } else {
+        printf("test dna_pattern error\n");
+    }
+
+#ifdef PRINT_CHECKS
+    printf("test dna_pattern completed\n");
+#endif
+#endif
+
+
+
 #ifdef RSA_KEY_GEN
     rsa_key_gen();
 #ifdef PRINT_CHECKS

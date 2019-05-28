@@ -123,7 +123,7 @@ seeqNew
    sq->dfa    = (void *) dfa;
    sq->rdfa   = (void *) rdfa;
    sq->bufsz  = 0;
-   sq->string = malloc(INPUT_DNA_SIZE);      //ToDo: i changes the value from NULL to malloc in order to insert inside the string
+   sq->string = malloc(INPUT_DNA_SIZE);      //ToDo: changed the value from NULL to malloc in order to insert inside the string
 
    // Initialize match_t stack.
    sq->hits = 0;

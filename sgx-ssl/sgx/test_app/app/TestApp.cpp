@@ -490,7 +490,7 @@ void* memset_s(void* dest, size_t destsz, int c, size_t len) {
 
 int consttime_memequal(const void *b1, const void *b2, size_t len)
 {
-    const unsigned char *c1 = b1, *c2 = b2;
+    const unsigned char *c1 = static_cast<const unsigned char *>(b1), *c2 = static_cast<const unsigned char *>(b2);
     unsigned int res = 0;
 
     while (len--)

@@ -152,7 +152,7 @@ seeq
                   } else if (args.endline) {
                      fprintf(stdout, "%s", sq->string + match->end);
                   } else if (args.printline) {
-                     if (COLOR_TERMINAL && isatty(fileno(stdout))) {
+                     //if (COLOR_TERMINAL /*&& isatty(fileno(stdout))*/) {
                         // Prefix.
                         char tmp = sq->string[match->start];
                         sq->string[match->start] = 0;
@@ -165,8 +165,8 @@ seeq
                         fprintf(stdout, "%s" RESET, sq->string + match->start);
                         sq->string[match->end] = tmp;
                         fprintf(stdout, "%s", sq->string + match->end);
-                     }
-                     else fprintf(stdout, "%s", sq->string);
+                     //}
+                     //else fprintf(stdout, "%s", sq->string);
                   }
                }
                fprintf(stdout, "\n");
@@ -187,7 +187,7 @@ seeq
       size_t mem_rtrie = *(size_t *)(*(data + 4)) * 16;
       double mb = 1024.0*1024.0;
       fprintf(stderr, "memory: %.2f MB (DFA: %.2f MB, trie: %.2f MB)\n", (mem_dfa + mem_trie + mem_rdfa + mem_rtrie)/mb, (mem_dfa+mem_rdfa)/mb, (mem_trie+mem_rtrie)/mb);
-      fprintf(stderr, "done in %.3fs\n", (clock()-clk)*1.0/CLOCKS_PER_SEC);
+      //fprintf(stderr, "done in %.3fs\n", (clock()-clk)*1.0/CLOCKS_PER_SEC); //ToDo: remove this as it can't be called in sgx
    }
    
    seeqClose(sqfile);
@@ -230,12 +230,12 @@ seeqOpen
 */
    sqfile->line = 0;
   // sqfile->fdi = fdi;
-   sqfile->dnaInputString = INPUT_DNA; //ToDo Think of another way to get this here instead of including the TestMacros.h in libseeq.h
+   sqfile->dnaInputString = file;  //ToDo: file = INPUT_DNA
 
    return sqfile;
 }
 
-//ToDo remove this method as its not usefull anymore or use ocalls later to add this feature to sgx seeq library
+//ToDo maybe remove this method as its not usefull anymore or use ocalls later to add this feature to sgx seeq library
 int
 seeqClose
 (
@@ -267,7 +267,7 @@ seeqClose
  * It also writes the read line inside the string array/pointer (s) and closes that array with "\0"
  * ToDo: i wrote this method to replace the getline method call in the seeqFileMatch function
  */
-ssize_t *sgets(char *s, int n, const char **strp){
+ssize_t sgets(char *s, int n, const char **strp){
     if(**strp == '\0')return 0;
     int i;
     for(i=0;i<n-1;++i, ++(*strp)){
@@ -288,7 +288,7 @@ ssize_t *sgets(char *s, int n, const char **strp){
 long
 seeqFileMatch
 (
- seeqfile_t * sqfile,   // ToDo sqfile is not the dna input char
+ seeqfile_t * sqfile,
  seeq_t     * sq,
  int          match_opt,
  int          file_opt
