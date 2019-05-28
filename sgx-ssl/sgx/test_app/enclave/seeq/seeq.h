@@ -53,7 +53,6 @@ struct seeqarg_t {
 
 struct seeqfile_t {
    size_t  line;
-   //FILE  * fdi;    //ToDo changed this to the given String
    const char *dnaInputString;
 };
 
@@ -66,7 +65,7 @@ struct seeqfile_t {
 #define SQ_COUNTMATCH 4
 
 int          seeq            (char *, char *, struct seeqarg_t);
-long         seeqFileMatch   (seeqfile_t *, seeq_t *, int, int);  //ToDo i changed the first parameter from seeqfile_t to char
+long         seeqFileMatch   (seeqfile_t *, seeq_t *, int, int);
 seeqfile_t * seeqOpen        (const char *);
 int          seeqClose       (seeqfile_t *);
 

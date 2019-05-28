@@ -84,7 +84,7 @@ seeq
 {
    const int verbose = args.verbose;
    const int tau = args.dist;
-// ToDo remove this as it does not matter anymore
+
    if (verbose) fprintf(stderr, "opening input file... ");
 
    seeq_t * sq =  seeqNew(expression, tau, args.memory);
@@ -94,7 +94,6 @@ seeq
    }
 
 
-   // ToDO remove this as you dont need to open it
    seeqfile_t * sqfile = seeqOpen(input);
    if (sqfile == NULL) {
       fprintf(stderr, "error in 'seeqOpen()': %s\n", seeqPrintError());
@@ -103,11 +102,10 @@ seeq
    }
 
 
-   //ToDo remove or append this to the print checks as it causes an ocall
-//   clock_t clk = 0;
-   if (verbose) {
+
+   if (verbose)
+   {
       fprintf(stderr, "\nmatching...\n");
-   //   clk = clock();
    }
 
    int match_options = 0;
@@ -152,21 +150,18 @@ seeq
                   } else if (args.endline) {
                      fprintf(stdout, "%s", sq->string + match->end);
                   } else if (args.printline) {
-                     //if (COLOR_TERMINAL /*&& isatty(fileno(stdout))*/) {
-                        // Prefix.
-                        char tmp = sq->string[match->start];
-                        sq->string[match->start] = 0;
-                        fprintf(stdout, "%s", sq->string);
-                        sq->string[match->start] = tmp;
-                        // Color match.
-                        fprintf(stdout, (match->dist ? BOLDRED : BOLDGREEN));
-                        tmp = sq->string[match->end];
-                        sq->string[match->end] = 0;
-                        fprintf(stdout, "%s" RESET, sq->string + match->start);
-                        sq->string[match->end] = tmp;
-                        fprintf(stdout, "%s", sq->string + match->end);
-                     //}
-                     //else fprintf(stdout, "%s", sq->string);
+                    // Prefix.
+                    char tmp = sq->string[match->start];
+                    sq->string[match->start] = 0;
+                    fprintf(stdout, "%s", sq->string);
+                    sq->string[match->start] = tmp;
+                    // Color match.
+                    fprintf(stdout, (match->dist ? BOLDRED : BOLDGREEN));
+                    tmp = sq->string[match->end];
+                    sq->string[match->end] = 0;
+                    fprintf(stdout, "%s" RESET, sq->string + match->start);
+                    sq->string[match->end] = tmp;
+                    fprintf(stdout, "%s", sq->string + match->end);
                   }
                }
                fprintf(stdout, "\n");
@@ -187,7 +182,6 @@ seeq
       size_t mem_rtrie = *(size_t *)(*(data + 4)) * 16;
       double mb = 1024.0*1024.0;
       fprintf(stderr, "memory: %.2f MB (DFA: %.2f MB, trie: %.2f MB)\n", (mem_dfa + mem_trie + mem_rdfa + mem_rtrie)/mb, (mem_dfa+mem_rdfa)/mb, (mem_trie+mem_rtrie)/mb);
-      //fprintf(stderr, "done in %.3fs\n", (clock()-clk)*1.0/CLOCKS_PER_SEC); //ToDo: remove this as it can't be called in sgx
    }
    
    seeqClose(sqfile);
@@ -196,7 +190,6 @@ seeq
    return EXIT_SUCCESS;
 }
 
-//ToDo remove this later as it is not usefull
 seeqfile_t *
 seeqOpen
 (
@@ -223,13 +216,7 @@ seeqOpen
    seeqfile_t * sqfile = malloc(sizeof(seeqfile_t));
    if (sqfile == NULL) return NULL;
 
-   // Open file or set to stdin
-   /*FILE * fdi = stdin;
-   if (file != NULL) fdi = fopen(file, "r");
-   if (fdi  == NULL) return NULL;
-*/
    sqfile->line = 0;
-  // sqfile->fdi = fdi;
    sqfile->dnaInputString = file;  //ToDo: file = INPUT_DNA
 
    return sqfile;
@@ -255,8 +242,6 @@ seeqClose
 {
    // Set error to 0.
    seeqerr = 0;
-   // Close file.
-  // if (sqfile->fdi != stdin && sqfile->fdi != NULL) if (fclose(sqfile->fdi) != 0) return -1; //ToDo remove this as we dont open a file anymore
    // Free structure.
    free(sqfile);
    return 0;
@@ -340,13 +325,6 @@ seeqFileMatch
    if (file_opt == SQ_COUNTMATCH) match_opt = (match_opt & ~MASK_MATCH) | SQ_ALL;
    else if (file_opt == SQ_COUNTLINES) match_opt = (match_opt & ~MASK_MATCH) | SQ_FIRST;
 
-   /*
-   if (sqfile->fdi == NULL) {
-      seeqerr = 10;
-      return -1;
-   }*/
-
-   //ToDo: i added this as a replacement of the code above (still needs testing)
    if(sqfile->dnaInputString == NULL) {
        seeqerr = 10;
        return -1;
@@ -358,7 +336,6 @@ seeqFileMatch
    size_t startline = sqfile->line;
    ssize_t readsz;
 
-   //while ((readsz = getline(&(sq->string), &(sq->bufsz), sqfile->fdi)) > 0) { // ToDo change this to read the line from the given string in the macro
    while ((readsz = sgets(sq->string, INPUT_DNA_SIZE, p)) > 0) {
       sqfile->line++;
       // Remove newline.

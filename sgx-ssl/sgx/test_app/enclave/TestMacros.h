@@ -17,6 +17,8 @@
 #define SECURE_HASH_ALGORITHM_1
 #define THREAD_TESTS                        */
 #define DNA_PATTERN_MATCHING
+//#define CUSTOM_TEST                 //ToDo: the idea is to add new custom method that looks like void customTest(int paraCount, void args...); where its like an interface for
+
 
 
 /*   DNA Test Flags & Logical Conditions   */
