@@ -6,7 +6,7 @@
  */
 
 /*  Debug Options   */
-#define PRINT_CHECKS   //ToDo: This is for debugging and ocall_print_out checks
+//#define PRINT_CHECKS   //ToDo: This is for debugging and ocall_print_out checks
 
 
 /*  Available Features   */
@@ -17,13 +17,13 @@
 
 /*  Global Values  */
 #define PLOTDATA_FILE_NAME "plotdata.txt"
-#define NUMBER_OF_ITERATIONS  10 //ToDo: This will be done later in cmake
+#define NUMBER_OF_ITERATIONS  1000 //ToDo: This will be done later in cmake
 #define CYCLES_RATE 1000000 //ToDo: This should also be done in cmake later
 #define ARRAY_SIZE (1000000)
 
 
 
-/*  Global Conditions */
+/*  Global Logical Conditions */
 #if defined WITH_ITERATION_QUERY && NUMBER_OF_ITERATIONS
 #error "Choose either the interactive approach or the fixed one"
 #endif
