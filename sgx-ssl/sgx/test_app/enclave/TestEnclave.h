@@ -57,16 +57,40 @@ char* getenv(char* name);
 int fflush(void* stream);
 void exit(int status);
 
+#ifdef RSA_TESTS
 int rsa_test();
+#endif
+#ifdef ELLIPTIC_CURVE_TESTS
 int ec_test();
+#endif
+#ifdef ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
 int ecdh_test();
+#endif
+#ifdef ELLIPTIC_CURVE_DSA_TESTS
 int ecdsa_test();
+#endif
+#ifdef BN_TESTS
 int bn_test();
+#endif
+#ifdef DEFFIE_HELLMAN_TESTS
 int dh_test();
+#endif
+#ifdef SECURE_HASH_ALGORITHM_256
 int sha256_test();
+#endif
+#ifdef SECURE_HASH_ALGORITHM_1
 int sha1_test();
+#endif
+#ifdef THREAD_TESTS
 int threads_test();
+#endif
+#ifdef DNA_PATTERN_MATCHING
 int seeq_test();
+#endif
+#ifdef CUSTOM_TEST
+int custom_test();
+#endif
+
 
 #if defined(__cplusplus)
 }

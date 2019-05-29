@@ -21,6 +21,8 @@
 */
 
 #include "seeq.h"
+#ifdef DNA_PATTERN_MATCHING
+
 #include <unistd.h>
 #include <string.h>
 #include <errno.h>
@@ -356,3 +358,4 @@ seeqFileMatch
    if (sqfile->line == startline) return 0;
    else return count;
 }
+#endif

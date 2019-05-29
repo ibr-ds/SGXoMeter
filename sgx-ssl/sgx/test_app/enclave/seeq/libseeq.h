@@ -4,7 +4,7 @@
 ** File authors:
 **  Eduard Valera Zorita (eduardvalera@gmail.com)
 **
-** License: 
+** License:
 **  This program is free software: you can redistribute it and/or modify
 **  it under the terms of the GNU General Public License as published by
 **  the Free Software Foundation, either version 3 of the License, or
@@ -20,39 +20,42 @@
 **
 */
 
+#include "../TestMacros.h"
+
+#ifdef DNA_PATTERN_MATCHING
+
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+
 #endif
-
 #ifndef _SEEQLIB_H_
+
 #define _SEEQLIB_H_
-
 #define LIBSEEQ_VERSION "libseeq-1.1"
-#define COLOR_TERMINAL 1
 
+#define COLOR_TERMINAL 1
 // Match options.
 #define SQ_FIRST      0x00
 #define SQ_BEST       0x01
 #define SQ_ALL        0x02
-#define SQ_COUNT      0x03
 
+#define SQ_COUNT      0x03
 #define SQ_FAIL       0x00
 #define SQ_CONVERT    0x04
+
 #define SQ_IGNORE     0x08
-
 #define SQ_LINES      0x00
-#define SQ_STREAM     0x10
 
+#define SQ_STREAM     0x10
 #define MASK_MATCH    0x03
 #define MASK_NONDNA   0x0C
+
+
 #define MASK_INPUT    0x10
-
-
 // Init options
-#define INITIAL_MATCH_STACK_SIZE 16
 
+#define INITIAL_MATCH_STACK_SIZE 16
 #include <stdio.h>
-#include "../TestMacros.h"
 extern int seeqerr;
 
 typedef struct seeq_t   seeq_t;
@@ -103,5 +106,7 @@ int recursive_merge (size_t, size_t, int, seeq_t *, mstack_t **);
 #define RESET       "\033[0m"
 #define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
 #define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+
+#endif
 
 #endif

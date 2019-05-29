@@ -91,6 +91,8 @@ struct evp_pkey_st {
     CRYPTO_RWLOCK *lock;
 } /* EVP_PKEY */ ;
 
+
+#ifdef RSA_KEY_GEN
 void rsa_key_gen()
 {
 	BIGNUM *bn = BN_new();
@@ -165,6 +167,9 @@ void rsa_key_gen()
 	}
 }
 
+#endif //RSA KEY GEN
+
+#ifdef ELLIPTIC_CURVE_KEY_GEN
 void ec_key_gen()
 {
 	unsigned char entropy_buf[ADD_ENTROPY_SIZE] = {0};
@@ -236,6 +241,7 @@ void ec_key_gen()
 	}
 }
 
+#endif  //ELLIPTIC CURVE KEY GEN
 
 int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
 {
@@ -329,6 +335,19 @@ void t_sgxssl_call_apis()
 
     // Initialize SGXSSL crypto
     OPENSSL_init_crypto(0, NULL);
+
+#ifdef CUSTOM_TEST
+    ret = custom_test();
+    if(ret != 0)
+    {
+        printf("custom_test has failed!\n");
+    }
+#ifdef PRINT_CHECKS
+    printf("test custom_test completed\n");
+#endif
+#endif
+
+
 
 #ifdef DNA_PATTERN_MATCHING
     ret = seeq_test();

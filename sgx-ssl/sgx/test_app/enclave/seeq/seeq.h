@@ -26,6 +26,8 @@
 #define SEEQ_VERSION "seeq-1.1"
 
 #include "libseeq.h"
+#ifdef DNA_PATTERN_MATCHING
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -69,4 +71,5 @@ long         seeqFileMatch   (seeqfile_t *, seeq_t *, int, int);
 seeqfile_t * seeqOpen        (const char *);
 int          seeqClose       (seeqfile_t *);
 
+#endif
 #endif

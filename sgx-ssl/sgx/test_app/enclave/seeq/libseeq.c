@@ -23,6 +23,8 @@
 #include "libseeq.h"
 #include "seeqcore.h"
 
+#ifdef DNA_PATTERN_MATCHING
+
 int seeqerr = 0;
 
 static const char *
@@ -1229,3 +1231,4 @@ path_compare
    }
    return 1;
 }
+#endif

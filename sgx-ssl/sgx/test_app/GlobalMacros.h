@@ -6,18 +6,18 @@
  */
 
 /*  Debug Options   */
-//#define PRINT_CHECKS   //ToDo: This is for debugging and ocall_print_out checks
+#define PRINT_CHECKS   //ToDo: This is for debugging and ocall_print_out checks
 
 
 /*  Available Features   */
 //#define WITH_ITERATION_QUERY
 #define WRITE_LOG_FILE
-#define MEMSET_SGX
+//#define MEMSET_SGX
 
 
 /*  Global Values  */
 #define PLOTDATA_FILE_NAME "plotdata.txt"
-#define NUMBER_OF_ITERATIONS  1000 //ToDo: This will be done later in cmake
+#define NUMBER_OF_ITERATIONS  10 //ToDo: This will be done later in cmake
 #define CYCLES_RATE 1000000 //ToDo: This should also be done in cmake later
 #define ARRAY_SIZE (1000000)
 

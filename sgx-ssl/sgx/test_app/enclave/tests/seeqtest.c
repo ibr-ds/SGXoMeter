@@ -1,10 +1,9 @@
 //
 // Created by moe on 24.05.19.
 //
-
 #include "../seeq/seeq.h"
-#include "../TestEnclave.h"
 
+#ifdef DNA_PATTERN_MATCHING
 int seeq_test() {
 
     struct seeqarg_t args;
@@ -29,3 +28,4 @@ int seeq_test() {
     return seeq(PATTERN, INPUT_DNA, args);
 
 }
+#endif
