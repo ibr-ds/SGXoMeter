@@ -29,7 +29,7 @@ Here you can choose the wanted applications to benchmark and set the possible ru
 It also offers the opportunity for third developer parties to benchmark their applications/function payloads inside enclaves by offering an "interface"-like function ("customtest.c") 
 that can be implemented as desired(as long as SGX driver/SDK supports the used libraries/operations).
 
-### ** Available Benchmark Applications**
+### **Available Benchmark Applications**
 -----------------------------------------
 Currently there are couple modules(tests) available:
 
