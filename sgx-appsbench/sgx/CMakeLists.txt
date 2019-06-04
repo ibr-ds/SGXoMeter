@@ -55,18 +55,16 @@ else()
 	set(VCC 			@${CMAKE_C_COMPILER})
 	set(VCXX 			@${CMAKE_CXX_COMPILER})
 endif()
+
+
 ######################## SGX SETTINGS ########################
-set(SGX_SDK /opt/intel/sgxsdk  CACHE PATH "Set the path to the SGX-SDK directory")
-set(SGX_ARCH x64)
-set(SGX_MODE HW CACHE STRING "SGX mode: SIM or HW") # SGX mode: sim, hw
-set(SGX_BUILD DEBUG CACHE STRING "Build: DEBUG, PRERELEASE or RELEASE")
+set(SGX_SDK 				/opt/intel/sgxsdk  CACHE PATH "Set the path to the SGX-SDK directory")
+set(SGX_ARCH 				x64)
+set(SGX_MODE 				HW CACHE STRING "SGX mode: SIM or HW") # SGX mode: sim, hw
+set(SGX_BUILD				DEBUG CACHE STRING "Build: DEBUG, PRERELEASE or RELEASE")
 include (cmake/Init.cmake)
 include (cmake/ConfigSGX.cmake)
 
+######################## Build the benchmarking tool  ########################
 
-
-
-set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/${PROJECT_NAME}-${MBEDTLS_VERSION})
-
-set(MBEDTLS_LIB_DIR ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
-
+add_subdirectory(test_app)
