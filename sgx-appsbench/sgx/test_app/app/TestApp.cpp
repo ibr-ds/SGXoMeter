@@ -47,6 +47,10 @@
 #include <sgx_urts.h>
 #include <csignal>
 
+#ifdef RUNTIME_PARSER
+#include "InputParser.h"
+#endif
+
 #include "TestApp.h"
 #include "TestEnclave_u.h"
 
@@ -515,7 +519,7 @@ int main(int argc, char *argv[])
 {
     (void)(argc);
     (void)(argv);
-
+    say_usage();
     signal(SIGINT, intHandler);
 
 #ifdef WITH_ITERATION_QUERY

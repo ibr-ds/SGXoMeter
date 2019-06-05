@@ -1,10 +1,44 @@
-project(SGX-AppsBench)
-cmake_minimum_required(VERSION 3.4)
+project(SGX-AppsBench)					#delete this because it will be called from the above cmakelists
+cmake_minimum_required(VERSION 3.4)			#delete this because it will be callled from the above cmakelists
 
 
-######################### This is only for gui tests #####################################
+
+########################## Usefull Cmake Macros ##########################
+macro(check_add_definition VARNAME VALUE)       
+	if(${VARNAME})                      
+		add_definitions(-DVALUE)        # Checks if the VARNAME IS ON and then add the VALUE as compiler variable     		
+	endif()
+endmacro()
+
+
+
+
+########################## Inlcude the Globale and Test Variables ##########################
+include (cmake/GlobalVariables.cmake)
+include (cmake/TestVariables.cmake)
+
+
+########################## This is only for gui tests ##########################
+set(INPUT_DNA_VALUE				"ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCTCGT\n
+ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCATCA\n
+           	       CATGTTACAAATAAAGCAATAGCATCA\n
+CATGTTACAAA                       TAAAGCAATAGCATCA\n
+                      CATOGTTACAAATAAAGCAATAGCATCA\n
+ACCTCGTAAAAGCTATAGACTTG" CACHE STRING "The required DNA sequence for the search/matching")
+
+message(${INPUT_DNA_VALUE})
 set(CHECK NO CACHE BOOL "set the boolean for the test")
+set(INTEG 100 CACHE STRING "enter a number here")
 
+if(INTEG GREATER 100)
+	add_definitions(-DINTEG)
+	execute_process (
+        	COMMAND echo "building the INTEG with value : ${INTEG}"
+    	)
+	message("haleloia")
+endif()
+
+check_add_definition(CHECK "haha")
 if(CHECK)
     set(TEST ../blabla CACHE STRING "test value:")
     execute_process (

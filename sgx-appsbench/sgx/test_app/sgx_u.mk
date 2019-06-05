@@ -118,11 +118,16 @@ $(UNTRUSTED_DIR)/TestEnclave_u.o: $(UNTRUSTED_DIR)/TestEnclave_u.c
 	$(VCC) $(App_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
+
 $(UNTRUSTED_DIR)/%.o: $(UNTRUSTED_DIR)/%.cpp
 	$(VCXX) $(App_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-TestApp: $(UNTRUSTED_DIR)/TestEnclave_u.o $(App_Cpp_Objects)
+$(UNTRUSTED_DIR)/InputParser.o: $(UNTRUSTED_DIR)/InputParser.c
+	$(VCC) $(App_C_Flags) -c $< -o $@
+	@echo "CC  <=  $<"
+
+TestApp: $(UNTRUSTED_DIR)/InputParser.o $(UNTRUSTED_DIR)/TestEnclave_u.o $(App_Cpp_Objects)
 	$(VCXX) $^ -o $@ $(App_Link_Flags)
 	@echo "LINK =>  $@"
 
@@ -130,5 +135,5 @@ TestApp: $(UNTRUSTED_DIR)/TestEnclave_u.o $(App_Cpp_Objects)
 .PHONY: clean
 
 clean:
-	@rm -f TestApp  $(App_Cpp_Objects) $(UNTRUSTED_DIR)/TestEnclave_u.* 
+	@rm -f TestApp  $(App_Cpp_Objects) $(UNTRUSTED_DIR)/TestEnclave_u.* $(UNTRUSTED_DIR)/InputParser.o
 	

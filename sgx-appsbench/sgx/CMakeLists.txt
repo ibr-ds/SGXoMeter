@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4)
 project(SGX-AppsBench "C" "CXX")
 
 
-#########################  Build Environment Variables #################################
+##########################  Build Environment Variables ##########################
 set(ROOT_DIR 				${CMAKE_CURRENT_SOURCE_DIR})
 set(PACKAGE_LIB 			${ROOT_DIR}/../package/lib64/)
 set(PACKAGE_INC 			${ROOT_DIR}/../package/include/)
@@ -57,7 +57,7 @@ else()
 endif()
 
 
-######################## SGX SETTINGS ########################
+########################## SGX SETTINGS ##########################
 set(SGX_SDK 				/opt/intel/sgxsdk  CACHE PATH "Set the path to the SGX-SDK directory")
 set(SGX_ARCH 				x64)
 set(SGX_MODE 				HW CACHE STRING "SGX mode: SIM or HW") # SGX mode: sim, hw
@@ -65,6 +65,8 @@ set(SGX_BUILD				DEBUG CACHE STRING "Build: DEBUG, PRERELEASE or RELEASE")
 include (cmake/Init.cmake)
 include (cmake/ConfigSGX.cmake)
 
-######################## Build the benchmarking tool  ########################
+########################## Build the benchmarking tool  ##########################
 
 add_subdirectory(test_app)
+
+
