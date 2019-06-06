@@ -20,7 +20,7 @@
 **
 */
 
-#include "../TestMacros.h"
+#include "TestMacros.h"
 
 #ifdef DNA_PATTERN_MATCHING
 

@@ -81,7 +81,8 @@ endif
 App_Cpp_Files := $(UNTRUSTED_DIR)/TestApp.cpp
 App_Cpp_Objects := $(App_Cpp_Files:.cpp=.o)
 
-App_Include_Paths := -I$(UNTRUSTED_DIR) -I$(SGX_SDK_INC)
+Global_Variables_Path := GlobalVariables 
+App_Include_Paths := -I$(UNTRUSTED_DIR) -I$(SGX_SDK_INC) -I$(Global_Variables_Path)
 
 App_C_Flags := $(SGX_COMMON_CFLAGS) -fpic -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes $(App_Include_Paths)
 App_Cpp_Flags := $(App_C_Flags) -std=c++11

@@ -30,7 +30,7 @@
  */
 
 /* TestEnclave.edl - Top EDL file. */
-#include "../GlobalMacros.h"
+#include "../GlobalVariables/GlobalMacros.h"
 
 enclave {
     

@@ -42,7 +42,7 @@
 
 # define MAX_PATH FILENAME_MAX
 
-#include "../GlobalMacros.h"
+#include "GlobalMacros.h"
 
 #include <sgx_urts.h>
 #include <csignal>

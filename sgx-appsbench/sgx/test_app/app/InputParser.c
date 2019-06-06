@@ -367,10 +367,10 @@ void parseSeeqInput(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
 
-    int maskcnt = !count_flag;
+    /*int maskcnt = !count_flag;
     int maskinv = !invert_flag * maskcnt;
 
-    /*struct seeqarg_t args;
+    struct seeqarg_t args;
 
     args.showdist  = showdist_flag * maskinv;
     args.showpos   = showpos_flag * maskinv;
