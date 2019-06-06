@@ -13,7 +13,7 @@
 //#define WITH_ITERATION_QUERY
 #define WRITE_LOG_FILE
 //#define MEMSET_SGX
-#define RUNTIME_PARSER
+//#define RUNTIME_PARSER  //ToDO: this feature is under construction and still needs proper implementation(keep it out till its done)
 
 
 /*  Global Values  */
