@@ -16,9 +16,12 @@
 extern "C" {
 #endif
 
-void say_usage(void);
+
+void say_usage(const char * usageMessage);
 void say_help(void);
 void parseSeeqInput(int argc, char **argv);
+void parseToolInput(int argc, char **argv);
+
 
 #if defined(__cplusplus)
 }

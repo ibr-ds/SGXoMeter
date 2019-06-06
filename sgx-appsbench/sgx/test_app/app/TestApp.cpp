@@ -42,7 +42,7 @@
 
 # define MAX_PATH FILENAME_MAX
 
-#include "GlobalMacros.h"
+#include "GlobalVariables.h"
 
 #include <sgx_urts.h>
 #include <csignal>
@@ -246,7 +246,7 @@ int initialize_enclave(void)
 static volatile int do_bench = 0;
 static volatile int abort_measure = 0;
 volatile uint64_t counter = 0;
-uint64_t RATE = CYCLES_RATE;
+//uint64_t RATE = CYCLES_RATE; //ToDo is now in Global Variables
 
 static inline uint64_t rdtscp( uint32_t & aux )
 {
@@ -270,7 +270,7 @@ static inline void add_measurement(uint64_t diff)
     array[cur_elem].diff = diff;
     array[cur_elem].tsc = rdtscp(a);
     ++cur_elem;
-    if (cur_elem >= ARRAY_SIZE)
+    if (cur_elem >= ARR_SIZE)
         cur_elem = 0;
 }
 
@@ -320,7 +320,7 @@ static void print_array()
 
 #ifdef WRITE_LOG_FILE
     FILE *fp;
-    fp = fopen(PLOTDATA_FILE_NAME, "w");
+    fp = fopen(DATA_FILE_NAME, "w");
     if (fp == NULL)
     {
 	fprintf(stderr, "Couldnt open or create a file for the plot data!\n");
@@ -331,7 +331,7 @@ static void print_array()
     uint64_t end = cur_elem - 1;
     if (end < 0)
     {
-        end = ARRAY_SIZE - 1;
+        end = ARR_SIZE - 1;
     }
     uint64_t prev_elem = end;
     uint64_t start_tsc = 0;
@@ -345,17 +345,17 @@ static void print_array()
 #ifdef WRITE_LOG_FILE
 	    fprintf(fp,"%lu,%lu\n",array[cur_elem].tsc - start_tsc, array[cur_elem].diff);
 #else
-            printf("%lu, %lu, %lu\n", array[cur_elem].tsc - start_tsc, array[cur_elem].diff, array[cur_elem].tsc - array[prev_elem].tsc);
-#endif	          
-       
-	}
+	    printf("%lu, %lu, %lu\n", array[cur_elem].tsc - start_tsc, array[cur_elem].diff, array[cur_elem].tsc - array[prev_elem].tsc);
+#endif
+
+	    }
         ++cur_elem;
         ++prev_elem;
-        if (cur_elem >= ARRAY_SIZE)
+        if (cur_elem >= ARR_SIZE)
         {
             cur_elem = 0;
         }
-        if (prev_elem >= ARRAY_SIZE)
+        if (prev_elem >= ARR_SIZE)
         {
             prev_elem = 0;
         }
@@ -391,7 +391,7 @@ static void exec_bench_setup(
 
     fprintf(stderr, "Starting benchmark \n");
     counter = 0;
-    array = (measurement_t *)calloc(ARRAY_SIZE, sizeof(measurement_t));
+    array = (measurement_t *)calloc(ARR_SIZE, sizeof(measurement_t));
     ret = ecall_start_bench(global_eid, (uint64_t *)&counter
 #ifdef WITH_ITERATION_QUERY
            , iterNr
@@ -517,9 +517,15 @@ int consttime_memequal(const void *b1, const void *b2, size_t len)
 /* Application entry */
 int main(int argc, char *argv[])
 {
+#ifdef RUNTIME_PARSER
+    parseToolInput(argc, argv);
+    printf("Number of parsed iterations are %d \n", NUM_OF_ITERATION);
+#else
     (void)(argc);
     (void)(argv);
-    
+#endif
+
+
     signal(SIGINT, intHandler);
 
 #ifdef WITH_ITERATION_QUERY

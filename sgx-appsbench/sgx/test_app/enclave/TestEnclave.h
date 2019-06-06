@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "GlobalMacros.h"
+#include "GlobalVariables.h"
 #include "TestMacros.h"
 
 #define TEST_CHECK(status)	\

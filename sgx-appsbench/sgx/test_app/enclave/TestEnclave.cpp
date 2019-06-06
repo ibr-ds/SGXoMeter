@@ -258,9 +258,11 @@ int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
 
 static volatile int do_bench = 0;
 volatile uint64_t *bench_counter = 0;
-#ifdef WITH_ITERATION_QUERY
+#ifdef WITH_ITERATION_QUERY  //ToDo this is obsolete and should be deleted
 static int NUM_OF_ITER = 0;
 #endif
+
+
 
 extern "C" void ecall_start_bench(uint64_t *ctr
 #ifdef WITH_ITERATION_QUERY

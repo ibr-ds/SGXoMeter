@@ -1,28 +1,27 @@
+#include "GlobalVariables.h" // ToDo delete this later after full cmake support
 #include "InputParser.h"
 
-static const char *TOOL_USAGE = "Usage:"
-                           "  seeq [options] pattern inputfile\n"
-                           "\n   MATCHING OPTIONS:\n"
-                           "    -d --distance [#]    maximum Levenshtein distance [default 0]\n"
-                           "    -i --invert          return only the non-matching lines\n"
-                           "    -b --best            scan the whole line to find the best match [default: first match only]\n"
-                           "    -a --all             returns all the matches (implies -m) [default: first match only]\n"
-                           "    -x --nondna [0,1,2]  non-DNA characters: 0-skip line, 1-convert to 'N', 2-ignore. [default 0]\n"
-                           "\n   FORMAT OPTIONS:\n"
-                           "    -c --count           returns the count of matching lines\n"
-                           "    -m --match-only      print only the matched sequence\n"
-                           "    -n --no-printline    do not print the matched sequence\n"
-                           "    -l --lines           shows the line number of the match\n"
-                           "    -p --positions       shows the position of the match\n"
-                           "    -k --print-dist      shows the Levenshtein distance of the match\n"
-                           "    -f --compact         prints output in compact format (line:pos:dist)\n"
-                           "    -e --end             print only the end of the line, starting after the match\n"
-                           "    -r --prefix          print only the prefix, ending before the match\n"
-                           "\n   OTHER OPTIONS:\n"
-                           "    -v --version         print version\n"
-                           "    -y --memory          set DFA memory limit (in MB)\n"
-                           "    -z --verbose         verbose using stderr\n";
+#ifdef RUNTIME_PARSER
 
+/*  ToDo: here are the shared global variables to define */
+#ifdef WRITE_LOG_FILE
+char *DATA_FILE_NAME = PLOTDATA_FILE_NAME;
+#endif
+
+int NUM_OF_ITERATION = NUMBER_OF_ITERATIONS; //WILL BE USED
+uint64_t ARR_SIZE = ARRAY_SIZE;
+uint64_t RATE = CYCLES_RATE;
+
+/* ToDo: the end of the global variables definition      */
+static const char *TOOL_USAGE = "Usage:"
+                           "  TestApp [options]\n"
+                           "\n   CONFIG OPTIONS:\n"
+#ifdef WRITE_LOG_FILE
+                           "    -o --data-output [file name]     sets the name of the generated data file [default plotdata.txt]\n"
+#endif
+                           "    -r --rate  [#]                   sets the cycles rate for the benchmark tool [default 1000000]\n"
+                           "    -s --array-size [#]              sets the array size that contains the benchmark data [default 1000000]\n"
+                           "    -t --iteration [#]               sets the number of iterations [default 0 (unlimited)]\n";
 
 static const char *SEEQ_USAGE = "Usage:"
 "  seeq [options] pattern inputfile\n"
@@ -48,13 +47,133 @@ static const char *SEEQ_USAGE = "Usage:"
 "    -z --verbose         verbose using stderr\n";
 
 
-void say_usage(void)
+void say_usage(const char * usageMessage)
 {
-    fprintf(stderr, "%s\n", SEEQ_USAGE);
+    fprintf(stderr, "%s\n", usageMessage);
 }
 void say_help(void)
 {
     fprintf(stderr, "use '-h' for help.\n");
+}
+
+#define FLAG_IS_SET 1
+#define FLAG_NOT_SET -1
+
+void parseToolInput(int argc, char **argv)
+{
+
+    int o_flag = FLAG_NOT_SET, r_flag = FLAG_NOT_SET, s_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET;
+    int c;
+    while (1) {
+        int option_index = 0;
+        static struct option long_options[] = {
+                {"rate"         ,  required_argument, 0, 'r'},
+                {"array-size"   ,  required_argument, 0, 's'},
+                {"iteration"    ,  required_argument, 0, 't'},
+#ifdef WRITE_LOG_FILE
+                {"data-output"  ,  required_argument, 0, 'o'},
+#endif
+                {"help"         ,  required_argument, 0, 'h'},
+                {0              ,         0         , 0,  0 }
+        };
+
+        c = getopt_long(argc, argv, "hr:s:o:t:", long_options, &option_index);
+
+        /* Detect the end of the options. */
+        if (c == -1)
+        {
+           /* if(o_flag == FLAG_NOT_SET) DATA_FILE_NAME = PLOTDATA_FILE_NAME;
+            if(r_flag == FLAG_NOT_SET) RATE = CYCLES_RATE;
+            if(s_flag == FLAG_NOT_SET) ARR_SIZE = ARRAY_SIZE;
+            if(t_flag == FLAG_NOT_SET) NUM_OF_ITERATION = NUMBER_OF_ITERATIONS;
+            */
+            break;
+        }
+
+
+        switch (c) {
+#ifdef WRITE_LOG_FILE
+            case 'o':
+                if (o_flag  == FLAG_NOT_SET) {
+
+                    if (optarg == "") {
+                        fprintf(stderr, "error: Invalid file name!.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    o_flag = FLAG_IS_SET;
+                    DATA_FILE_NAME = optarg;
+                }
+                else {
+                    fprintf(stderr, "error: Output file name option set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+#endif
+            case 'r':
+                if (r_flag  == FLAG_NOT_SET) {
+                    uint64_t rate = atoi(optarg);  //ToDo you can replace this with strtoul but then you need an extra char pointer for the rest of the input and extra checks and free
+                    if (rate < 0) {
+                        fprintf(stderr, "error: Cycles rate must be a positive integer.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    r_flag = FLAG_IS_SET;
+                    RATE = rate;
+                }
+                else {
+                    fprintf(stderr, "error: Cycles rate option set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+
+            case 's':
+                if (s_flag == FLAG_NOT_SET) {
+                    uint64_t asize = atoi(optarg);
+                    if (asize < 0) {
+                        fprintf(stderr, "error: Data array size must be a positive integer.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    s_flag = FLAG_IS_SET;
+                    ARR_SIZE = asize;
+                }
+                else {
+                    fprintf(stderr, "error: Data array size option set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+
+            case 't':
+                if (t_flag == FLAG_NOT_SET) {
+                    int iterations = atoi(optarg);
+                    if (iterations < 0) {
+                        fprintf(stderr, "error: Number of iterations must be 0(unlimited) or a positive integer.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    t_flag = FLAG_IS_SET;
+                    NUM_OF_ITERATION = iterations;
+                }
+                else {
+                    fprintf(stderr, "error: Number of iterations option set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+
+            case 'h':
+                say_usage(TOOL_USAGE);
+                exit(EXIT_SUCCESS);
+
+            default:
+                break;
+        }
+    }
+
 }
 
 void parseSeeqInput(int argc, char **argv)
@@ -83,7 +202,7 @@ void parseSeeqInput(int argc, char **argv)
     input = NULL;
 
     if (argc == 1) {
-        say_usage();
+        say_usage(SEEQ_USAGE);
         exit(EXIT_SUCCESS);
     }
 
@@ -319,8 +438,8 @@ void parseSeeqInput(int argc, char **argv)
                 break;
 
             case 'h':
-                say_usage();
-                exit(0);
+                say_usage(SEEQ_USAGE);
+                exit(EXIT_SUCCESS);
 
             default:
                 break;
@@ -390,3 +509,5 @@ void parseSeeqInput(int argc, char **argv)
     args.memory    = (size_t)memory_flag * 1024*1024;
 */ //ToDO under construction
 }
+
+#endif
