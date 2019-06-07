@@ -2,7 +2,7 @@
 #define _UTILS_STRUCTS_
 
 #include "GlobalMacros.h" //ToDo delete this later as this will be obselete through the CMAKELISTS.txt.  Macros will be set in the CMAKE
-#include "TestMacros.h"
+#include "TestMacros.h" //ToDo delete this later as this will be obselete through the CMAKELISTS.txt.  Macros will be set in the CMAKE
 #include <stdint.h>
 #include <stdio.h>
 
