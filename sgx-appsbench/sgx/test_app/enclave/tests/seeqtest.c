@@ -1,31 +1,32 @@
 //
 // Created by moe on 24.05.19.
 //
+#include <GlobalVariables/UtilsStructs.h>
 #include "../seeq/seeq.h"
 
 #ifdef DNA_PATTERN_MATCHING
-int seeq_test() {
+int seeq_test(globalConfig_t *globalConfig) {
 
     struct seeqarg_t args;
 
-    args.showdist  = SHOW_DIST_FLAG * MASK_INV;
-    args.showpos   = SHOW_POS_FLAG * MASK_INV;
-    args.showline  = SHOW_LINE_FLAG * MASK_COUNT;
-    args.printline = PRINT_LINE_FLAG * MASK_INV;
-    args.matchonly = MATCH_ONLY_FLAG * MASK_INV;
-    args.count     = COUNT_FLAG;
-    args.compact   = COMPACT_FLAG * MASK_INV;
-    args.dist      = DIST_FLAG;
-    args.verbose   = VERBOSE_FLAG;
-    args.endline   = END_LINE_FLAG * MASK_INV;
-    args.prefix    = PREFIX_FLAG * MASK_INV;
-    args.invert    = INVERT_FLAG * MASK_INV;
-    args.best      = BEST_FLAG * MASK_INV;
-    args.non_dna   = NON_DNA_FLAG;
-    args.all       = ALL_FLAG;
-    args.memory    = MEMORY_ARG;
+    args.showdist  = globalConfig->SHOW_DIST;
+    args.showpos   = globalConfig->SHOW_POS;
+    args.showline  = globalConfig->SHOW_LINE;
+    args.printline = globalConfig->PRINT_LINE;
+    args.matchonly = globalConfig->MATCH_ONLY;
+    args.count     = globalConfig->COUNT;
+    args.compact   = globalConfig->COMPACT;
+    args.dist      = globalConfig->DIST;
+    args.verbose   = globalConfig->VERBOSE;
+    args.endline   = globalConfig->END_LINE;
+    args.prefix    = globalConfig->PREFIX;
+    args.invert    = globalConfig->INVERT;
+    args.best      = globalConfig->BEST;
+    args.non_dna   = globalConfig->NON_DNA;
+    args.all       = globalConfig->ALL;
+    args.memory    = globalConfig->MEMORY;
 
-    return seeq(PATTERN, INPUT_DNA, args);
+    return seeq(globalConfig->PATTERN_INPUT, globalConfig->DNA_INPUT, args);
 
 }
 #endif

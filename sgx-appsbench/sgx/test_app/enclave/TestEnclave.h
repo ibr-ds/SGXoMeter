@@ -35,8 +35,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "GlobalVariables.h"
-#include "TestMacros.h"
+#include "UtilsStructs.h"
+#include "TestMacros.h" //ToDo later this will be remove because the Macros are going to be defined by cmake for all source files and headers
 
 #define TEST_CHECK(status)	\
 {	\
@@ -85,7 +85,7 @@ int sha1_test();
 int threads_test();
 #endif
 #ifdef DNA_PATTERN_MATCHING
-int seeq_test();
+int seeq_test(globalConfig_t *globalConfig);
 #endif
 #ifdef CUSTOM_TEST
 int custom_test();

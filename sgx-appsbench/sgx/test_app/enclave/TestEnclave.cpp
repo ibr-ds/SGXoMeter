@@ -258,26 +258,19 @@ int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
 
 static volatile int do_bench = 0;
 volatile uint64_t *bench_counter = 0;
-#ifdef WITH_ITERATION_QUERY  //ToDo this is obsolete and should be deleted
-static int NUM_OF_ITER = 0;
-#endif
+static globalConfig_t *GLOBAL_CONFIG;
 
 
 
-extern "C" void ecall_start_bench(uint64_t *ctr
-#ifdef WITH_ITERATION_QUERY
-        , int iterNr
-#endif
-)
+extern "C" void ecall_start_bench(uint64_t *ctr, void *globalConfig)
 {
     bench_counter = ctr;
     do_bench = 1;
-#ifdef WITH_ITERATION_QUERY
-    if(iterNr > 0)
+    if(globalConfig != NULL)
     {
-        NUM_OF_ITER=iterNr;
+        GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
     }
-#endif
+#
 }
 
 extern "C" void ecall_stop_bench(void)
@@ -291,9 +284,7 @@ extern "C" void ecall_run_bench(void)
     while(do_bench == 0)
     { __asm__("pause");}
 
-#if defined WITH_ITERATION_QUERY || defined NUMBER_OF_ITERATIONS
     int iterCounter = 0;
-#endif
 
 #ifdef PRINT_CHECKS
     printf("Start tests\n");
@@ -304,20 +295,11 @@ extern "C" void ecall_run_bench(void)
         t_sgxssl_call_apis();
         __sync_fetch_and_add(bench_counter, 1);
 
-#if defined WITH_ITERATION_QUERY || defined NUMBER_OF_ITERATIONS
-        iterCounter++;
-        //check the counter either against the given one with a query or the one set globally
-        if(iterCounter ==
-#ifdef WITH_ITERATION_QUERY
-NUM_OF_ITER
-#elif defined NUMBER_OF_ITERATIONS
-            NUMBER_OF_ITERATIONS
-#endif
-                )
-        {
-            break;
+        if(GLOBAL_CONFIG->NUM_OF_ITERATION > 0) {
+            iterCounter++;
+            //check the counter either against the given one with a query or the one set globally
+            if(iterCounter == GLOBAL_CONFIG->NUM_OF_ITERATION)      break;
         }
-#endif
     }
 }
 
@@ -352,7 +334,7 @@ void t_sgxssl_call_apis()
 
 
 #ifdef DNA_PATTERN_MATCHING
-    ret = seeq_test();
+    ret = seeq_test(GLOBAL_CONFIG);
     if( ret != 0 )
     {
         printf("test dna_pattern error\n");

@@ -10,17 +10,16 @@
 #include <execinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
 
-void say_usage(const char * usageMessage);
+void say_usage();
 void say_help(void);
-void parseSeeqInput(int argc, char **argv);
-void parseToolInput(int argc, char **argv);
+void parseInput(int argc, char **argv);
 
 
 #if defined(__cplusplus)

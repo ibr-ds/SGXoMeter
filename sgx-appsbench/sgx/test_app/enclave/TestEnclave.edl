@@ -30,24 +30,17 @@
  */
 
 /* TestEnclave.edl - Top EDL file. */
-#include "../GlobalVariables/GlobalMacros.h"
 
 enclave {
-    
+
 from "sgx_tsgxssl.edl" import *;
 
      trusted {
-
-public void t_sgxssl_call_apis();
-public void new_thread_func();
-public void ecall_start_bench([user_check] uint64_t *ctr
-#ifdef WITH_ITERATION_QUERY
-        , int iterNr
-#endif
-);
-            public void ecall_stop_bench();
-            public void ecall_run_bench();
-
+        public void t_sgxssl_call_apis();
+        public void new_thread_func();
+        public void ecall_start_bench([user_check] uint64_t *ctr, [user_check] void *globalConfig);
+        public void ecall_stop_bench();
+        public void ecall_run_bench();
      };
 
 

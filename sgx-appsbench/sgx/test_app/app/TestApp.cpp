@@ -270,7 +270,7 @@ static inline void add_measurement(uint64_t diff)
     array[cur_elem].diff = diff;
     array[cur_elem].tsc = rdtscp(a);
     ++cur_elem;
-    if (cur_elem >= ARR_SIZE)
+    if (cur_elem >= GLOBAL_CONFIG.ARR_SIZE)
         cur_elem = 0;
 }
 
@@ -278,7 +278,7 @@ static inline void add_measurement(uint64_t diff)
 
 void *measure_thread(void *args)
 {
-    fprintf(stderr, "# RATE: %lu µs\n", RATE);
+    fprintf(stderr, "# RATE: %lu µs\n", GLOBAL_CONFIG.RATE);
     uint64_t last = 0, diff;
     uint64_t next = 0;
     while(do_bench == 0)
@@ -287,7 +287,7 @@ void *measure_thread(void *args)
     }
     while(abort_measure == 0)
     {
-        next = rdtscp(a) + RATE;
+        next = rdtscp(a) + GLOBAL_CONFIG.RATE;
         diff = counter - last;
         last = counter;
         add_measurement(diff);
@@ -320,7 +320,7 @@ static void print_array()
 
 #ifdef WRITE_LOG_FILE
     FILE *fp;
-    fp = fopen(DATA_FILE_NAME, "w");
+    fp = fopen(GLOBAL_CONFIG.DATA_FILE_NAME, "w");
     if (fp == NULL)
     {
 	fprintf(stderr, "Couldnt open or create a file for the plot data!\n");
@@ -331,7 +331,7 @@ static void print_array()
     uint64_t end = cur_elem - 1;
     if (end < 0)
     {
-        end = ARR_SIZE - 1;
+        end = GLOBAL_CONFIG.ARR_SIZE - 1;
     }
     uint64_t prev_elem = end;
     uint64_t start_tsc = 0;
@@ -351,11 +351,11 @@ static void print_array()
 	    }
         ++cur_elem;
         ++prev_elem;
-        if (cur_elem >= ARR_SIZE)
+        if (cur_elem >= GLOBAL_CONFIG.ARR_SIZE)
         {
             cur_elem = 0;
         }
-        if (prev_elem >= ARR_SIZE)
+        if (prev_elem >= GLOBAL_CONFIG.ARR_SIZE)
         {
             prev_elem = 0;
         }
@@ -365,11 +365,7 @@ static void print_array()
 #endif
 }
 
-static void exec_bench_setup(
-#ifdef WITH_ITERATION_QUERY
-        int iterNr
-#endif
-)
+static void exec_bench_setup()
 {
     sgx_status_t ret = SGX_SUCCESS;
 
@@ -391,12 +387,8 @@ static void exec_bench_setup(
 
     fprintf(stderr, "Starting benchmark \n");
     counter = 0;
-    array = (measurement_t *)calloc(ARR_SIZE, sizeof(measurement_t));
-    ret = ecall_start_bench(global_eid, (uint64_t *)&counter
-#ifdef WITH_ITERATION_QUERY
-           , iterNr
-#endif
-);
+    array = (measurement_t *)calloc(GLOBAL_CONFIG.ARR_SIZE, sizeof(measurement_t));
+    ret = ecall_start_bench(global_eid, (uint64_t *)&counter, &GLOBAL_CONFIG);
     print_ret_error(ret);
     do_bench = 1;
 
@@ -424,34 +416,6 @@ void intHandler(int dummy)
     print_ret_error(ret);
 }
 
-#ifdef WITH_ITERATION_QUERY
-/*  provide the number of the wanted benchmark iterations       */
-int get_num_of_iterations()
-{
-    int iterNr=0;
-    printf("Please insert the desired number of iterations?\n ");
-    int result = scanf("%d", &iterNr);
-
-    if (result == EOF)
-    {
-        printf("stdin ERROR while reading!\n Number of iteration is set to unlimited\n");
-    }
-    if (result == 0) //in case of invalid input like out of context string or anything rather than an int
-    {
-        while (fgetc(stdin) != '\n') // Read until a newline is found
-            ;
-        printf("nothing or invalid input is read!.\n");
-    }
-    if(iterNr > 0)
-    {
-        printf("The benchmark will run with %d iterations!\n", iterNr);
-    } else {
-        printf("The benchmark will run indefinitely!.Therefore, please consider pressing 'Ctrl+C' in order to stop the benchmark\n");
-    }
-    fflush(stdout);
-    return iterNr;
-}
-#endif
 
 /* OCall functions */
 void uprint(const char *str)
@@ -518,8 +482,9 @@ int consttime_memequal(const void *b1, const void *b2, size_t len)
 int main(int argc, char *argv[])
 {
 #ifdef RUNTIME_PARSER
-    parseToolInput(argc, argv);
-    printf("Number of parsed iterations are %d \n", NUM_OF_ITERATION);
+    parseInput(argc, argv);
+    printf("Name of the output file is %s \n", GLOBAL_CONFIG.DATA_FILE_NAME);
+    printf("Number of parsed iterations are %d \n", GLOBAL_CONFIG.NUM_OF_ITERATION);
 #else
     (void)(argc);
     (void)(argv);
@@ -528,16 +493,8 @@ int main(int argc, char *argv[])
 
     signal(SIGINT, intHandler);
 
-#ifdef WITH_ITERATION_QUERY
-    int iterNr = get_num_of_iterations();
-#endif
-
     /* Initialize the enclave and execute the benchmarking setup */
-    exec_bench_setup(
-            #ifdef WITH_ITERATION_QUERY
-    iterNr
-            #endif
-            );
+    exec_bench_setup();
 
     return 0;
 }
