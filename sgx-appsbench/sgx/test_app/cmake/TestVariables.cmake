@@ -50,11 +50,11 @@ else()
 		string(LENGTH PATTERN_VALUE PATTERN_LENGTH)
 
 		set(INPUT_DNA_VALUE				"ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCTCGT\n
-	ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCATCA\n
-		   	       CATGTTACAAATAAAGCAATAGCATCA\n
-	CATGTTACAAA                       TAAAGCAATAGCATCA\n
-		              CATOGTTACAAATAAAGCAATAGCATCA\n
-	ACCTCGTAAAAGCTATAGACTTG" CACHE STRING "The required DNA sequence for the search/matching")
+ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCATCA\n
+	   	       CATGTTACAAATAAAGCAATAGCATCA\n
+CATGTTACAAA                       TAAAGCAATAGCATCA\n
+	              CATOGTTACAAATAAAGCAATAGCATCA\n
+ACCTCGTAAAAGCTATAGACTTG" CACHE STRING "The required DNA sequence for the search/matching")
 
 		add_definitions(-DPATTERN=${PATTERN_VALUE} -DINPUT_DNA=${INPUT_DNA_VALUE} -DINPUT_DNA_SIZE=sizeof(INPUT_DNA))
 		
@@ -95,11 +95,11 @@ else()
 
 		if((SHOW_DIST_FLAG_VALUE EQUAL 0) AND (SHOW_POS_FLAG_VALUE EQUAL 0) AND (PRINT_LINE_FLAG_VALUE EQUAL 0) AND (SHOW_LINE_FLAG_VALUE EQUAL 0) 
 		   AND (COUNT_FLAG_VALUE EQUAL 0) AND (COMPACT_FLAG_VALUE  EQUAL 0) AND (PREFIX_FLAG_VALUE     EQUAL 0) AND (END_LINE_FLAG_VALUE  EQUAL 0))
-		   	message("ERROR: Invalid options: no output will be generated. Please reconfigure the variables correctly")
+		   	message(FATAL_ERROR "ERROR: Invalid options: no output will be generated. Please reconfigure the variables correctly")
 		endif()
 		
 		if(DIST_FLAG_VALUE LESS 0 OR DIST_FLAG_VALUE GREATER ${PATTERN_LENGTH}-2) # -2 because of the ""
-			message("ERROR the distance should be positive number and less than the patterns length!!")
+			message(FATAL_ERROR "ERROR the distance should be positive number and less than the patterns length!!")
 		endif()
 
 		########################## Add the compiler variable definitions with their values ##########################
@@ -122,7 +122,7 @@ else()
 		add_definitions(-DPRINT_LINE_FLAG=${PRINT_LINE_FLAG_VALUE})
 		add_definitions(-DMASK_COUNT=${MASK_COUNT_VALUE})
 		add_definitions(-DMASK_INV=${MASK_INV_VALUE})
-		add_definitions(-DMEMORY_ARG=(size_t)MEMORY_FLAG*1024*1024)
+		add_definitions(-DMEMORY_ARG=\(size_t\)${MEMORY_FLAG}*1024*1024)
 	endif()
 endif()
 

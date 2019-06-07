@@ -4,10 +4,10 @@ cmake_minimum_required(VERSION 3.4)			#delete this because it will be callled fr
 
 
 ########################## Usefull Cmake Macros ##########################
-macro(check_add_definition VARNAME VALUE)       
-	if(${VARNAME})                      
-		add_definitions(-DVALUE)        # Checks if the VARNAME IS ON and then add the VALUE as compiler variable     		
-	endif()
+macro(check_add_definition VARNAME VALUE)
+    if(${VARNAME})
+        add_definitions(-D${VALUE})        # Checks if the VARNAME IS ON and then add the VALUE as compiler variable
+    endif()
 endmacro()
 
 
