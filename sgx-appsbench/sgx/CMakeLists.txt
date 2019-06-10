@@ -1,8 +1,16 @@
 cmake_minimum_required(VERSION 3.4)
 project(SGX-AppsBench "C" "CXX")
 
+########################## SGX SETTINGS ##########################
+set(SGX_SDK 				/opt/intel/sgxsdk  CACHE PATH "Set the path to the SGX-SDK directory")
+set(SGX_ARCH 				x64)
+set(SGX_MODE 				HW CACHE STRING "SGX mode: SIM or HW") # SGX mode: sim, hw
+set(SGX_BUILD				DEBUG CACHE STRING "Build: DEBUG, PRERELEASE or RELEASE")
+include (cmake/Init.cmake)
+include (cmake/ConfigSGX.cmake)
 
-##########################  Build Environment Variables ##########################
+
+########################## Set Environment Variables ##########################
 set(ROOT_DIR 				${CMAKE_CURRENT_SOURCE_DIR})
 set(PACKAGE_LIB 			${ROOT_DIR}/../package/lib64/)
 set(PACKAGE_INC 			${ROOT_DIR}/../package/include/)
@@ -18,11 +26,15 @@ set(VCXX 				@${CMAKE_CXX_COMPILER})
 set(OBJDIR 				release)
 
 if(NOT DESTDIR)
-    	set(DESTDIR 			/opt/intel/sgxssl/)
+    	set(DESTDIR 			/opt/intel/sgxssl/ CACHE PATH "Set the path to the SGX-openssl directory")
 endif()
 
 if(NOT DEBUG)
-	set(DEBUG 			0 CACHE STRING "Set the debug value 1(on) or 0(off)")
+	set(DEBUG 			NO CACHE BOOL "Set the debug option for the openssl libraries. Value 1(on) or 0(off)")
+endif()
+
+if(NOT VERBOSE)
+	set(VERBOSE 			NO CACHE BOOL "Set '@' before the C and CXX compiler. Value 1(on) or 0(off)")
 endif()
 
 execute_process (
@@ -36,7 +48,7 @@ else()
    	set(OS_ID			2)
 endif()
 
-if(${DEBUG} EQUAL 1)
+if(DEBUG)
 	set(OBJDIR 			debug)	
 	set(OPENSSL_LIB 		libsgx_tsgxssl_cryptod.a)
 	set(TRUSTED_LIB 		ibsgx_tsgxssld.a)
@@ -48,7 +60,7 @@ else()
 	set(UNTRUSTED_LIB 		libsgx_usgxssld.a)
 endif()
 
-if(${VERBOSE} EQUAL 1)
+if(VERBOS)
 	set(VCC				${CMAKE_C_COMPILER})
 	set(VCXX			${CMAKE_CXX_COMPILER})
 else()
@@ -56,14 +68,11 @@ else()
 	set(VCXX 			@${CMAKE_CXX_COMPILER})
 endif()
 
+if(DEBUG AND SGX_BUILD STREQUAL "PRERELEASE")
+    message(FATAL_ERROR "Cannot set DEBUG and SGX_PRERELEASE at the same time!!")
+endif()
+set(OPENSSL_LIBRARY_PATH		${PACKAGE_LIB}/)
 
-########################## SGX SETTINGS ##########################
-set(SGX_SDK 				/opt/intel/sgxsdk  CACHE PATH "Set the path to the SGX-SDK directory")
-set(SGX_ARCH 				x64)
-set(SGX_MODE 				HW CACHE STRING "SGX mode: SIM or HW") # SGX mode: sim, hw
-set(SGX_BUILD				DEBUG CACHE STRING "Build: DEBUG, PRERELEASE or RELEASE")
-include (cmake/Init.cmake)
-include (cmake/ConfigSGX.cmake)
 
 ########################## Build the benchmarking tool  ##########################
 

@@ -18,39 +18,51 @@ include (cmake/GlobalVariables.cmake)
 include (cmake/TestVariables.cmake)
 
 
-########################## This is only for gui tests ##########################
-set(INPUT_DNA_VALUE				"ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCTCGT\n
-ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCATCA\n
-           	       CATGTTACAAATAAAGCAATAGCATCA\n
-CATGTTACAAA                       TAAAGCAATAGCATCA\n
-                      CATOGTTACAAATAAAGCAATAGCATCA\n
-ACCTCGTAAAAGCTATAGACTTG" CACHE STRING "The required DNA sequence for the search/matching")
+########################## Build The Untrusted Part ##########################
+add_subdirectory(app)
 
-message(${INPUT_DNA_VALUE})
-set(CHECK NO CACHE BOOL "set the boolean for the test")
-set(INTEG 100 CACHE STRING "enter a number here")
+########################## Build the Trusted Part ##########################
+add_subdirectory(enclave)
 
-if(INTEG GREATER 100)
-	add_definitions(-DINTEG)
-	execute_process (
-        	COMMAND echo "building the INTEG with value : ${INTEG}"
-    	)
-	message("haleloia")
-endif()
 
-check_add_definition(CHECK "haha")
-if(CHECK)
-    set(TEST ../blabla CACHE STRING "test value:")
-    execute_process (
-        COMMAND echo "building the test with value : ${TEST}"
-    )
-    execute_process (
-        COMMAND echo "current directory is : ${CMAKE_CURRENT_SOURCE_DIR} and c compiler is ${CMAKE_C_COMPILER} and cxx is ${CMAKE_CXX_COMPILER} "
-    )
-    execute_process (
-        COMMAND mkdir -p ${TEST}
-    )
-endif()
+########################## This is only for gui tests (delete it when finished)##########################
+#set(INPUT_DNA_VALUE				"ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCTCGT\n
+#ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCATCA\n
+#           	       CATGTTACAAATAAAGCAATAGCATCA\n
+#CATGTTACAAA                       TAAAGCAATAGCATCA\n
+#                      CATOGTTACAAATAAAGCAATAGCATCA\n
+#ACCTCGTAAAAGCTATAGACTTG" CACHE STRING "The required DNA sequence for the search/matching")
+#set(DEBUG haha)
+#set(DEBAG hoho)
+#if(DEBUG STREQUAL "haha" AND DEBAG STREQUAL "hoho")
+#	message(STATUS "${DEBUG} is the value of DEBUG variable")
+#	message(${CMAKE_SOURCE_DIR})
+#endif()
+#message(${INPUT_DNA_VALUE})
+#set(CHECK NO CACHE BOOL "set the boolean for the test")
+#set(INTEG 100 CACHE STRING "enter a number here")
+
+#if(INTEG GREATER 100)
+#	add_definitions(-DINTEG)
+#	execute_process (
+#       	COMMAND echo "building the INTEG with value : ${INTEG}"
+#  	)
+#	message("haleloia")
+#endif()
+
+#check_add_definition(CHECK "haha")
+#if(CHECK)
+#    set(TEST ../blabla CACHE STRING "test value:")
+#    execute_process (
+#        COMMAND echo "building the test with value : ${TEST}"
+#    )
+#    execute_process (
+#        COMMAND echo "current directory is : ${CMAKE_CURRENT_SOURCE_DIR} and c compiler is ${CMAKE_C_COMPILER} and cxx is ${CMAKE_CXX_COMPILER} "
+#    )
+#    execute_process (
+#        COMMAND mkdir -p ${TEST}
+#    )
+#endif()
 
 
 
