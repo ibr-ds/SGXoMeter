@@ -42,10 +42,10 @@ check_add_definition(CUSTOM_TEST_MODULE 		CUSTOM_TEST)
 
 ########################## DNA Pattern Module Configuration ##########################
 if(RUNTIME_PARSER_FEATURE AND DNA_PATTERN_MATCHING_MODULE)
-	message("Building with the DNA Pattern module. The parameter/flags should be entered manually and parsed while runtime or the standard values will be applied. Consider using the formats from seeq repository")
+	message(STATUS "Building with the DNA Pattern module. The parameter/flags should be entered manually and parsed while runtime or the standard values will be applied. Consider using the formats from seeq repository")
 else()
 	if(DNA_PATTERN_MATCHING_MODULE)	
-		message("Building with the DNA Pattern module. The parameter/flags should be entered manually and parsed while compile or the standard values will be applied. Consider using cmake-gui")
+		message(STATUS "Building with the DNA Pattern module. The parameter/flags should be entered manually and parsed while compile or the standard values will be applied. Consider using cmake-gui")
 		set(PATTERN_VALUE				"ACT" CACHE STRING "The searched Pattern in the DNA")
 		string(LENGTH PATTERN_VALUE PATTERN_LENGTH)
 

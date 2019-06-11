@@ -8,14 +8,13 @@ else()
 endif()
 
 ########################## Build Untrusted Part of BenchApp ##########################
-set(UNTRUSTED_DIR		".")
-set(Global_Variables_Path	"../GlobalVariables")   ##Get this out as it is used in both trusted and untrusted
+set(UNTRUSTED_DIR		"${CMAKE_CURRENT_SOURCE_DIR}")
 set(APP_INCLUDE_PATHS 		"I${UNTRUSTED_DIR} -I${SGXSDK_INCLUDE_DIRS} -I${Global_Variables_Path}")
 
 set(CMAKE_C_FLAGS 		"${CMAKE_C_FLAGS} ${SGX_COMMON_CFLAGS} -fPIC -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes ${APP_INCLUDE_PATHS}") #try to remove app Include Paths because they are included later
 set(CMAKE_CXX_FLAGS 		"${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++11")
 
-set(Security_Link_Flags		"-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie") ##Get this out as it is used in both trusted and untrusted
+
 set(APP_Link_Flags		"${SGX_COMMON_CFLAGS} ${Security_Link_Flags} -L${SGXSDK_LIBRARIES} -l${SGX_URTS_LIB} -l${SGX_USVC_LIB} -L${OPENSSL_LIBRARY_PATH} -l${SgxSSK_LINK_LIB} -lpthread")
 set(APP_SRC_FILES 		TestEnclave_u.c InputParser.c TestApp.cpp)
 
@@ -32,16 +31,15 @@ add_custom_command(
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(BenchApp ${APP_SRC_FILES})
+add_executable(BenchApp ${APP_SRC_FILES} TestEnclave_u.c)
 
-include_directories(
+target_include_directories(BenchApp PRIVATE
         ${SGXSDK_INCLUDE_DIRS}  
 	${UNTRUSTED_DIR}
         ${Global_Variables_Path}
 )
 
-target_link_libraries(BenchApp
-        ${APP_Link_Flags})
+target_link_libraries(BenchApp	   ${APP_Link_Flags})
 
 add_dependencies(BenchApp TestEnclave)
 

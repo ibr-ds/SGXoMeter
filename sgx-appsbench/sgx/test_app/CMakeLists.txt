@@ -1,5 +1,5 @@
-project(SGX-AppsBench)					#delete this because it will be called from the above cmakelists
-cmake_minimum_required(VERSION 3.4)			#delete this because it will be callled from the above cmakelists
+#project(SGX-AppsBench)					#delete this because it will be called from the above cmakelists
+#cmake_minimum_required(VERSION 3.4)			#delete this because it will be callled from the above cmakelists
 
 
 
@@ -10,12 +10,13 @@ macro(check_add_definition VARNAME VALUE)
     endif()
 endmacro()
 
-
-
+########################## Global Settings ##########################
+set(Global_Variables_Path		"${CMAKE_CURRENT_SOURCE_DIR}/GlobalVariables")
+set(Security_Link_Flags			"-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie") 
 
 ########################## Inlcude the Globale and Test Variables ##########################
-include (cmake/GlobalVariables.cmake)
-include (cmake/TestVariables.cmake)
+include(cmake/GlobalVariables.cmake)
+include(cmake/TestVariables.cmake)
 
 
 ########################## Build The Untrusted Part ##########################

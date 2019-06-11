@@ -19,7 +19,7 @@ endif()
 #endif
 
 
-set(ENCLAVE_DIR			".")
+set(ENCLAVE_DIR			"${CMAKE_CURRENT_SOURCE_DIR}")
 
 file(GLOB Trusted_Cpp_Files
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
@@ -30,24 +30,23 @@ file(GLOB Trusted_C_Files
 	"${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
 	"${CMAKE_CURRENT_SOURCE_DIR}/seeq/*.c")
 
-set(Trusted_Include_Paths	"-I.. -I../GlobalVariables -I${ENCLAVE_DIR} -I${SGXSDK_INCLUDE_DIRS} -I${SGXSDK_INCLUDE_DIRS}/tlibc -I${SGX_LIBCXX_PATH} -I${PACKAGE_INC}")
+set(Trusted_Include_Paths	"-I.. -I${Global_Variables_Path} -I${ENCLAVE_DIR} -I${SGXSDK_INCLUDE_DIRS} -I${SGXSDK_INCLUDE_DIRS}/tlibc -I${SGX_LIBCXX_PATH} -I${PACKAGE_INC}") ##maybe delete this later as it is included later
 
 
 
-set(SOURCE_FILES		"${Trusted_Cpp_Files} ${Trusted_C_Files}")
+set(TRUSTED_SRCS		"${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c")
 
 
 set_directory_properties(PROPERTIES
         ADDITIONAL_MAKE_CLEAN_FILES "TestEnclave_t.c; TestEnclave_t.h")
 
-set(Common_C_CPP_FLAGS		"-DOS_ID=${OS_ID} ${SGX_COMMON_CFLAGS} -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security ${Trusted_Include_Paths}-include \"tsgxsslio.h\"") ##maybe delete the trusted include paths
+set(Common_C_CPP_FLAGS		"-DOS_ID=${OS_ID} ${SGX_COMMON_CFLAGS} -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security ${Trusted_Include_Paths} -include \"tsgxsslio.h\"") ##maybe delete the trusted include paths
 
 set(CMAKE_C_FLAGS 		"${CMAKE_C_FLAGS} ${Common_C_CPP_FLAGS} -Wno-implicit-function-declaration -std=c11")
 set(CMAKE_CXX_FLAGS 		"${CMAKE_CXX_FLAGS} ${Common_C_CPP_FLAGS} -std=c++11 -nostdinc++")
 
 set(SgxSSL_LINK_LIB		"-L${OPENSSL_LIBRARY_PATH} -Wl,--whole-archive -l${SGXSSL_LIBRARY} -Wl,--no-whole-archive -l${OpenSSL_CRYP_LIBRARY}")
-set(Security_Link_Flags		"-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie")
-
+    
 
 add_custom_command(
         OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c
@@ -55,22 +54,56 @@ add_custom_command(
         --search-path ${SGXSDK_INCLUDE_DIRS}
         --search-path ${PACKAGE_INC} #sgx_tsgxssl.edl	
         COMMENT "Generating Enclave_t.{c,h}"
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} )
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_library(TestEnclave SHARED ${SOURCE_FILES})
+#####only for tests because the shared is not working #####
 
-include_directories(
-        ${CMAKE_CURRENT_SOURCE_DIR}/../GlobalVariables
+add_library(TestEnclave-edlobj OBJECT TestEnclave_t.c)
+string(REPLACE " " ";" REPLACED_C_FLAGS ${CMAKE_C_FLAGS})
+target_compile_options(TestEnclave-edlobj PRIVATE ${REPLACED_C_FLAGS})
+
+target_include_directories(TestEnclave-edlobj PRIVATE
+	${Global_Variables_Path}
 	${CMAKE_CURRENT_SOURCE_DIR}/..
 	${CMAKE_CURRENT_SOURCE_DIR}        
         ${SGXSDK_INCLUDE_DIRS}
         ${SGXSDK_INCLUDE_DIRS}/tlibc
         ${SGX_LIBCXX_PATH}
-	${PACKAGE_INC}
-)
+	${PACKAGE_INC})
+
+add_library(TestEnclave STATIC
+	${TRUSTED_SRCS}
+	$<TARGET_OBJECTS:TestEnclave-edlobj>)
+
+string(REPLACE " " ";" REPLACED_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+target_compile_options(TestEnclave PRIVATE ${REPLACED_CXX_FLAGS})
+
+target_include_directories(TestEnclave PRIVATE
+	${Global_Variables_Path}
+	${CMAKE_CURRENT_SOURCE_DIR}/..
+	${CMAKE_CURRENT_SOURCE_DIR}        
+        ${SGXSDK_INCLUDE_DIRS}
+        ${SGXSDK_INCLUDE_DIRS}/tlibc
+        ${SGX_LIBCXX_PATH}
+	${PACKAGE_INC})
 
 
-set_target_properties(TestEnclave PROPERTIES PREFIX "")  ##maybe remove this
+#add_library(TestEnclave SHARED ${TRUSTED_SRCS})   #${TRUSTED_SRCS}
+
+
+##recomment this if the test fails
+#include_directories(
+#        ${Global_Variables_Path}
+#	${CMAKE_CURRENT_SOURCE_DIR}/..
+#	${CMAKE_CURRENT_SOURCE_DIR}        
+#        ${SGXSDK_INCLUDE_DIRS}
+#        ${SGXSDK_INCLUDE_DIRS}/tlibc
+#        ${SGX_LIBCXX_PATH}
+#	${PACKAGE_INC}
+#)
+
+
+#set_target_properties(TestEnclave PROPERTIES PREFIX "")  ##maybe remove this
 
 target_link_libraries(TestEnclave "${SGX_COMMON_CFLAGS} \
     -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles \
@@ -81,7 +114,7 @@ target_link_libraries(TestEnclave "${SGX_COMMON_CFLAGS} \
     -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
     -Wl,-pie,-eenclave_entry -Wl,--export-dynamic \
     -Wl,--defsym,__ImageBase=0 \
-    -Wl,--version-script=${ENCLAVE_DIR}/TestEnclave.lds")
+    -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave.lds")
 
 add_custom_command(TARGET TestEnclave
         POST_BUILD
