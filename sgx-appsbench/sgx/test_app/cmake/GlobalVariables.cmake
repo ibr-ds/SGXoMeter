@@ -23,12 +23,14 @@ endif()
 ########################## Global Variables with Values ##########################
 if(LOGGING_FILE_FEATURE)
 	set(RESULT_FILE_NAME		"plotdata.txt" CACHE STRING "name of the output results file")
-	add_definitions(-DPLOTDATA_FILE_NAME=${RESULT_FILE_NAME})
+	add_definitions(-DPLOTDATA_FILE_NAME="${RESULT_FILE_NAME}")
 endif()
 
 set(NUM_OF_ITERATIONS		0 CACHE STRING "Sets number of iterations. 0 is for unlimited looping")
-if(NUM_OF_ITERATIONS GREATER 0)
+if(NUM_OF_ITERATIONS GREATER -1)
 	add_definitions(-DNUMBER_OF_ITERATIONS=${NUM_OF_ITERATIONS})
+else()
+	message(FATAL_ERROR "Invalid Number of iterations. Please reconfigure again with the correct value")
 endif()
 
 set(CYCLES_RATE_VALUE			1000000 CACHE STRING "Sets the number of cycles rate for the benchmark")

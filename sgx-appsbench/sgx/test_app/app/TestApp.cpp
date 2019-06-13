@@ -483,8 +483,6 @@ int main(int argc, char *argv[])
 {
 #ifdef RUNTIME_PARSER
     parseInput(argc, argv);
-    printf("Name of the output file is %s \n", GLOBAL_CONFIG.DATA_FILE_NAME);
-    printf("Number of parsed iterations are %d \n", GLOBAL_CONFIG.NUM_OF_ITERATION);
 #else
     (void)(argc);
     (void)(argv);

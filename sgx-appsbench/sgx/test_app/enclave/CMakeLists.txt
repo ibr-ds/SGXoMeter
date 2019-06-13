@@ -34,7 +34,7 @@ set(Trusted_Include_Paths	"-I.. -I${Global_Variables_Path} -I${ENCLAVE_DIR} -I${
 
 
 
-set(TRUSTED_SRCS		"${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c")
+set(TRUSTED_SRCS		${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c)
 
 
 set_directory_properties(PROPERTIES
@@ -58,49 +58,49 @@ add_custom_command(
 
 #####only for tests because the shared is not working #####
 
-add_library(TestEnclave-edlobj OBJECT TestEnclave_t.c)
-string(REPLACE " " ";" REPLACED_C_FLAGS ${CMAKE_C_FLAGS})
-target_compile_options(TestEnclave-edlobj PRIVATE ${REPLACED_C_FLAGS})
+#add_library(TestEnclave-edlobj OBJECT TestEnclave_t.c)
+#string(REPLACE " " ";" REPLACED_C_FLAGS ${CMAKE_C_FLAGS})
+#target_compile_options(TestEnclave-edlobj PRIVATE ${REPLACED_C_FLAGS})
 
-target_include_directories(TestEnclave-edlobj PRIVATE
-	${Global_Variables_Path}
-	${CMAKE_CURRENT_SOURCE_DIR}/..
-	${CMAKE_CURRENT_SOURCE_DIR}        
-        ${SGXSDK_INCLUDE_DIRS}
-        ${SGXSDK_INCLUDE_DIRS}/tlibc
-        ${SGX_LIBCXX_PATH}
-	${PACKAGE_INC})
-
-add_library(TestEnclave STATIC
-	${TRUSTED_SRCS}
-	$<TARGET_OBJECTS:TestEnclave-edlobj>)
-
-string(REPLACE " " ";" REPLACED_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-target_compile_options(TestEnclave PRIVATE ${REPLACED_CXX_FLAGS})
-
-target_include_directories(TestEnclave PRIVATE
-	${Global_Variables_Path}
-	${CMAKE_CURRENT_SOURCE_DIR}/..
-	${CMAKE_CURRENT_SOURCE_DIR}        
-        ${SGXSDK_INCLUDE_DIRS}
-        ${SGXSDK_INCLUDE_DIRS}/tlibc
-        ${SGX_LIBCXX_PATH}
-	${PACKAGE_INC})
-
-
-#add_library(TestEnclave SHARED ${TRUSTED_SRCS})   #${TRUSTED_SRCS}
-
-
-##recomment this if the test fails
-#include_directories(
-#        ${Global_Variables_Path}
+#target_include_directories(TestEnclave-edlobj PRIVATE
+#	${Global_Variables_Path}
 #	${CMAKE_CURRENT_SOURCE_DIR}/..
 #	${CMAKE_CURRENT_SOURCE_DIR}        
 #        ${SGXSDK_INCLUDE_DIRS}
 #        ${SGXSDK_INCLUDE_DIRS}/tlibc
 #        ${SGX_LIBCXX_PATH}
-#	${PACKAGE_INC}
-#)
+#	${PACKAGE_INC})
+
+#add_library(TestEnclave STATIC
+#	${TRUSTED_SRCS}
+#	$<TARGET_OBJECTS:TestEnclave-edlobj>)
+
+#string(REPLACE " " ";" REPLACED_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+#target_compile_options(TestEnclave PRIVATE ${REPLACED_CXX_FLAGS})
+
+#target_include_directories(TestEnclave PRIVATE
+#	${Global_Variables_Path}
+#	${CMAKE_CURRENT_SOURCE_DIR}/..
+#	${CMAKE_CURRENT_SOURCE_DIR}        
+#        ${SGXSDK_INCLUDE_DIRS}
+#        ${SGXSDK_INCLUDE_DIRS}/tlibc
+#        ${SGX_LIBCXX_PATH}
+#	${PACKAGE_INC})
+
+
+add_library(TestEnclave SHARED ${TRUSTED_SRCS})   #${TRUSTED_SRCS}
+
+
+#recomment this if the test fails
+include_directories(
+        ${Global_Variables_Path}
+	${CMAKE_CURRENT_SOURCE_DIR}/..
+	${CMAKE_CURRENT_SOURCE_DIR}        
+        ${SGXSDK_INCLUDE_DIRS}
+        ${SGXSDK_INCLUDE_DIRS}/tlibc
+        ${SGX_LIBCXX_PATH}
+	${PACKAGE_INC}
+)
 
 
 #set_target_properties(TestEnclave PROPERTIES PREFIX "")  ##maybe remove this
@@ -121,8 +121,9 @@ add_custom_command(TARGET TestEnclave
         COMMAND ${SGX_ENCLAVE_SIGNER} sign
         -key ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_private.pem
         -config ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave.config.xml
-        -enclave TestEnclave.so
+        -enclave test_app/enclave/libTestEnclave.so
         -out TestEnclave.signed.so
+	BYPRODUCTS TestEnclave.signed.so
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMENT "Signing the enclave => ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/TestEnclave.signed.so")
 

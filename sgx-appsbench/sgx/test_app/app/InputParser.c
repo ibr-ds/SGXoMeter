@@ -40,7 +40,7 @@ globalConfig_t GLOBAL_CONFIG = {
         .BEST = BEST_FLAG,
         .NON_DNA = NON_DNA_FLAG,
         .ALL = ALL_FLAG,
-        .MEMORY = MEMORY_ARG
+        .MEMORY = (size_t)MEMORY_ARG 
 
 #endif
 };
@@ -110,7 +110,11 @@ void say_help(void)
 void parseInput(int argc, char **argv)
 {
 
-    int o_flag = FLAG_NOT_SET, r_flag = FLAG_NOT_SET, s_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET;
+#ifdef WRITE_LOG_FILE
+    int o_flag = FLAG_NOT_SET; 
+#endif
+
+    int r_flag = FLAG_NOT_SET, s_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET;
 #ifdef DNA_PATTERN_MATCHING
     int pattern_flag   = FLAG_NOT_SET;
     int dna_flag       = FLAG_NOT_SET;
@@ -170,7 +174,11 @@ void parseInput(int argc, char **argv)
                 {0                  ,         0         , 0,  0 }
         };
 
-        const char * allowedOptions = "hR:S:o:I:"
+        const char * allowedOptions = "hR:S:I:"
+#ifdef WRITE_LOG_FILE
+				      "o:"
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
                                       "apmnilczfvkherby:d:x:P:D:"
 #endif

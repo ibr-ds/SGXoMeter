@@ -9,7 +9,7 @@ endif()
 
 ########################## Build Untrusted Part of BenchApp ##########################
 set(UNTRUSTED_DIR		"${CMAKE_CURRENT_SOURCE_DIR}")
-set(APP_INCLUDE_PATHS 		"I${UNTRUSTED_DIR} -I${SGXSDK_INCLUDE_DIRS} -I${Global_Variables_Path}")
+set(APP_INCLUDE_PATHS 		"-I${UNTRUSTED_DIR} -I${SGXSDK_INCLUDE_DIRS} -I${Global_Variables_Path}")
 
 set(CMAKE_C_FLAGS 		"${CMAKE_C_FLAGS} ${SGX_COMMON_CFLAGS} -fPIC -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes ${APP_INCLUDE_PATHS}") #try to remove app Include Paths because they are included later
 set(CMAKE_CXX_FLAGS 		"${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++11")
@@ -32,6 +32,11 @@ add_custom_command(
 )
 
 add_executable(BenchApp ${APP_SRC_FILES} TestEnclave_u.c)
+
+set_target_properties(BenchApp
+	PROPERTIES
+	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
+)
 
 target_include_directories(BenchApp PRIVATE
         ${SGXSDK_INCLUDE_DIRS}  

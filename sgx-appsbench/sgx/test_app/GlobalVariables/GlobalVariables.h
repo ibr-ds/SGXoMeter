@@ -55,7 +55,7 @@
             .BEST = BEST_FLAG,
             .NON_DNA = NON_DNA_FLAG,
             .ALL = ALL_FLAG,
-            .MEMORY = MEMORY_ARG
+            .MEMORY = (size_t)MEMORY_ARG
 
 #endif
     };
