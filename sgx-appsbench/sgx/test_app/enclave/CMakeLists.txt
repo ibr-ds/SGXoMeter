@@ -1,12 +1,12 @@
 ########################## Build Trusted Part of BenchApp ##########################
 
 if(DEBUG) 
-    set(SGX_COMMON_CFLAGS 	"${SGX_COMMON_CFLAGS} -O0 -g")
-    set(SGXSSL_LIBRARY		"sgx_tsgxssld")
+    set(SGX_COMMON_CFLAGS 		"${SGX_COMMON_CFLAGS} -O0 -g")
+    set(SGXSSL_LIBRARY			"sgx_tsgxssld")
     set(OpenSSL_CRYP_LIBRARY	"sgx_tsgxssl_cryptod")
 else()
-    set(SGX_COMMON_CFLAGS 	"${SGX_COMMON_CFLAGS} -O2 -D_FORTIFY_SOURCE=2")
-    set(SGXSSL_LIBRARY		"sgx_tsgxssl")
+    set(SGX_COMMON_CFLAGS 		"${SGX_COMMON_CFLAGS} -O2 -D_FORTIFY_SOURCE=2")
+    set(SGXSSL_LIBRARY			"sgx_tsgxssl")
     set(OpenSSL_CRYP_LIBRARY	"sgx_tsgxssl_crypto")
 endif()
 
@@ -19,7 +19,7 @@ endif()
 #endif
 
 
-set(ENCLAVE_DIR			"${CMAKE_CURRENT_SOURCE_DIR}")
+set(ENCLAVE_DIR					"${CMAKE_CURRENT_SOURCE_DIR}")
 
 file(GLOB Trusted_Cpp_Files
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
@@ -30,22 +30,22 @@ file(GLOB Trusted_C_Files
 	"${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
 	"${CMAKE_CURRENT_SOURCE_DIR}/seeq/*.c")
 
-set(Trusted_Include_Paths	"-I.. -I${Global_Variables_Path} -I${ENCLAVE_DIR} -I${SGXSDK_INCLUDE_DIRS} -I${SGXSDK_INCLUDE_DIRS}/tlibc -I${SGX_LIBCXX_PATH} -I${PACKAGE_INC}") ##maybe delete this later as it is included later
+set(Trusted_Include_Paths		"-I.. -I${Global_Variables_Path} -I${ENCLAVE_DIR} -I${SGXSDK_INCLUDE_DIRS} -I${SGXSDK_INCLUDE_DIRS}/tlibc -I${SGX_LIBCXX_PATH} -I${PACKAGE_INC}") ##maybe delete this later as it is included later
 
 
 
-set(TRUSTED_SRCS		${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c)
+set(TRUSTED_SRCS				${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c)
 
 
 set_directory_properties(PROPERTIES
         ADDITIONAL_MAKE_CLEAN_FILES "TestEnclave_t.c; TestEnclave_t.h")
 
-set(Common_C_CPP_FLAGS		"-DOS_ID=${OS_ID} ${SGX_COMMON_CFLAGS} -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security ${Trusted_Include_Paths} -include \"tsgxsslio.h\"") ##maybe delete the trusted include paths
+set(Common_C_CPP_FLAGS			"-DOS_ID=${OS_ID} ${SGX_COMMON_CFLAGS} -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security ${Trusted_Include_Paths} -include \"tsgxsslio.h\"") ##maybe delete the trusted include paths
 
-set(CMAKE_C_FLAGS 		"${CMAKE_C_FLAGS} ${Common_C_CPP_FLAGS} -Wno-implicit-function-declaration -std=c11")
-set(CMAKE_CXX_FLAGS 		"${CMAKE_CXX_FLAGS} ${Common_C_CPP_FLAGS} -std=c++11 -nostdinc++")
+set(CMAKE_C_FLAGS 				"${CMAKE_C_FLAGS} ${Common_C_CPP_FLAGS} -Wno-implicit-function-declaration -std=c11")
+set(CMAKE_CXX_FLAGS 			"${CMAKE_CXX_FLAGS} ${Common_C_CPP_FLAGS} -std=c++11 -nostdinc++")
 
-set(SgxSSL_LINK_LIB		"-L${OPENSSL_LIBRARY_PATH} -Wl,--whole-archive -l${SGXSSL_LIBRARY} -Wl,--no-whole-archive -l${OpenSSL_CRYP_LIBRARY}")
+set(SgxSSL_LINK_LIB				"-L${OPENSSL_LIBRARY_PATH} -Wl,--whole-archive -l${SGXSSL_LIBRARY} -Wl,--no-whole-archive -l${OpenSSL_CRYP_LIBRARY}")
     
 
 add_custom_command(
