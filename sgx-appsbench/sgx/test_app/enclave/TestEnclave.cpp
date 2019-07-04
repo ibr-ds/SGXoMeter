@@ -265,12 +265,11 @@ static globalConfig_t *GLOBAL_CONFIG;
 extern "C" void ecall_start_bench(uint64_t *ctr, void *globalConfig)
 {
     bench_counter = ctr;
-    do_bench = 1;
     if(globalConfig != NULL)
     {
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
     }
-#
+    do_bench = 1;
 }
 
 extern "C" void ecall_stop_bench(void)

@@ -18,8 +18,8 @@ globalConfig_t GLOBAL_CONFIG = {
         .DATA_FILE_NAME = PLOTDATA_FILE_NAME,
 #endif
         .NUM_OF_ITERATION = NUMBER_OF_ITERATIONS,
-        .ARR_SIZE= ARRAY_SIZE,
-        .RATE = CYCLES_RATE
+        .RUNTIME = RUNTIME_PHASE,
+        .WARMUP_TIME = WARMUP_PHASE
 
 #ifdef DNA_PATTERN_MATCHING
         ,
@@ -56,9 +56,9 @@ static const char *TOOL_USAGE = "Tool Usage:"
 #ifdef WRITE_LOG_FILE
                            "    -o --data-output [file name]     sets the name of the generated data file [default plotdata.txt]\n"
 #endif
-                           "    -R --rate  [#]                   sets the cycles rate for the benchmark tool [default 1000000]\n"
-                           "    -S --array-size [#]              sets the array size that contains the benchmark data [default 1000000]\n"
-                           "    -I --iteration [#]               sets the number of iterations [default 0 (unlimited)]\n";
+                           "    -R --runtime-phase  [#]          sets the runtime phase for each benchmark test [default 60 seconds]\n"
+                           "    -I --iteration [#]               sets the number of iterations [default 0 (unlimited)]\n"
+                           "    -w --warmup-phase [#]            sets the warmup phase time for each benchmark test [default 10 seconds)]\n";
 
 #ifdef DNA_PATTERN_MATCHING
 
@@ -114,7 +114,7 @@ void parseInput(int argc, char **argv)
     int o_flag = FLAG_NOT_SET; 
 #endif
 
-    int r_flag = FLAG_NOT_SET, s_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET;
+    int r_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET, w_flag = FLAG_NOT_SET;
 #ifdef DNA_PATTERN_MATCHING
     int pattern_flag   = FLAG_NOT_SET;
     int dna_flag       = FLAG_NOT_SET;
@@ -140,9 +140,9 @@ void parseInput(int argc, char **argv)
     while (1) {
         int option_index = 0;
         static struct option long_options[] = {
-                {"rate"             ,  required_argument, 0, 'R'},
-                {"array-size"       ,  required_argument, 0, 'S'},
+                {"runtime-phase"    ,  required_argument, 0, 'R'},
                 {"iteration"        ,  required_argument, 0, 'I'},
+                {"warmup-phase"     ,  required_argument, 0, 'w'},
 #ifdef WRITE_LOG_FILE
                 {"data-output"      ,  required_argument, 0, 'o'},
 #endif
@@ -174,7 +174,7 @@ void parseInput(int argc, char **argv)
                 {0                  ,         0         , 0,  0 }
         };
 
-        const char * allowedOptions = "hR:S:I:"
+        const char * allowedOptions = "hw:R:S:I:"
 #ifdef WRITE_LOG_FILE
 				      "o:"
 #endif
@@ -208,41 +208,43 @@ void parseInput(int argc, char **argv)
                 }
                 break;
 #endif
-            case 'R':
-                if (r_flag  == FLAG_NOT_SET) {
-                    uint64_t rate = atoi(optarg);  //ToDo you can replace this with strtoul but then you need an extra char pointer for the rest of the input and extra checks and free
-                    if (rate < 0) {
-                        fprintf(stderr, "error: Cycles rate must be a positive integer.\n");
+
+            case 'w':
+                if (w_flag  == FLAG_NOT_SET) {
+                    uint64_t wTime = atol(optarg);
+                    if (wTime < 0) {
+                        fprintf(stderr, "error: Invalid warmup time value!.\n");
                         say_help();
                         exit(EXIT_FAILURE);
                     }
-                    r_flag = FLAG_IS_SET;
-                    GLOBAL_CONFIG.RATE = rate;
+                    w_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.WARMUP_TIME = wTime;
                 }
                 else {
-                    fprintf(stderr, "error: Cycles rate option set more than once.\n");
+                    fprintf(stderr, "error: Warmup time value is set more than once.\n");
                     say_help();
                     exit(EXIT_FAILURE);
                 }
                 break;
 
-            case 'S':
-                if (s_flag == FLAG_NOT_SET) {
-                    uint64_t asize = atoi(optarg);
-                    if (asize < 0) {
-                        fprintf(stderr, "error: Data array size must be a positive integer.\n");
+            case 'R':
+                if (r_flag  == FLAG_NOT_SET) {
+                    uint64_t runtime = atol(optarg);  //ToDo you can replace this with strtoul but then you need an extra char pointer for the rest of the input and extra checks and free
+                    if (runtime < 0) {
+                        fprintf(stderr, "error: Runtime value should be positive!\n");
                         say_help();
                         exit(EXIT_FAILURE);
                     }
-                    s_flag = FLAG_IS_SET;
-                    GLOBAL_CONFIG.ARR_SIZE = asize;
+                    r_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.RUNTIME = runtime;
                 }
                 else {
-                    fprintf(stderr, "error: Data array size option set more than once.\n");
+                    fprintf(stderr, "error: Runtime value is set more than once.\n");
                     say_help();
                     exit(EXIT_FAILURE);
                 }
                 break;
+
 
             case 'I':
                 if (t_flag == FLAG_NOT_SET) {

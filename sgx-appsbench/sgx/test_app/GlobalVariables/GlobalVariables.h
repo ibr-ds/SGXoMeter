@@ -3,7 +3,6 @@
 
 #include "UtilsStructs.h"
 
-
 #ifdef RUNTIME_PARSER
     //ToDo delete the commented part after discussing the stuff with nico
     /*#ifdef WRITE_LOG_FILE
@@ -18,24 +17,14 @@
 
 
 #else
-    //ToDo delete the commented part after discussing the stuff with nico
-    /*
-    #ifdef WRITE_LOG_FILE
-    char *DATA_FILE_NAME = PLOTDATA_FILE_NAME;
-    #endif
-
-    int NUM_OF_ITERATION = NUMBER_OF_ITERATIONS; //WILL BE USED
-    uint64_t ARR_SIZE = ARRAY_SIZE;
-    uint64_t RATE = CYCLES_RATE;*/
 
     globalConfig_t GLOBAL_CONFIG = {
 #ifdef WRITE_LOG_FILE
             .DATA_FILE_NAME = PLOTDATA_FILE_NAME,
 #endif
             .NUM_OF_ITERATION = NUMBER_OF_ITERATIONS,
-            .ARR_SIZE = ARRAY_SIZE,
-            .RATE = CYCLES_RATE
-
+            .RUNTIME = RUNTIME_PHASE,
+            .WARMUP_TIME = WARMUP_PHASE
 #ifdef DNA_PATTERN_MATCHING
             ,
             .DNA_INPUT = INPUT_DNA,

@@ -5,6 +5,12 @@ macro(check_add_definition VARNAME VALUE)
     endif()
 endmacro()
 
+macro(check_and_increment_counter TESTVAR COUNTER)
+    if(${TESTVAR})
+        MATH(EXPR ${COUNTER} "${${COUNTER}}+1")  # Used to count the number of modules to be tested
+    endif()
+endmacro()
+
 ########################## Global Settings ##########################
 set(Global_Variables_Path		"${CMAKE_CURRENT_SOURCE_DIR}/GlobalVariables")
 set(Security_Link_Flags			"-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie") 

@@ -29,30 +29,23 @@
  *
  */
 
+#include "TestApp.h"
+#include "TestEnclave_u.h"
 
-#include <stdio.h>
-#include <string.h>
-#include <assert.h>
-
-#include <unistd.h>
-#include <pwd.h>
-#include <libgen.h>
-#include <stdlib.h>
-#include <pthread.h>
 
 # define MAX_PATH FILENAME_MAX
 
 #include "GlobalVariables.h"
 
-#include <sgx_urts.h>
-#include <csignal>
-
 #ifdef RUNTIME_PARSER
 #include "InputParser.h"
 #endif
 
-#include "TestApp.h"
-#include "TestEnclave_u.h"
+typedef std::chrono::high_resolution_clock::time_point TimeVar;
+
+#define timeNow() std::chrono::high_resolution_clock::now()
+#define duration(a) std::chrono::duration_cast<std::chrono::seconds>(a).count()
+
 
 
 
@@ -243,64 +236,89 @@ int initialize_enclave(void)
     return 0;
 }
 
+
+/*  SIGINT handler in order to stop the benchmark with Ctrl+C   */
+void ecallInterruptHandler(int dummy)
+{
+    (void)dummy;
+    sgx_status_t ret = SGX_SUCCESS;
+    ret = ecall_stop_bench(global_eid);
+    print_ret_error(ret);
+}
+
+
 static volatile int do_bench = 0;
 static volatile int abort_measure = 0;
 volatile uint64_t counter = 0;
-//uint64_t RATE = CYCLES_RATE; //ToDo is now in Global Variables
 
-static inline uint64_t rdtscp( uint32_t & aux )
-{
-    uint64_t rax,rdx;
-    asm volatile ( "rdtscp\n" : "=a" (rax), "=d" (rdx), "=c" (aux) : : );
-    return (rdx << 32) + rax;
-}
 
-typedef struct {
-    uint64_t tsc;
-    uint64_t diff;
+typedef struct {  //ToDo probably add an extra variable for function ids
+    uint64_t warmCnt;
+    uint64_t runCnt;
 } measurement_t;
+
 
 measurement_t *array;
 uint64_t cur_elem = 0;
 uint32_t a;
 
 
-static inline void add_measurement(uint64_t diff)
+void doWarmUp()
 {
-    array[cur_elem].diff = diff;
-    array[cur_elem].tsc = rdtscp(a);
-    ++cur_elem;
-    if (cur_elem >= GLOBAL_CONFIG.ARR_SIZE)
-        cur_elem = 0;
+    TimeVar initTime = timeNow();
+    TimeVar currentTime;
+    do
+    {
+        __asm__("pause");
+        currentTime = timeNow();
+    } while(duration(currentTime - initTime) <  GLOBAL_CONFIG.WARMUP_TIME);
 }
 
-// "print" to array
+void doRuntime()
+{
+    TimeVar initTime = timeNow();
+    TimeVar curTime = timeNow();
+    while(abort_measure == 0 && duration(curTime - initTime) < GLOBAL_CONFIG.RUNTIME)
+    {
+        curTime = timeNow();
+        __asm__("pause");
+    }
+}
+
+static inline void add_warm_measurement()
+{
+    array[cur_elem].warmCnt = counter;
+    __sync_fetch_and_and(&counter,((uint64_t)0)); // reset the counter for the runtime phase
+}
+
+
+static inline void add_runtime_measurement()
+{
+    array[cur_elem].runCnt = counter;
+    __sync_fetch_and_and(&counter,((uint64_t)0)); // reset the counter for the possible next warmup phase
+    ++cur_elem;                                   // next element in the array for the next test
+}
+
 
 void *measure_thread(void *args)
 {
-    fprintf(stderr, "# RATE: %lu µs\n", GLOBAL_CONFIG.RATE);
-    uint64_t last = 0, diff;
-    uint64_t next = 0;
+    fprintf(stderr, "# Warmup phase: %lus\n", GLOBAL_CONFIG.WARMUP_TIME);
+    fprintf(stderr, "# Runtime phase: %lus\n", GLOBAL_CONFIG.RUNTIME);
     while(do_bench == 0)
     {
         __asm__("pause");
     }
-    while(abort_measure == 0)
-    {
-        next = rdtscp(a) + GLOBAL_CONFIG.RATE;
-        diff = counter - last;
-        last = counter;
-        add_measurement(diff);
-        while(rdtscp(a) < next)
-        {
-            __asm__("pause");
-        }
-    }
 
+    doWarmUp();                                 //do the warm up before starting
+    add_warm_measurement();                     // add the warmup results and reset the tests counter
+
+    doRuntime();                                // do the runtime
+    add_runtime_measurement();                  // add the runtime results, reset the tests counter and increment the pointer to the next test
+    ecallInterruptHandler(0);
     return nullptr;
 }
 
-uint64_t WORKER_THREADS = 1; //ToDo this should probably be 2 not 1
+uint64_t WORKER_THREADS = 1;
 pthread_barrier_t worker_barrier;
 
 void *worker_thread(void *args)
@@ -317,48 +335,26 @@ void *worker_thread(void *args)
 
 static void print_array()
 {
-
+    //ToDo do the format of the output file
 #ifdef WRITE_LOG_FILE
     FILE *fp;
     fp = fopen(GLOBAL_CONFIG.DATA_FILE_NAME, "w");
     if (fp == NULL)
     {
-	fprintf(stderr, "Couldnt open or create a file for the plot data!\n");
-    }	    
-#endif
-
-    // print array
-    uint64_t end = cur_elem - 1;
-    if (end < 0)
-    {
-        end = GLOBAL_CONFIG.ARR_SIZE - 1;
+        fprintf(stderr, "Couldnt open or create a file for the plot data!\n");
     }
-    uint64_t prev_elem = end;
-    uint64_t start_tsc = 0;
-    while (cur_elem != end)
-    {
-        if (array[cur_elem].tsc != 0)
-        {
-            if (start_tsc == 0)
-                start_tsc = array[cur_elem].tsc;
-
-#ifdef WRITE_LOG_FILE
-	    fprintf(fp,"%lu,%lu\n",array[cur_elem].tsc - start_tsc, array[cur_elem].diff);
-#else
-	    printf("%lu, %lu, %lu\n", array[cur_elem].tsc - start_tsc, array[cur_elem].diff, array[cur_elem].tsc - array[prev_elem].tsc);
 #endif
 
-	    }
-        ++cur_elem;
-        ++prev_elem;
-        if (cur_elem >= GLOBAL_CONFIG.ARR_SIZE)
-        {
-            cur_elem = 0;
-        }
-        if (prev_elem >= GLOBAL_CONFIG.ARR_SIZE)
-        {
-            prev_elem = 0;
-        }
+    // print array either to an output file or to the console
+    for (int i = 0; i < NUM_OF_TESTS; ++i)
+    {
+        float warmRate    = (float)array[i].warmCnt / (float)GLOBAL_CONFIG.WARMUP_TIME;
+        float runtimeRate = (float)array[i].runCnt  / (float)GLOBAL_CONFIG.RUNTIME;
+#ifdef WRITE_LOG_FILE
+        fprintf(fp,"%lu,%.5f,%lu,%.5f\n", array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);  //ToDo: think of an idea to append the name of the test ran for this calculation
+#else
+        printf("%lu, %.5f, %lu, %.5f\n", array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);   //ToDo: think of an idea to append the name of the test ran for this calculation
+#endif
     }
 #ifdef WRITE_LOG_FILE
     fclose(fp);
@@ -367,6 +363,11 @@ static void print_array()
 
 static void exec_bench_setup()
 {
+    array = (measurement_t *)calloc(NUM_OF_TESTS, sizeof(measurement_t));       //create an array with the size of the number of tests to be done
+
+    /*
+     * enclave initialization should be done once
+     */
     sgx_status_t ret = SGX_SUCCESS;
 
     /* Initialize the enclave */
@@ -376,6 +377,9 @@ static void exec_bench_setup()
         return;
     }
 
+    /*
+     * TODO move this into a seperate methods for multiple benchmark tests
+     */
     pthread_t measure, worker[WORKER_THREADS];
     pthread_create(&measure, nullptr, measure_thread, nullptr); // start the measure thread
     pthread_barrier_init(&worker_barrier, nullptr, WORKER_THREADS + 1);
@@ -387,8 +391,7 @@ static void exec_bench_setup()
 
     fprintf(stderr, "Starting benchmark \n");
     counter = 0;
-    array = (measurement_t *)calloc(GLOBAL_CONFIG.ARR_SIZE, sizeof(measurement_t));
-    ret = ecall_start_bench(global_eid, (uint64_t *)&counter, &GLOBAL_CONFIG);
+    ret = ecall_start_bench(global_eid, (uint64_t *)&counter, &GLOBAL_CONFIG);  //ToDo maybe give the global_Config to the run benchmark ecall and give the function pointer instead?!
     print_ret_error(ret);
     do_bench = 1;
 
@@ -398,23 +401,23 @@ static void exec_bench_setup()
         fprintf(stderr, "Joining worker %d\n", i);
         pthread_join(worker[i], nullptr);
     }
+    /*
+     * ToDo here ends the encapsulation of the part above
+     */
+
+    // Destroy the enclave after all tests have been run and executed completely
     sgx_destroy_enclave(global_eid);
 
     abort_measure = 1;
     fprintf(stderr, "Joining measure \n");
     pthread_join(measure, nullptr);
 
+    // Print the array to an output file with some statistics information. For example, the rate of the executed tests per seconds
     print_array();
+    //free as it's not needed anymore
+    free(array);
 }
 
-/*  SIGINT handler in order to stop the benchmark with Ctrl+C   */
-void intHandler(int dummy)
-{
-    (void)dummy;
-    sgx_status_t ret = SGX_SUCCESS;
-    ret = ecall_stop_bench(global_eid);
-    print_ret_error(ret);
-}
 
 
 /* OCall functions */
@@ -449,7 +452,7 @@ int ucreate_thread()
 }
 
 
-/*  ToDo: memset is used in seeq libraries, therefore i defined the two methods below just in case   */
+/*  ToDo: memset is used in seeq libraries, therefore i defined the two methods below just in case. However seeq seems to work without adding them, so maybe remove them if not needed?!   */
 
 #ifdef MEMSET_SGX
 void* memset_s(void* dest, size_t destsz, int c, size_t len) {
@@ -489,7 +492,7 @@ int main(int argc, char *argv[])
 #endif
 
 
-    signal(SIGINT, intHandler);
+    signal(SIGINT, ecallInterruptHandler);
 
     /* Initialize the enclave and execute the benchmarking setup */
     exec_bench_setup();

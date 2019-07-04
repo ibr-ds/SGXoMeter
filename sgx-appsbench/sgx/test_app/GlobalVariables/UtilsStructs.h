@@ -13,8 +13,8 @@ typedef struct globalConfig{
 #endif
 
     int NUM_OF_ITERATION;
-    uint64_t ARR_SIZE;
-    uint64_t RATE;
+    uint64_t RUNTIME;
+    uint64_t WARMUP_TIME;
 
 #ifdef DNA_PATTERN_MATCHING
     char *DNA_INPUT;

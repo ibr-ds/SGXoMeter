@@ -33,19 +33,32 @@ else()
 	message(FATAL_ERROR "Invalid Number of iterations. Please reconfigure again with the correct value")
 endif()
 
-set(GLOB_CYCLES_RATE_VALUE			1000000 CACHE STRING "Sets the number of cycles rate for the benchmark")
-if(GLOB_CYCLES_RATE_VALUE GREATER 0)
-	add_definitions(-DCYCLES_RATE=${GLOB_CYCLES_RATE_VALUE})
+set(GLOB_WARMUP_PHASE_VALUE		10 CACHE STRING "Sets the warmup phase time of each benchmark test")
+if(GLOB_WARMUP_PHASE_VALUE GREATER 0)
+	add_definitions(-DWARMUP_PHASE=${GLOB_WARMUP_PHASE_VALUE})
+else()
+	message(FATAL_ERROR "Invalid warmup time value. Please reconfigure again with correct values")
+endif()
+
+#TODO: change this later for the runtime phase variable
+set(GLOB_RUNTIME_VALUE			60 CACHE STRING "Sets the number of cycles rate for the benchmark")
+if(GLOB_RUNTIME_VALUE GREATER 0)
+	add_definitions(-DRUNTIME_PHASE=${GLOB_RUNTIME_VALUE})
 else()
 	message(FATAL_ERROR "Invalid cycles rate value!. Please reconfigure again with correct values")
 endif()
 
-set(GLOB_ARRAY_SIZE_VALUE			1000000 CACHE STRING "Sets the size of the array that contains the results")
-if(GLOB_ARRAY_SIZE_VALUE GREATER 0)
-	add_definitions(-DARRAY_SIZE=${GLOB_ARRAY_SIZE_VALUE})
-else()
-	message(FATAL_ERROR "Invalid Array size!. Please reconfigure again with correct values")
-endif()
+#ToDo this is number of tests global variable which will be later incremented for each added test Module
+set(NUMBER_OF_TESTS_VALUE									0)
+
+
+#ToDo change the size of the array dynamically to the number of tests (remove this eventually and use numOfTests instead)
+#set(GLOB_ARRAY_SIZE_VALUE			1000000 CACHE STRING "Sets the size of the array that contains the results")
+#if(GLOB_ARRAY_SIZE_VALUE GREATER 0)
+#	add_definitions(-DARRAY_SIZE=${GLOB_ARRAY_SIZE_VALUE})
+#else()
+#	message(FATAL_ERROR "Invalid Array size!. Please reconfigure again with correct values")
+#endif()
 
 
 

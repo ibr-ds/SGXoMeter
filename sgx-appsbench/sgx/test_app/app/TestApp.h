@@ -36,6 +36,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <pwd.h>
+#include <libgen.h>
+#include <pthread.h>
+#include <chrono>
+#include <csignal>
+
+#include <sgx_urts.h>
 
 #include "sgx_error.h"       /* sgx_status_t */
 #include "sgx_eid.h"     /* sgx_enclave_id_t */
