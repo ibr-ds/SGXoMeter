@@ -36,11 +36,12 @@ enclave {
 from "sgx_tsgxssl.edl" import *;
 
      trusted {
-        public void t_sgxssl_call_apis();
+        //public void execute_test();
         public void new_thread_func();
-        public void ecall_start_bench([user_check] uint64_t *ctr, [user_check] void *globalConfig);
+        public void ecall_start_bench();
         public void ecall_stop_bench();
-        public void ecall_run_bench();
+        public void ecall_run_bench(int test_id);
+        public void ecall_set_config([user_check] uint64_t *ctr, [user_check] void *globalConfig);
      };
 
 

@@ -3,15 +3,7 @@
 
 #ifdef RUNTIME_PARSER
 
-/*  ToDo: here are the shared global variables to define */
-/*#ifdef WRITE_LOG_FILE
-char *DATA_FILE_NAME = PLOTDATA_FILE_NAME;
-#endif
 
-int NUM_OF_ITERATION = NUMBER_OF_ITERATIONS; //WILL BE USED
-uint64_t ARR_SIZE = ARRAY_SIZE;
-uint64_t RATE = CYCLES_RATE;
-*/
 /*  ToDo: Here is the definition of the globalConfig with default values   */
 globalConfig_t GLOBAL_CONFIG = {
 #ifdef WRITE_LOG_FILE
@@ -44,8 +36,6 @@ globalConfig_t GLOBAL_CONFIG = {
 
 #endif
 };
-
-
 /* ToDo: the end of the global variables definition      */
 
 

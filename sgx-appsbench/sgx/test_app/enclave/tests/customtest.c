@@ -22,7 +22,7 @@
 /*  This is the function that will be called in the tool and get benchmarked. So basically, it should run your computation inside it.    */
 int custom_test()
 {
-    printf("Write your custom code here to Benchmark\n");
+    //printf("Write your custom code here to Benchmark\n");
     return 0;
 }
 

@@ -4,15 +4,7 @@
 #include "UtilsStructs.h"
 
 #ifdef RUNTIME_PARSER
-    //ToDo delete the commented part after discussing the stuff with nico
-    /*#ifdef WRITE_LOG_FILE
-    extern char *DATA_FILE_NAME;// = PLOTDATA_FILE_NAME;
-    #endif
 
-    extern int NUM_OF_ITERATION; // = NUMBER_OF_ITERATIONS; //WILL BE USED
-    extern uint64_t ARR_SIZE; // = ARRAY_SIZE;
-    extern uint64_t RATE; // = CYCLES_RATE;
-    */
     extern globalConfig_t GLOBAL_CONFIG;
 
 

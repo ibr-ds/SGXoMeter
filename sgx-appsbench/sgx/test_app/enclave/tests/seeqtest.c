@@ -5,7 +5,7 @@
 #include "../seeq/seeq.h"
 
 #ifdef DNA_PATTERN_MATCHING
-int seeq_test(globalConfig_t *globalConfig) {
+int wrapper_seeq_test(globalConfig_t *globalConfig) {
 
     struct seeqarg_t args;
 

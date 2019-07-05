@@ -146,8 +146,8 @@ void print_error_message(sgx_status_t ret)
     for (idx = 0; idx < ttl; idx++) {
         if(ret == sgx_errlist[idx].err) {
             if(NULL != sgx_errlist[idx].sug)
-                printf("Info: %s\n", sgx_errlist[idx].sug);
-            printf("Error: %s\n", sgx_errlist[idx].msg);
+                fprintf(stderr, "Info: %s\n", sgx_errlist[idx].sug);
+            fprintf(stderr, "Error: %s\n", sgx_errlist[idx].msg);
             break;
         }
     }
@@ -159,7 +159,8 @@ void print_error_message(sgx_status_t ret)
 void print_ret_error(sgx_status_t ret) {
     if (ret != SGX_SUCCESS)
     {
-        fprintf(stderr, "SGX error: 0x%x\n", ret);
+        fprintf(stderr, "SGX error: 0x%x\n", ret); //ToDo probably remove this as it's not important anymore
+        print_error_message(ret);
         exit(-1);
     }
 }
@@ -246,19 +247,76 @@ void ecallInterruptHandler(int dummy)
     print_ret_error(ret);
 }
 
+#define DUMMY_INDEX     1
+#define MAX_TEST_NAME_LENGTH 32
+static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] = {
+
+            "NONE"
+#ifdef CUSTOM_TEST
+            , "custom test"
+#endif
+
+#ifdef RSA_KEY_GEN
+            , "rsa key gen"
+#endif
+
+#ifdef ELLIPTIC_CURVE_KEY_GEN
+            , "EC key gen"
+#endif
+
+#ifdef DNA_PATTERN_MATCHING
+            , "DNA matching"
+#endif
+
+#ifdef RSA_TESTS
+            , "RSA tests"
+#endif
+
+#ifdef ELLIPTIC_CURVE_TESTS
+            , "EC tests"
+#endif
+
+#ifdef ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
+            , "EC & DH tests"
+#endif
+
+#ifdef ELLIPTIC_CURVE_DSA_TESTS
+            , "EC & DSA tests"
+#endif
+
+#ifdef BN_TESTS
+            , "BN Tests"
+#endif
+
+#ifdef DEFFIE_HELLMAN_TESTS
+            , "DH tests"
+#endif
+
+#ifdef SECURE_HASH_ALGORITHM_256
+            , "SHA256"
+#endif
+
+#ifdef SECURE_HASH_ALGORITHM_1
+            , "SHA1"
+#endif
+
+#ifdef THREAD_TESTS
+            , "Multi-Thread tests"
+#endif
+};
 
 static volatile int do_bench = 0;
 static volatile int abort_measure = 0;
 volatile uint64_t counter = 0;
 
 
-typedef struct {  //ToDo probably add an extra variable for function ids
+typedef struct {
     uint64_t warmCnt;
     uint64_t runCnt;
 } measurement_t;
 
 
-measurement_t *array;
+measurement_t array[NUM_OF_TEST_MODULES];
 uint64_t cur_elem = 0;
 uint32_t a;
 
@@ -271,7 +329,7 @@ void doWarmUp()
     {
         __asm__("pause");
         currentTime = timeNow();
-    } while(duration(currentTime - initTime) <  GLOBAL_CONFIG.WARMUP_TIME);
+    } while(abort_measure == 0 && duration(currentTime - initTime) <  GLOBAL_CONFIG.WARMUP_TIME);
 }
 
 void doRuntime()
@@ -300,10 +358,9 @@ static inline void add_runtime_measurement()
 }
 
 
+
 void *measure_thread(void *args)
 {
-    fprintf(stderr, "# Warmup phase: %lus\n", GLOBAL_CONFIG.WARMUP_TIME);
-    fprintf(stderr, "# Runtime phase: %lus\n", GLOBAL_CONFIG.RUNTIME);
     while(do_bench == 0)
     {
         __asm__("pause");
@@ -323,15 +380,19 @@ pthread_barrier_t worker_barrier;
 
 void *worker_thread(void *args)
 {
-    pthread_barrier_wait(&worker_barrier);
+    int *argptr = (int*) args;
+    int test_id = *argptr;
+
+    pthread_barrier_wait(&worker_barrier);  // register +1 to the thread barrier instance
     while(do_bench == 0)
     {
         __asm__("pause");
     }
-    sgx_status_t ret = ecall_run_bench(global_eid);
+    sgx_status_t ret = ecall_run_bench(global_eid, test_id);
     print_ret_error(ret);
     return nullptr;
 }
+
 
 static void print_array()
 {
@@ -346,25 +407,61 @@ static void print_array()
 #endif
 
     // print array either to an output file or to the console
-    for (int i = 0; i < NUM_OF_TESTS; ++i)
+    for (int i = 0; i < NUM_OF_TEST_MODULES; ++i)
     {
         float warmRate    = (float)array[i].warmCnt / (float)GLOBAL_CONFIG.WARMUP_TIME;
         float runtimeRate = (float)array[i].runCnt  / (float)GLOBAL_CONFIG.RUNTIME;
 #ifdef WRITE_LOG_FILE
-        fprintf(fp,"%lu,%.5f,%lu,%.5f\n", array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);  //ToDo: think of an idea to append the name of the test ran for this calculation
+        fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);  //ToDo: think of an idea to append the name of the test ran for this calculation
 #else
-        printf("%lu, %.5f, %lu, %.5f\n", array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);   //ToDo: think of an idea to append the name of the test ran for this calculation
+        printf("%s,%lu, %.5f, %lu, %.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);   //ToDo: think of an idea to append the name of the test ran for this calculation
 #endif
     }
 #ifdef WRITE_LOG_FILE
+    fprintf(stderr, "Results are saved in a text file with the name: %s\n", GLOBAL_CONFIG.DATA_FILE_NAME);
     fclose(fp);
 #endif
 }
 
+
+static void run_tests()
+{
+    for (int test_id = 1; test_id < NUM_OF_TEST_MODULES+DUMMY_INDEX; ++test_id)
+    {
+        abort_measure = 0;
+        sgx_status_t ret = SGX_SUCCESS;
+        pthread_t measure, worker[WORKER_THREADS];
+        pthread_create(&measure, nullptr, measure_thread, nullptr); // start the measure thread
+        pthread_barrier_init(&worker_barrier, nullptr, WORKER_THREADS + 1);
+        for (int j = 0; j < (int)WORKER_THREADS; ++j)
+        {
+            pthread_create(worker+j, nullptr, worker_thread, &test_id);      //ToDo danger: i didnt pass by value because we only have 1 worker thread and its okay in this case but if multiple threads then its better to pass by value as thread creation and execution may differ
+        }
+        pthread_barrier_wait(&worker_barrier);
+
+        fprintf(stderr, "Starting benchmark \n");
+        counter = 0;
+        ret = ecall_start_bench(global_eid);
+        print_ret_error(ret);
+        do_bench = 1;
+
+
+        for (int j = 0; j < (int)WORKER_THREADS; ++j)
+        {
+            fprintf(stderr, "Joining worker %d\n", j);
+            pthread_join(worker[j], nullptr);
+        }
+
+        abort_measure = 1;
+        fprintf(stderr, "Joining measure \n");
+        pthread_join(measure, nullptr);
+
+        pthread_barrier_destroy(&worker_barrier);
+    }
+}
+
 static void exec_bench_setup()
 {
-    array = (measurement_t *)calloc(NUM_OF_TESTS, sizeof(measurement_t));       //create an array with the size of the number of tests to be done
-
     /*
      * enclave initialization should be done once
      */
@@ -378,44 +475,19 @@ static void exec_bench_setup()
     }
 
     /*
-     * TODO move this into a seperate methods for multiple benchmark tests
+     * Pass the global config variable and the counter to the enclave
      */
-    pthread_t measure, worker[WORKER_THREADS];
-    pthread_create(&measure, nullptr, measure_thread, nullptr); // start the measure thread
-    pthread_barrier_init(&worker_barrier, nullptr, WORKER_THREADS + 1);
-    for (int i = 0; i < (int)WORKER_THREADS; ++i)
-    {
-        pthread_create(worker+i, nullptr, worker_thread, nullptr);
-    }
-    pthread_barrier_wait(&worker_barrier);
-
-    fprintf(stderr, "Starting benchmark \n");
-    counter = 0;
-    ret = ecall_start_bench(global_eid, (uint64_t *)&counter, &GLOBAL_CONFIG);  //ToDo maybe give the global_Config to the run benchmark ecall and give the function pointer instead?!
+    ret = ecall_set_config(global_eid, (uint64_t *)&counter, &GLOBAL_CONFIG);
     print_ret_error(ret);
-    do_bench = 1;
 
-
-    for (int i = 0; i < (int)WORKER_THREADS; ++i)
-    {
-        fprintf(stderr, "Joining worker %d\n", i);
-        pthread_join(worker[i], nullptr);
-    }
-    /*
-     * ToDo here ends the encapsulation of the part above
-     */
+    // Run the benchmarks for each chosen test
+    run_tests();
 
     // Destroy the enclave after all tests have been run and executed completely
-    sgx_destroy_enclave(global_eid);
-
-    abort_measure = 1;
-    fprintf(stderr, "Joining measure \n");
-    pthread_join(measure, nullptr);
-
+    ret = sgx_destroy_enclave(global_eid);
+    print_ret_error(ret);
     // Print the array to an output file with some statistics information. For example, the rate of the executed tests per seconds
     print_array();
-    //free as it's not needed anymore
-    free(array);
 }
 
 
@@ -491,6 +563,11 @@ int main(int argc, char *argv[])
     (void)(argv);
 #endif
 
+#ifdef PRINT_CHECKS
+    fprintf(stderr, "# Warmup phase: %lus\n", GLOBAL_CONFIG.WARMUP_TIME);
+    fprintf(stderr, "# Runtime phase: %lus\n", GLOBAL_CONFIG.RUNTIME);
+
+#endif
 
     signal(SIGINT, ecallInterruptHandler);
 

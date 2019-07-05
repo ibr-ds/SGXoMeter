@@ -53,7 +53,6 @@ extern "C" {
 void printf(const char *fmt, ...);
 
 int puts(const char* str);
-char* getenv(char* name);
 int fflush(void* stream);
 void exit(int status);
 
@@ -85,12 +84,12 @@ int sha1_test();
 int threads_test();
 #endif
 #ifdef DNA_PATTERN_MATCHING
-int seeq_test(globalConfig_t *globalConfig);
+int wrapper_seeq_test(globalConfig_t *globalConfig);
+int seeq_test();
 #endif
 #ifdef CUSTOM_TEST
 int custom_test();
 #endif
-
 
 #if defined(__cplusplus)
 }
