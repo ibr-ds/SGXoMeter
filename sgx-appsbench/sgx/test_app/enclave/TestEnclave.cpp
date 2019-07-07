@@ -280,7 +280,7 @@ int seeq_test()
 
 
 #ifdef PRINT_CHECKS
-#define GEN_TEST_MODULE_FUNCTION_END(NAME)  printf("test NAME completed\n");\
+#define GEN_TEST_MODULE_FUNCTION_END(NAME)  printf("test %s completed\n", #NAME);\
 }
 #else
 #define GEN_TEST_MODULE_FUNCTION_END(NAME)  }
@@ -291,8 +291,6 @@ int seeq_test()
 #define GEN_TEST_MODULE_FUNCTION(NAME) static void execute_##NAME() \
     { \
         int ret = 0; \
-        SGXSSLSetPrintToStdoutStderrCB(vprintf_cb); \
-        OPENSSL_init_crypto(0, NULL); \
         ret = NAME(); \
         if(ret != 0) \
         { \
@@ -441,6 +439,8 @@ extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
     {
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
     }
+    SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
+    OPENSSL_init_crypto(0, NULL);
 }
 
 extern "C" void ecall_start_bench()

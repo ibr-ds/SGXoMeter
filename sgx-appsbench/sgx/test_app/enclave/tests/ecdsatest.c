@@ -89,7 +89,11 @@
 #define stdout ((void*)1)
 #define stderr ((void*)2)
 
+#ifdef PRINT_CHECKS
 #define BIO_printf(x, ...) printf(__VA_ARGS__)
+#else
+#define BIO_print(x, ...)
+#endif
 
 static const char rnd_seed[] = "string to make the random number generator "
     "think it has entropy";
