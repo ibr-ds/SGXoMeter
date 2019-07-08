@@ -72,7 +72,16 @@
 #define stdout ((void*)1)
 #define stderr ((void*)2)
 
+#ifdef PRINT_CHECKS
+
 #define fprintf(stream, msg...) printf(msg)
+
+#else
+#define fprintf(stream, msg...)
+
+#endif
+
+
 
 static int cb(int p, int n, BN_GENCB *arg);
 
@@ -572,7 +581,7 @@ static int run_rfc5114_tests(void)
         if (memcmp(Z2, td->Z, td->Z_len))
             goto err;
 
-        printf("RFC5114 parameter test %d OK\n", i + 1);
+        fprintf(stderr, "RFC5114 parameter test %d OK\n", i + 1);
 
         DH_free(dhA);
         DH_free(dhB);
@@ -611,7 +620,7 @@ static int run_rfc5114_tests(void)
     /* We'll have a stale error on the queue from the above test so clear it */
     ERR_clear_error();
 
-    printf("RFC5114 parameter test %d OK\n", i + 1);
+    fprintf(stderr,"RFC5114 parameter test %d OK\n", i + 1);
 
     BN_free(bady);
     DH_free(dhA);

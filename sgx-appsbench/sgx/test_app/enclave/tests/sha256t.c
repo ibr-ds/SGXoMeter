@@ -64,8 +64,14 @@
 #define stdout ((void*)1)
 #define stderr ((void*)2)
 
+#ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)
 #define fflush(...)
+#else
+#define fprintf(stream, msg...)
+#define fflush(...)
+#endif
+
 
 static const unsigned char app_b1[SHA256_DIGEST_LENGTH] = {
     0xba, 0x78, 0x16, 0xbf, 0x8f, 0x01, 0xcf, 0xea,

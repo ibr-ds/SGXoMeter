@@ -61,6 +61,8 @@ char* getenv(char* name)
 extern void printf(const char *fmt, ...);
 int puts(const char* str)
 {
+#ifdef PRINT_CHECKS
 	printf(str);
+#endif
 	return 0;
 }

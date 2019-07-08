@@ -87,7 +87,14 @@
 
 #include "../TestEnclave.h"
 
+#ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)
+#else
+#define fprintf(stream, msg...)
+#define BN_print_fp(stream, varName)
+
+#endif
+
 #define stdout ((void*)0)
 #define stderr ((void*)1)
 

@@ -67,6 +67,10 @@
 # include <openssl/ebcdic.h>
 #endif
 
+#ifndef PRINT_CHECKS
+#define printf(var,...)
+#endif
+
 static char *test[] = {
     "abc",
     "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
