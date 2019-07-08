@@ -8,17 +8,80 @@
 ####Cons: 
 ---------
 -Coding quality is bad because of:-- the indents in code are sometimes wrong and varies from time to time
-				  -- the code contains sometimes comments which either make no sence or the code does not actually follow whats described in the comments above it
+				  -- the code contains sometimes comments which either make no sence or the code does not actually follow what's described in the comments above it
 				  -- code structure is not suited for extending from 3rd parties as it contains to many hardcoded values and functions in it
 				  -- input parsing is also bad as it strongly depends on the input order and does the parsing in a not clean manner
 				  -- a lot of unused local variables, function parameters and lots of unused code/function definitions scattered all arround
+				  -- rarly use of headers and glues the code at compile time. which make it hard for 3rd parties to keep track of whats going on
+
+####Flaws:
+----------
+
+#####semi-flaws:
+----------------
+-- incorrect mathematic formels are used. For example, they calculate the the 95th confidence half intervall of the generated benchmark results but then they restrict the results even more by
+   comparing the ratio against 1% instead of 5% as they mentioned in the comment above the mentioned code.
+-- bad code quality as mentioned above
+
+-- comparision is done against hardcoded values taken from two old different platforms with old kernel and libc versions. 
+   These are Dell pentium xp90 and AMD k6-233 respectively. 
+   The Values are possibly the mean values of running the same benchmarks on those old machines.
+   However, this is only a speculation as they did not specify nor documented how they extracted those values. 
+   The Values will be later used as divisor of the generated benchmark results. 
+   Which also explains why the actual machine final results are way bigger numbers as the other two columns.
+   The first column represent the mean value of each benchmark.
+   The second and the third columns represent of how much faster is the tested pc than the other two hardcoded platform.
+   This is done by dividing the mean value of each benchmark by the hardcoded values of these two platforms. Which is also not documented what theses columns really represent.
+
+-- code terminates the program after running all benchmarks ("mainn" function) but does not continue to what comes after them, such as destroying the enclave. (not critical but still bad coding)
+
+-- the description of the function "bench-with-confidence" in "nbench0.c" is a little bit clumsy. Some comments do not really stand for what's actually done beneath them.
+
+-- as mentioned earlier they do 30 executions of each benchmark and then extract the mean(average) out the sample array. However, no warmup phase has been actually done. What about possible outliers?!
+   Can we consider the adjusment phase enough as warmup for the benchmark? we know that they run each test as long as it surpasses 60 ticks (hardcoded value) and each time they adjust the processed input's size so the benchmark would eventually surpass the 60 tick threshold. But still, is that enough for warmup? are 60 ticks really enough ?!     
 
 
+-- they should maybe consider taking the median instead of mean value in order to exclude outliers while calculating the confidence interval.
 
+--
 ############################################ Code Quality in Regards to the chosen enclave interface ############################################
 
 
 
+Some observations:-- firstly they built wrappers for ecalls without the global eid as paramters in the "App.cpp". 
+		     Then, the call external "mainn" function inside the "main" function in "App.cpp"
+		     the implementation of "mainn" is done inside "nbench0.c" which contains the main program logic 
+		     from parsing to comparing benchmarking results. It also contains the global variables and 
+		     structs for each single benchmark. It also contains function pointer array for each available benchmark. 
+		     This array points to functions. The "mainn" then iterates through the function-
+		     pointer array and executes each of the benchmark 30 times and then builds the student t-distribution out of the results.
+		     However, the implementation of each benchmark are outsourced in "nbench1.c" which contains 
+	             all tests and benchmark functions and their initialisation steps.
+		     "nbench1.c" can be seen as the interface between the "App.cpp" and "Enclave.cpp", 
+		     because there happens the transition between the un-trusted code.
+		     There, each tests gets first adjusted(initialistations and buffer allocations and
+		     sometimes input generation for the functions) based on specific time/tick interval
+		     set globally (60 ticks hardcoded), then each test is run multiple times until it surpasses 
+		     a specific time threshold which is also globally set for each test(hardcoded 5seconds).
+		     Afterwards it counts how many iterations/operations/calls are done based on the ellapsed time (~ the hardcoded threshold +minimal nano/milliseconds)
+		     and returns them back to the benchmark call in "nbench0.c" to add it to the "30 results array". when the array is full, it stops doing that tests benchmark
+		     and calculates the t-distribution and compares the results with hardcoded results taken from old machines with old kernel and old libc versions.
+		     
+		  -- Code Flow would look a loot like this:  "App.cpp --> nbench0.c <--> nbench1.c <--> Enclave.cpp".
+		     App.cpp calls the "mainn" function which is implemented in nbench0.c. "mainn" calls internally all benchmark test functions which are implemented in "nbench1.c".
+		     These functions however do the intialisation and adjusment operations before and while entering the enclave. Therefore they call the wrapper functions for ecalls in "App.cpp".
+		     Which redirects the control flow to the "Enclave.cpp" and executes the setup and benchmark test functions over there.
+
+
+
+not critical Flaws:-- (bad) coding style because they almost use no headers and everything is done by using "extern" and linking at compile time. This makes it really hard to catch up of what's really going on
+	 	      and to search for the related function calls for each test is time consuming and sometimes causes a headache.
+
+semi
+
+
+
+		      
 
 
 
