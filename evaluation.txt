@@ -1,0 +1,37 @@
+############################################ Code Quality in General ############################################
+####Pros:
+---------
+-Almost everything is commented and documented in the source code
+-direkt full working port of nbench in sgx
+-
+
+####Cons: 
+---------
+-Coding quality is bad because of:-- the indents in code are sometimes wrong and varies from time to time
+				  -- the code contains sometimes comments which either make no sence or the code does not actually follow whats described in the comments above it
+				  -- code structure is not suited for extending from 3rd parties as it contains to many hardcoded values and functions in it
+				  -- input parsing is also bad as it strongly depends on the input order and does the parsing in a not clean manner
+				  -- a lot of unused local variables, function parameters and lots of unused code/function definitions scattered all arround
+
+
+
+############################################ Code Quality in Regards to the chosen enclave interface ############################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############################################ Single Benchmark evaluation ############################################
