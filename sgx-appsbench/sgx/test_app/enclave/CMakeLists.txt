@@ -30,17 +30,19 @@ file(GLOB Trusted_C_Files
 	"${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
 	"${CMAKE_CURRENT_SOURCE_DIR}/seeq/*.c")
 
-set(Trusted_Include_Paths		"-I.. -I${Global_Variables_Path} -I${ENCLAVE_DIR} -I${SGXSDK_INCLUDE_DIRS} -I${SGXSDK_INCLUDE_DIRS}/tlibc -I${SGX_LIBCXX_PATH} -I${PACKAGE_INC}") ##maybe delete this later as it is included later
+set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC})
 
 
 
 set(TRUSTED_SRCS				${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c)
 
 
-set_directory_properties(PROPERTIES
-        ADDITIONAL_MAKE_CLEAN_FILES "TestEnclave_t.c; TestEnclave_t.h")
+set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES
+        "${ENCLAVE_DIR}/TestEnclave_t.c"
+        "${ENCLAVE_DIR}/TestEnclave_t.h"
+        )
 
-set(Common_C_CPP_FLAGS			"-DOS_ID=${OS_ID} ${SGX_COMMON_CFLAGS} -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security ${Trusted_Include_Paths} -include \"tsgxsslio.h\"") ##maybe delete the trusted include paths
+set(Common_C_CPP_FLAGS			"-DOS_ID=${OS_ID} ${SGX_COMMON_CFLAGS} -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security -include \"tsgxsslio.h\"")
 
 set(CMAKE_C_FLAGS 				"${CMAKE_C_FLAGS} ${Common_C_CPP_FLAGS} -Wno-implicit-function-declaration -std=c11")
 set(CMAKE_CXX_FLAGS 			"${CMAKE_CXX_FLAGS} ${Common_C_CPP_FLAGS} -std=c++11 -nostdinc++")
@@ -87,25 +89,18 @@ add_custom_command(
 #        ${SGX_LIBCXX_PATH}
 #	${PACKAGE_INC})
 
-
-add_library(TestEnclave SHARED ${TRUSTED_SRCS})   #${TRUSTED_SRCS}
+add_library(${ENCLAVE_LIB_NAME} SHARED ${TRUSTED_SRCS})   #${TRUSTED_SRCS}
 
 
 #recomment this if the test fails
 include_directories(
-        ${Global_Variables_Path}
-	${CMAKE_CURRENT_SOURCE_DIR}/..
-	${CMAKE_CURRENT_SOURCE_DIR}        
-        ${SGXSDK_INCLUDE_DIRS}
-        ${SGXSDK_INCLUDE_DIRS}/tlibc
-        ${SGX_LIBCXX_PATH}
-	${PACKAGE_INC}
+        ${Trusted_Include_Paths}
 )
 
 
 #set_target_properties(TestEnclave PROPERTIES PREFIX "")  ##maybe remove this
 
-target_link_libraries(TestEnclave "${SGX_COMMON_CFLAGS} \
+target_link_libraries(${ENCLAVE_LIB_NAME} "${SGX_COMMON_CFLAGS} \
     -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles \
     ${Security_Link_flags} \
     ${SgxSSL_LINK_LIB} -L${SGX_LIBRARY_PATH} \
@@ -116,16 +111,16 @@ target_link_libraries(TestEnclave "${SGX_COMMON_CFLAGS} \
     -Wl,--defsym,__ImageBase=0 \
     -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave.lds")
 
-add_custom_command(TARGET TestEnclave
+add_custom_command(TARGET ${ENCLAVE_LIB_NAME}
         POST_BUILD
         COMMAND ${SGX_ENCLAVE_SIGNER} sign
         -key ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_private.pem
         -config ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave.config.xml
-        -enclave test_app/enclave/libTestEnclave.so
-        -out TestEnclave.signed.so
-	BYPRODUCTS TestEnclave.signed.so
+        -enclave test_app/enclave/lib${ENCLAVE_LIB_NAME}.so     #ToDo was libTestEnclave.so before. change this later to be also global variable or so
+        -out ${SIGNED_ENCLAVE_NAME}
+	    BYPRODUCTS ${SIGNED_ENCLAVE_NAME}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        COMMENT "Signing the enclave => ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/TestEnclave.signed.so")
+        COMMENT "Signing the enclave => ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${SIGNED_ENCLAVE_NAME}")
 
 
 ### are those important ##

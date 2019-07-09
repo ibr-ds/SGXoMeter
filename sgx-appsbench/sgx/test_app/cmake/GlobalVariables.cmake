@@ -22,9 +22,17 @@ endif()
 
 ########################## Global Variables with Values ##########################
 if(FEATURE_LOGGING_FILE)
-	set(GLOB_RESULT_FILE_NAME		"plotdata.txt" CACHE STRING "name of the output results file")
-	add_definitions(-DPLOTDATA_FILE_NAME="${GLOB_RESULT_FILE_NAME}")
+
+	set(GLOB_RESULT_FILE_NAME		"plotdata" CACHE STRING "name of the output results file")
+	if (SGX_MODE STREQUAL HW)
+		string(CONCAT OUTPUT_FILE_NAME ${GLOB_RESULT_FILE_NAME} ".txt")
+	else()
+		string(CONCAT OUTPUT_FILE_NAME ${GLOB_RESULT_FILE_NAME} "_sim.txt")
+	endif()
+
+	add_definitions(-DPLOTDATA_FILE_NAME="${OUTPUT_FILE_NAME}")
 endif()
+
 
 set(GLOB_NUM_OF_ITERATIONS		0 CACHE STRING "Sets number of iterations. 0 is for unlimited looping")
 if(GLOB_NUM_OF_ITERATIONS GREATER -1)
@@ -50,15 +58,6 @@ endif()
 
 #ToDo this is number of tests global variable which will be later incremented for each added test Module
 set(NUMBER_OF_TESTS_VALUE									0)
-
-
-#ToDo change the size of the array dynamically to the number of tests (remove this eventually and use numOfTests instead)
-#set(GLOB_ARRAY_SIZE_VALUE			1000000 CACHE STRING "Sets the size of the array that contains the results")
-#if(GLOB_ARRAY_SIZE_VALUE GREATER 0)
-#	add_definitions(-DARRAY_SIZE=${GLOB_ARRAY_SIZE_VALUE})
-#else()
-#	message(FATAL_ERROR "Invalid Array size!. Please reconfigure again with correct values")
-#endif()
 
 
 

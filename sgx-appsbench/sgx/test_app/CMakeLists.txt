@@ -11,6 +11,25 @@ macro(check_and_increment_counter TESTVAR COUNTER)
     endif()
 endmacro()
 
+
+
+########################## SOME TESTING    ##########################
+
+
+#ToDo take this to the outside with the untrusted to the outside
+if (SGX_MODE STREQUAL HW)
+    set(ENCLAVE_LIB_NAME            TestEnclave)
+    set(APP_NAME                    BenchApp)
+    set(SIGNED_ENCLAVE_NAME         TestEnclave.signed.so)
+    add_definitions(-DTESTENCLAVE_FILENAME="${SIGNED_ENCLAVE_NAME}")
+else()
+    set(ENCLAVE_LIB_NAME            TestEnclaveSim)
+    set(APP_NAME                    BenchAppSim)
+    set(SIGNED_ENCLAVE_NAME         TestEnclaveSim.signed.so)
+    add_definitions(-DTESTENCLAVE_FILENAME="${SIGNED_ENCLAVE_NAME}")
+endif()
+
+
 ########################## Global Settings ##########################
 set(Global_Variables_Path		"${CMAKE_CURRENT_SOURCE_DIR}/GlobalVariables")
 set(Security_Link_Flags			"-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie") 

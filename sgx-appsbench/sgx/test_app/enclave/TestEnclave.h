@@ -36,7 +36,6 @@
 #include <assert.h>
 
 #include "UtilsStructs.h"
-#include "TestMacros.h" //ToDo later this will be remove because the Macros are going to be defined by cmake for all source files and headers
 
 #define TEST_CHECK(status)	\
 {	\
