@@ -89,27 +89,21 @@ add_custom_command(
 #        ${SGX_LIBCXX_PATH}
 #	${PACKAGE_INC})
 
-add_library(${ENCLAVE_LIB_NAME} SHARED ${TRUSTED_SRCS})   #${TRUSTED_SRCS}
+add_library(${ENCLAVE_LIB_NAME} SHARED ${TRUSTED_SRCS})
 
 
-#recomment this if the test fails
-include_directories(
-        ${Trusted_Include_Paths}
-)
-
-
-#set_target_properties(TestEnclave PROPERTIES PREFIX "")  ##maybe remove this
+include_directories(${Trusted_Include_Paths})
 
 target_link_libraries(${ENCLAVE_LIB_NAME} "${SGX_COMMON_CFLAGS} \
-    -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles \
-    ${Security_Link_flags} \
-    ${SgxSSL_LINK_LIB} -L${SGX_LIBRARY_PATH} \
-    -Wl,--whole-archive -l${SGX_TRTS_LIB} -Wl,--no-whole-archive \
-    -Wl,--start-group -lsgx_tstdc -lsgx_tcxx -lsgx_tcrypto -l${SGX_TSVC_LIB} -Wl,--end-group \
-    -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
-    -Wl,-pie,-eenclave_entry -Wl,--export-dynamic \
-    -Wl,--defsym,__ImageBase=0 \
-    -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave.lds")
+        -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles \
+        ${Security_Link_flags} \
+        ${SgxSSL_LINK_LIB} -L${SGX_LIBRARY_PATH} \
+        -Wl,--whole-archive -l${SGX_TRTS_LIB} -Wl,--no-whole-archive \
+        -Wl,--start-group -lsgx_tstdc -lsgx_tcxx -lsgx_tcrypto -l${SGX_TSVC_LIB} -Wl,--end-group \
+        -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
+        -Wl,-pie,-eenclave_entry -Wl,--export-dynamic \
+        -Wl,--defsym,__ImageBase=0 \
+        -Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave.lds")
 
 add_custom_command(TARGET ${ENCLAVE_LIB_NAME}
         POST_BUILD
