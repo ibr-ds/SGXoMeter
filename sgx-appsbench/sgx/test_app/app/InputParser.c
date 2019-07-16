@@ -13,6 +13,11 @@ globalConfig_t GLOBAL_CONFIG = {
         .RUNTIME = RUNTIME_PHASE,
         .WARMUP_TIME = WARMUP_PHASE
 
+#ifdef CUSTOM_SHA256_TEST
+,
+        .HASH256_LEN = SHA_INPUT_LEN
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
         ,
         .DNA_INPUT = INPUT_DNA,
@@ -48,7 +53,11 @@ static const char *TOOL_USAGE = "Tool Usage:"
 #endif
                            "    -R --runtime-phase  [#]          sets the runtime phase for each benchmark test [default 60 seconds]\n"
                            "    -I --iteration [#]               sets the number of iterations [default 0 (unlimited)]\n"
-                           "    -w --warmup-phase [#]            sets the warmup phase time for each benchmark test [default 10 seconds)]\n";
+                           "    -w --warmup-phase [#]            sets the warmup phase time for each benchmark test [default 10 seconds)]\n"
+#ifdef CUSTOM_SHA256_TEST
+                           "    -L --hash256-length [#]          sets the input length of the hashed string [default 100 chars)]\n"
+#endif
+;
 
 #ifdef DNA_PATTERN_MATCHING
 
@@ -92,8 +101,6 @@ void say_help(void)
     fprintf(stderr, "use '-h' for help.\n");
 }
 
-
-
 #define FLAG_IS_SET 1
 #define FLAG_NOT_SET -1
 
@@ -105,6 +112,11 @@ void parseInput(int argc, char **argv)
 #endif
 
     int r_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET, w_flag = FLAG_NOT_SET;
+
+#ifdef CUSTOM_SHA256_TEST
+    int hash_flag = FLAG_NOT_SET;
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
     int pattern_flag   = FLAG_NOT_SET;
     int dna_flag       = FLAG_NOT_SET;
@@ -138,6 +150,10 @@ void parseInput(int argc, char **argv)
 #endif
                 {"help"             ,  required_argument, 0, 'h'},
 
+#ifdef CUSTOM_SHA256_TEST
+                {"hash256-length"   ,  required_argument, 0, 'L'},
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
                 {"pattern"          ,  required_argument, 0, 'P'},
                 {"DNA-input"        ,  required_argument, 0, 'D'},
@@ -168,7 +184,9 @@ void parseInput(int argc, char **argv)
 #ifdef WRITE_LOG_FILE
 				      "o:"
 #endif
-
+#ifdef CUSTOM_SHA256_TEST
+                      "L:"
+#endif
 #ifdef DNA_PATTERN_MATCHING
                                       "apmnilczfvkherby:d:x:P:D:"
 #endif
@@ -253,6 +271,26 @@ void parseInput(int argc, char **argv)
                     exit(EXIT_FAILURE);
                 }
                 break;
+
+#ifdef CUSTOM_SHA256_TEST
+            case 'L':
+                if (hash_flag == FLAG_NOT_SET) {
+                    size_t hash_len = atol(optarg);
+                    if (hash_len < 0) {
+                        fprintf(stderr, "error: Invalid hash input length!.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    hash_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.HASH256_LEN = hash_len;
+                }
+                else {
+                    fprintf(stderr, "error: Hash input length value is set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+#endif
 
 #ifdef DNA_PATTERN_MATCHING
             case 'P':

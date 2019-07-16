@@ -202,8 +202,11 @@ void ecallInterruptHandler(int dummy)
 #define DUMMY_INDEX     1
 #define MAX_TEST_NAME_LENGTH 32
 static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] = {
-
             "NONE"
+#ifdef CUSTOM_SHA256_TEST
+            , "custom SHA256 test"
+#endif
+
 #ifdef CUSTOM_TEST
             , "custom test"
 #endif

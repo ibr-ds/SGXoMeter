@@ -16,6 +16,10 @@ typedef struct globalConfig{
     uint64_t RUNTIME;
     uint64_t WARMUP_TIME;
 
+#ifdef CUSTOM_SHA256_TEST
+    size_t HASH256_LEN;
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
     char *DNA_INPUT;
     char *PATTERN_INPUT;

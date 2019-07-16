@@ -90,6 +90,11 @@ int seeq_test();
 int custom_test();
 #endif
 
+#ifdef CUSTOM_SHA256_TEST
+int custom_SHA256_test();
+void initCustomSHA256(globalConfig_t *globalConfig);
+#endif
+
 #if defined(__cplusplus)
 }
 #endif

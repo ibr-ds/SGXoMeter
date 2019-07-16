@@ -13,8 +13,8 @@ endmacro()
 
 
 ########################## Global Settings ##########################
-set(Global_Variables_Path		"${CMAKE_CURRENT_SOURCE_DIR}/GlobalVariables")
-set(Security_Link_Flags			"-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie")
+set(Global_Variables_Path		    "${CMAKE_CURRENT_SOURCE_DIR}/GlobalVariables")
+set(Security_Link_Flags			    "-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie")
 
 if (SGX_MODE STREQUAL HW)
     set(ENCLAVE_LIB_NAME            TestEnclave)

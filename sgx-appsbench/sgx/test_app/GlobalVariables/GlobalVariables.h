@@ -17,6 +17,10 @@
             .NUM_OF_ITERATION = NUMBER_OF_ITERATIONS,
             .RUNTIME = RUNTIME_PHASE,
             .WARMUP_TIME = WARMUP_PHASE
+#ifdef CUSTOM_SHA256_TEST
+            ,
+            .HASH256_LEN = SHA_INPUT_LEN
+#endif
 #ifdef DNA_PATTERN_MATCHING
             ,
             .DNA_INPUT = INPUT_DNA,

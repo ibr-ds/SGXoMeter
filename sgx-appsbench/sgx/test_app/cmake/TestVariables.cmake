@@ -52,7 +52,18 @@ set(MODULE_CUSTOM_TEST										NO CACHE BOOL "YES OR NO to enable the custom te
 check_add_definition(MODULE_CUSTOM_TEST 					CUSTOM_TEST)
 check_and_increment_counter(MODULE_CUSTOM_TEST				NUMBER_OF_TESTS_VALUE)
 
+set(MODULE_CUSTOM_SHA256_TEST								NO CACHE BOOL "YES OR NO to enable the custom test module")
+check_add_definition(MODULE_CUSTOM_SHA256_TEST 				CUSTOM_SHA256_TEST)
+check_and_increment_counter(MODULE_CUSTOM_SHA256_TEST		NUMBER_OF_TESTS_VALUE)
+
 add_definitions(-DNUM_OF_TEST_MODULES=${NUMBER_OF_TESTS_VALUE})
+
+
+########################## Custom SHA256 Module ##########################
+if(MODULE_CUSTOM_SHA256_TEST)
+	set(VALUE_SHA_INPUT_LEN									100	CACHE STRING "Sets the size of the string array to hash in the SHA256 test. Default size is 100")
+	add_definitions(-DSHA_INPUT_LEN=${VALUE_SHA_INPUT_LEN})
+endif()
 
 ########################## DNA Pattern Module Configuration ##########################
 if(FEATURE_RUNTIME_PARSER AND MODULE_DNA_PATTERN_MATCHING)

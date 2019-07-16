@@ -118,19 +118,15 @@ int sha256_test()
     unsigned char md[SHA256_DIGEST_LENGTH];
     int i;
     EVP_MD_CTX *evp;
-#ifdef PRINT_CHECKS
     fprintf(stdout, "Testing SHA-256 ");
-#endif
     EVP_Digest("abc", 3, md, NULL, EVP_sha256(), NULL);
     if (memcmp(md, app_b1, sizeof(app_b1))) {
         fflush(stdout);
         fprintf(stderr, "\nTEST 1 of 3 failed.\n");
         return 1;
     } else
-#ifdef PRINT_CHECKS
         fprintf(stdout, ".");
     fflush(stdout);
-#endif
 
     EVP_Digest("abcdbcde" "cdefdefg" "efghfghi" "ghijhijk"
                "ijkljklm" "klmnlmno" "mnopnopq", 56, md, NULL, EVP_sha256(),

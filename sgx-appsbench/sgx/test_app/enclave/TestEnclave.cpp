@@ -310,6 +310,10 @@ int seeq_test()
 GEN_TEST_MODULE_FUNCTION(custom_test)
 #endif
 
+#ifdef CUSTOM_SHA256_TEST
+GEN_TEST_MODULE_FUNCTION(custom_SHA256_test)
+#endif
+
 #ifdef RSA_KEY_GEN
 GEN_TEST_MODULE_FUNCTION(rsa_key_gen)
 #endif
@@ -377,6 +381,10 @@ void dummy()
 void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
     {
                  dummy
+#ifdef CUSTOM_SHA256_TEST
+                ,TEST_NAME(custom_SHA256_test)
+#endif
+
 #ifdef CUSTOM_TEST
                 ,TEST_NAME(custom_test)
 #endif
@@ -441,6 +449,9 @@ extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
     }
     SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
     OPENSSL_init_crypto(0, NULL);
+#ifdef CUSTOM_SHA256_TEST
+    initCustomSHA256(GLOBAL_CONFIG);   //ToDo this might not work. If so build a wrapper like seeqtest
+#endif
 }
 
 extern "C" void ecall_start_bench()
