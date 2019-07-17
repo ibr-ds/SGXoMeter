@@ -6,8 +6,8 @@ set(SGX_SDK 				/opt/intel/sgxsdk  CACHE PATH "Set the path to the SGX-SDK direc
 set(SGX_ARCH 				x64)
 set(SGX_MODE 				HW CACHE STRING "SGX mode: SIM or HW") # SGX mode: sim, hw
 set(SGX_BUILD				DEBUG CACHE STRING "Build: DEBUG, PRERELEASE or RELEASE")
-include (cmake/Init.cmake)
-include (cmake/ConfigSGX.cmake)
+include(cmake/Init.cmake)
+include(cmake/ConfigSGX.cmake)
 
 
 ########################## Set Environment Variables ##########################
@@ -71,7 +71,7 @@ endif()
 if(DEBUG AND SGX_BUILD STREQUAL "PRERELEASE")
     message(FATAL_ERROR "Cannot set DEBUG and SGX_PRERELEASE at the same time!!")
 endif()
-set(OPENSSL_LIBRARY_PATH	${PACKAGE_LIB}/)
+set(OPENSSL_LIBRARY_PATH	${PACKAGE_LIB})
 
 
 ########################## Build the benchmarking tool  ##########################

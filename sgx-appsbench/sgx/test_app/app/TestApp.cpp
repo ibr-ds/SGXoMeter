@@ -396,7 +396,7 @@ static void run_tests()
         }
         pthread_barrier_wait(&worker_barrier);
 
-        fprintf(stderr, "Starting benchmark \n");
+        fprintf(stderr, "Starting to benchmark the Module %s \n", test_names[test_id]);
         counter = 0;
         ret = ecall_start_bench(global_eid);
         print_ret_error(ret);

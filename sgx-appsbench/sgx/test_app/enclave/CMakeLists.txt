@@ -23,15 +23,14 @@ set(ENCLAVE_DIR					"${CMAKE_CURRENT_SOURCE_DIR}")
 
 file(GLOB Trusted_Cpp_Files
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+	    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
 
 file(GLOB Trusted_C_Files
         "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
-	"${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
-	"${CMAKE_CURRENT_SOURCE_DIR}/seeq/*.c")
+	    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
+	    "${CMAKE_CURRENT_SOURCE_DIR}/seeq/*.c")
 
 set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC})
-
 
 
 set(TRUSTED_SRCS				${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c)
@@ -115,9 +114,3 @@ add_custom_command(TARGET ${ENCLAVE_LIB_NAME}
 	    BYPRODUCTS ${SIGNED_ENCLAVE_NAME}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         COMMENT "Signing the enclave => ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${SIGNED_ENCLAVE_NAME}")
-
-
-### are those important ##
-#add_dependencies(TestEnclave ${PROJECT_NAME}_t)
-#add_dependencies(TestEnclave ${PROJECT_NAME}_u)
-

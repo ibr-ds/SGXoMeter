@@ -1,95 +1,8 @@
-/*
- * Copyright (C) 2011-2017 Intel Corporation. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *   * Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *   * Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in
- *     the documentation and/or other materials provided with the
- *     distribution.
- *   * Neither the name of Intel Corporation nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- */
+//
+// Created by moe on 17.07.19.
+//
 
-
-#include <stdio.h>      /* vsnprintf */
-#include <stdarg.h>
-
-#include "TestEnclave.h"
-#include "TestEnclave_t.h"  /* print_string */
-#include "tSgxSSL_api.h"
-
-#include <openssl/ec.h>
-#include <openssl/bn.h>
-#include <openssl/rsa.h>
-#include <openssl/evp.h>
-#include <openssl/err.h>
-#include <openssl/rand.h>
-#include <sgx_tae_service.h>
-
-
-#define ADD_ENTROPY_SIZE	32
-
-
-/* 
- * printf: 
- *   Invokes OCALL to display the enclave buffer to the terminal.
- */
-void printf(const char *fmt, ...)
-{
-    char buf[BUFSIZ] = {'\0'};
-    va_list ap;
-    va_start(ap, fmt);
-    vsnprintf(buf, BUFSIZ, fmt, ap);
-    va_end(ap);
-    uprint(buf);
-}
-
-typedef void CRYPTO_RWLOCK;
-
-struct evp_pkey_st {
-    int type;
-    int save_type;
-    int references;
-    const EVP_PKEY_ASN1_METHOD *ameth;
-    ENGINE *engine;
-    union {
-        char *ptr;
-# ifndef OPENSSL_NO_RSA
-        struct rsa_st *rsa;     /* RSA */
-# endif
-# ifndef OPENSSL_NO_DSA
-        struct dsa_st *dsa;     /* DSA */
-# endif
-# ifndef OPENSSL_NO_DH
-        struct dh_st *dh;       /* DH */
-# endif
-# ifndef OPENSSL_NO_EC
-        struct ec_key_st *ec;   /* ECC */
-# endif
-    } pkey;
-    int save_parameters;
-    STACK_OF(X509_ATTRIBUTE) *attributes; /* [ 0 ] */
-    CRYPTO_RWLOCK *lock;
-} /* EVP_PKEY */ ;
+#include "BenchThread.h"
 
 
 #ifdef RSA_KEY_GEN
@@ -105,7 +18,7 @@ int rsa_key_gen()
        	printf("BN_set_word failure\n");
 	    return 1;
 	}
-	
+
 	RSA *keypair = RSA_new();
 	if (keypair == NULL) {
 		printf("RSA_new failure: %ld\n", ERR_get_error());
@@ -186,7 +99,7 @@ int ec_key_gen()
     	printf("EC_KEY_new_by_curve_name failure: %ld\n", ERR_get_error());
 	    return 1;
     }
-    
+
 	EC_KEY_set_asn1_flag(ec, OPENSSL_EC_NAMED_CURVE);
 
 	int ret = EC_KEY_generate_key(ec);
@@ -245,17 +158,6 @@ int ec_key_gen()
 
 #endif  //ELLIPTIC CURVE KEY GEN
 
-int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
-{
-	char buf[BUFSIZ] = {'\0'};
-
-	int res = vsnprintf(buf, BUFSIZ, fmt, arg);
-	if (res >=0) {
-		sgx_status_t sgx_ret = uprint((const char *) buf);
-		TEST_CHECK(sgx_ret);
-	}
-	return res;
-}
 
 
 /*
@@ -379,8 +281,8 @@ void dummy()
  * it also contains at first a dummy empty function to avoid the adding ',' comma problem
  */
 void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
-    {
-                 dummy
+        {
+                dummy
 #ifdef CUSTOM_SHA256_TEST
                 ,TEST_NAME(custom_SHA256_test)
 #endif
@@ -436,22 +338,8 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
 #ifdef THREAD_TESTS
                 ,TEST_NAME(threads_test)
 #endif
-    };
+        };
 
-
-extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
-{
-    bench_counter = ctr;
-    if(globalConfig != NULL)
-    {
-        GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
-    }
-    SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
-    OPENSSL_init_crypto(0, NULL);
-#ifdef CUSTOM_SHA256_TEST
-    initCustomSHA256(GLOBAL_CONFIG);   //ToDo this might not work. If so build a wrapper like seeqtest
-#endif
-}
 
 /*
  * The 3 Benchmark status
@@ -460,17 +348,30 @@ extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
 #define RUNNING   1
 #define STOPED    2
 
-extern "C" void ecall_start_bench()
+void start_bench(void)
 {
     do_bench = RUNNING;
 }
 
-extern "C" void ecall_stop_bench(void)
+void stop_bench(void)
 {
     do_bench = STOPED;
 }
 
-extern "C" void ecall_run_bench(int test_id)
+void set_config(uint64_t *ctr, void *globalConfig)
+{
+    bench_counter = ctr;
+    if(globalConfig != NULL)
+    {
+        GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
+    }
+    OPENSSL_init_crypto(0, NULL);
+#ifdef CUSTOM_SHA256_TEST
+    initCustomSHA256(GLOBAL_CONFIG);   //ToDo this might not work. If so build a wrapper like seeqtest
+#endif
+}
+
+void run_bench(int test_id)
 {
 
     while(do_bench == PAUSED)

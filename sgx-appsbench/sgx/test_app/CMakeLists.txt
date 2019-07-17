@@ -14,6 +14,7 @@ endmacro()
 
 ########################## Global Settings ##########################
 set(Global_Variables_Path		    "${CMAKE_CURRENT_SOURCE_DIR}/GlobalVariables")
+set(Utils_Path		                "${CMAKE_CURRENT_SOURCE_DIR}/Utils")
 set(Security_Link_Flags			    "-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie")
 
 if (SGX_MODE STREQUAL HW)
@@ -39,4 +40,5 @@ add_subdirectory(app)
 ########################## Build the Trusted Part ##########################
 add_subdirectory(enclave)
 
-
+########################## Build the Baseline Part ##########################
+add_subdirectory(baseline)
