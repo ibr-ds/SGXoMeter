@@ -6,18 +6,13 @@
 #define SGX_APPSBENCH_BASEAPP_H
 
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdarg.h>
 #include <string.h>
 #include <unistd.h>
-#include <pwd.h>
-#include <libgen.h>
 #include <pthread.h>
 #include <chrono>
 #include <csignal>
-#include <signal.h>
 
 #ifndef TRUE
 # define TRUE 1

@@ -365,7 +365,7 @@ void set_config(uint64_t *ctr, void *globalConfig)
     {
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
     }
-    OPENSSL_init_crypto(0, NULL);
+   // OPENSSL_init_crypto(0, NULL);
 #ifdef CUSTOM_SHA256_TEST
     initCustomSHA256(GLOBAL_CONFIG);   //ToDo this might not work. If so build a wrapper like seeqtest
 #endif

@@ -354,7 +354,7 @@ static void print_array()
     //ToDo do the format of the output file
 #ifdef WRITE_LOG_FILE
     FILE *fp;
-    fp = fopen(GLOBAL_CONFIG.DATA_FILE_NAME, "w");
+    fp = fopen(GLOBAL_CONFIG.DATA_FILE_NAME, "a");
     if (fp == NULL)
     {
         fprintf(stderr, "Couldnt open or create a file for the plot data!\n");

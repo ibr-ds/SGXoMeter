@@ -1,16 +1,17 @@
 //
 // Created by moe on 16.07.19.
 //
+#define CUSTOM_SHA256_TEST
 #ifdef CUSTOM_SHA256_TEST
 
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <GlobalVariables/UtilsStructs.h>
 
 
 #include <openssl/sha.h>
 #include <openssl/evp.h>
+#include <UtilsStructs.h>
 
 #define stdout ((void*)1)
 #define stderr ((void*)2)

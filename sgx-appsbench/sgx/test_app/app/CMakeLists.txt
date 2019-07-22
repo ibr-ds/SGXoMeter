@@ -1,5 +1,5 @@
 
-if(DEBUG) 
+if(DEBUG)
     set(SGX_COMMON_CFLAGS 	"${SGX_COMMON_CFLAGS} -O0 -g")
     set(SgxSSK_LINK_LIB		"sgx_usgxssld")
 else()
