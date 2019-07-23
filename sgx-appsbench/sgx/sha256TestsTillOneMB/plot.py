@@ -25,6 +25,7 @@ with open(fn_base,'r') as csvfile:
     for row in plots:
         baseline.append(float(row[5]))
 
+plt.semilogy()
 plt.semilogx(basex=2)
 #plt.xscale('log', basex=2)
 plt.plot(x,baseline,'r',label='Baseline')

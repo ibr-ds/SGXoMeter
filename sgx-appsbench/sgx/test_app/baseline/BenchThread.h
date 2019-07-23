@@ -23,6 +23,7 @@ extern "C" {
 
 
 void start_bench(void);
+void pause_bench(void);
 void stop_bench(void);
 void run_bench(int test_id);
 void set_config(uint64_t *ctr, void *globalConfig);

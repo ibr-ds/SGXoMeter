@@ -41,4 +41,8 @@ add_subdirectory(app)
 add_subdirectory(enclave)
 
 ########################## Build the Baseline Part ##########################
-add_subdirectory(baseline)
+set(BASE_APP_NAME                        BaselineApp)
+set(BASELINE_APP_PATH                    ${CMAKE_BINARY_DIR}/${BASE_APP_NAME})
+if(NOT EXISTS ${BASELINE_APP_PATH})
+    add_subdirectory(baseline)
+endif()

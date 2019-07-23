@@ -460,7 +460,7 @@ extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
 #define RUNNING   1
 #define STOPED    2
 
-extern "C" void ecall_start_bench()
+extern "C" void ecall_start_bench(void)
 {
     do_bench = RUNNING;
 }
@@ -468,6 +468,11 @@ extern "C" void ecall_start_bench()
 extern "C" void ecall_stop_bench(void)
 {
     do_bench = STOPED;
+}
+
+extern "C" void ecall_pause_bench(void)
+{
+    do_bench = PAUSED;
 }
 
 extern "C" void ecall_run_bench(int test_id)
@@ -494,6 +499,4 @@ extern "C" void ecall_run_bench(int test_id)
             if(iterCounter == GLOBAL_CONFIG->NUM_OF_ITERATION)      break;
         }
     }
-    //Reset the benchmark in case of multiple test modules to run after each other
-    do_bench = PAUSED;
 }

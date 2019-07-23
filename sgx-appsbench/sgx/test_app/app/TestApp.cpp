@@ -263,7 +263,7 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
 static volatile int do_bench = 0;
 static volatile int abort_measure = 0;
 volatile uint64_t counter = 0;
-
+uint64_t tmpCounter = 0;
 
 typedef struct {
     uint64_t warmCnt;
@@ -300,14 +300,13 @@ void doRuntime()
 
 static inline void add_warm_measurement()
 {
-    array[cur_elem].warmCnt = counter;
-    __sync_fetch_and_and(&counter,((uint64_t)0)); // reset the counter for the runtime phase
+    tmpCounter = array[cur_elem].warmCnt = counter;
 }
 
 
 static inline void add_runtime_measurement()
 {
-    array[cur_elem].runCnt = counter;
+    array[cur_elem].runCnt = (counter - tmpCounter);
     __sync_fetch_and_and(&counter,((uint64_t)0)); // reset the counter for the possible next warmup phase
     ++cur_elem;                                   // next element in the array for the next test
 }
@@ -321,12 +320,13 @@ void *measure_thread(void *args)
         __asm__("pause");
     }
 
-    doWarmUp();                                 //do the warm up before starting
-    add_warm_measurement();                     // add the warmup results and reset the tests counter
+    doWarmUp();                                         // do the warm up before starting
+    add_warm_measurement();                             // add the warmup results and reset the tests counter
 
-    doRuntime();                                // do the runtime
-    add_runtime_measurement();                  // add the runtime results, reset the tests counter and increment the pointer to the next test
-    ecallInterruptHandler(0);
+    doRuntime();                                        // do the runtime
+    sgx_status_t ret = ecall_pause_bench(global_eid);   // pause the Benchmark to stop incrementing the counter
+    print_ret_error(ret);
+    add_runtime_measurement();                          // add the runtime results, reset the tests counter and increment the pointer to the next test
     return nullptr;
 }
 
@@ -367,7 +367,12 @@ static void print_array()
         float warmRate    = (float)array[i].warmCnt / (float)GLOBAL_CONFIG.WARMUP_TIME;
         float runtimeRate = (float)array[i].runCnt  / (float)GLOBAL_CONFIG.RUNTIME;
 #ifdef WRITE_LOG_FILE
-        fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+        if(strcmp(test_names[i + DUMMY_INDEX], "custom SHA256 test") == 0)
+        {
+            fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.HASH256_LEN ,array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+        } else {
+            fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+        }
 #else
         printf("%s,%lu, %.5f, %lu, %.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);   //ToDo: think of an idea to append the name of the test ran for this calculation
 #endif
@@ -383,6 +388,7 @@ static void run_tests()
 {
     for (int test_id = 1; test_id < NUM_OF_TEST_MODULES+DUMMY_INDEX; ++test_id)
     {
+        //ToDo Maybe we should reset the counter just in case?! (Ask Nico)
         abort_measure = 0;
         sgx_status_t ret = SGX_SUCCESS;
         pthread_t measure, worker[WORKER_THREADS];

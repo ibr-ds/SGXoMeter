@@ -5,6 +5,32 @@
 #include "BenchThread.h"
 
 
+struct evp_pkey_st {
+    int type;
+    int save_type;
+    int references;
+    const EVP_PKEY_ASN1_METHOD *ameth;
+    ENGINE *engine;
+    union {
+        char *ptr;
+# ifndef OPENSSL_NO_RSA
+        struct rsa_st *rsa;     /* RSA */
+# endif
+# ifndef OPENSSL_NO_DSA
+        struct dsa_st *dsa;     /* DSA */
+# endif
+# ifndef OPENSSL_NO_DH
+        struct dh_st *dh;       /* DH */
+# endif
+# ifndef OPENSSL_NO_EC
+        struct ec_key_st *ec;   /* ECC */
+# endif
+    } pkey;
+    int save_parameters;
+    STACK_OF(X509_ATTRIBUTE) *attributes; /* [ 0 ] */
+    CRYPTO_RWLOCK *lock;
+} /* EVP_PKEY */ ;
+
 #ifdef RSA_KEY_GEN
 int rsa_key_gen()
 {
@@ -82,6 +108,8 @@ int rsa_key_gen()
 }
 
 #endif //RSA KEY GEN
+
+#define ADD_ENTROPY_SIZE	32
 
 #ifdef ELLIPTIC_CURVE_KEY_GEN
 int ec_key_gen()
@@ -358,6 +386,11 @@ void stop_bench(void)
     do_bench = STOPED;
 }
 
+void pause_bench(void)
+{
+    do_bench = PAUSED;
+}
+
 void set_config(uint64_t *ctr, void *globalConfig)
 {
     bench_counter = ctr;
@@ -385,7 +418,6 @@ void run_bench(int test_id)
 
     while(do_bench == RUNNING)
     {
-        //execute_test();
         (*testFuncPtr[test_id])();
         __sync_fetch_and_add(bench_counter, 1);
 
@@ -395,6 +427,4 @@ void run_bench(int test_id)
             if(iterCounter == GLOBAL_CONFIG->NUM_OF_ITERATION)      break;
         }
     }
-    //Reset the benchmark in case of multiple test modules to run after each other
-    do_bench = PAUSED;
 }

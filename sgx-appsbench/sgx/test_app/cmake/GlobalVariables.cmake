@@ -1,4 +1,4 @@
-########################## This is more or less a configuration fileww for the benchmarking tool ##########################
+########################## This is more or less a configuration file for the benchmarking tool ##########################
 
 
 
@@ -23,7 +23,7 @@ endif()
 ########################## Global Variables with Values ##########################
 if(FEATURE_LOGGING_FILE)
 
-	set(GLOB_RESULT_FILE_NAME		"plotdata" CACHE STRING "name of the output results file")
+	set(GLOB_RESULT_FILE_NAME	"plotdata" CACHE STRING "name of the output results file")
 	if (SGX_MODE STREQUAL HW)
 		string(CONCAT OUTPUT_FILE_NAME ${GLOB_RESULT_FILE_NAME} ".txt")
 	else()
@@ -48,7 +48,6 @@ else()
 	message(FATAL_ERROR "Invalid warmup time value. Please reconfigure again with correct values")
 endif()
 
-#TODO: change this later for the runtime phase variable
 set(GLOB_RUNTIME_VALUE			60 CACHE STRING "Sets the number of cycles rate for the benchmark")
 if(GLOB_RUNTIME_VALUE GREATER 0)
 	add_definitions(-DRUNTIME_PHASE=${GLOB_RUNTIME_VALUE})
