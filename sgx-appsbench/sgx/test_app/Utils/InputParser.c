@@ -1,4 +1,4 @@
-#include "GlobalVariables.h" // ToDo delete this later after full cmake support
+#include "GlobalVariables.h"
 #include "InputParser.h"
 
 #ifdef RUNTIME_PARSER

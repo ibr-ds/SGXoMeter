@@ -25,7 +25,7 @@
 #endif
 
 
-char *toHashStr;
+static char *toHashStr;
 static globalConfig_t *globConfPtr;
 void initCustomSHA256(globalConfig_t *globalConfig)
 {
@@ -37,6 +37,10 @@ void initCustomSHA256(globalConfig_t *globalConfig)
     }
 }
 
+void post_SHA256_test()
+{
+    free(toHashStr);
+}
 
 int custom_SHA256_test()
 {
