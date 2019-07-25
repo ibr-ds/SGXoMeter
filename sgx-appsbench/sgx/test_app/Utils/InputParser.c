@@ -381,7 +381,7 @@ void parseInput(int argc, char **argv)
                     multipli_flag = multiplicator;
                 }
                 else {
-                    fprintf(stderr, "error: distance option set more than once.\n");
+                    fprintf(stderr, "error: DNA multiplicator set more than once.\n");
                     say_help();
                     exit(EXIT_FAILURE);
                 }
@@ -398,7 +398,7 @@ void parseInput(int argc, char **argv)
                     dist_flag = dist;
                 }
                 else {
-                    fprintf(stderr, "error: distance option set more than once.\n");
+                    fprintf(stderr, "error: Distance option set more than once.\n");
                     say_help();
                     exit(EXIT_FAILURE);
                 }
