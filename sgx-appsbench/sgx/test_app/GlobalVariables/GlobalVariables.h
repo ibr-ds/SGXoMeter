@@ -21,6 +21,11 @@
             ,
             .HASH256_LEN = SHA_INPUT_LEN
 #endif
+
+#ifdef RSA_KEY_GEN
+            .RSA_BITS_MULTIPLICATOR = DEFAULT_RSA_BITS;
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
             ,
             .DNA_INPUT = INPUT_DNA,

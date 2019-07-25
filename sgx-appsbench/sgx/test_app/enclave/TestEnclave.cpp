@@ -63,6 +63,27 @@ void printf(const char *fmt, ...)
     uprint(buf);
 }
 
+int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
+{
+    char buf[BUFSIZ] = {'\0'};
+
+    int res = vsnprintf(buf, BUFSIZ, fmt, arg);
+    if (res >=0) {
+        sgx_status_t sgx_ret = uprint((const char *) buf);
+        TEST_CHECK(sgx_ret);
+    }
+    return res;
+}
+
+
+/*
+ * Local variables referring global variables, which their values are changed from multiple threads
+ */
+static volatile int do_bench = 0;
+volatile uint64_t *bench_counter = 0;
+static globalConfig_t *GLOBAL_CONFIG;
+
+
 typedef void CRYPTO_RWLOCK;
 
 struct evp_pkey_st {
@@ -91,7 +112,6 @@ struct evp_pkey_st {
     CRYPTO_RWLOCK *lock;
 } /* EVP_PKEY */ ;
 
-
 #ifdef RSA_KEY_GEN
 int rsa_key_gen()
 {
@@ -111,7 +131,7 @@ int rsa_key_gen()
 		printf("RSA_new failure: %ld\n", ERR_get_error());
 	    return 1;
 	}
-	ret = RSA_generate_key_ex(keypair, 4096, bn, NULL);
+	ret = RSA_generate_key_ex(keypair, GLOBAL_CONFIG->RSA_BITS, bn, NULL);
 	if (!ret) {
         printf("RSA_generate_key_ex failure: %ld\n", ERR_get_error());
 	    return 1;
@@ -167,7 +187,6 @@ int rsa_key_gen()
 	}
 	return 0;
 }
-
 #endif //RSA KEY GEN
 
 #ifdef ELLIPTIC_CURVE_KEY_GEN
@@ -242,28 +261,7 @@ int ec_key_gen()
 	}
 	return 0;
 }
-
 #endif  //ELLIPTIC CURVE KEY GEN
-
-int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
-{
-	char buf[BUFSIZ] = {'\0'};
-
-	int res = vsnprintf(buf, BUFSIZ, fmt, arg);
-	if (res >=0) {
-		sgx_status_t sgx_ret = uprint((const char *) buf);
-		TEST_CHECK(sgx_ret);
-	}
-	return res;
-}
-
-
-/*
- * Local variables referring global variables, which their values are changed from multiple threads
- */
-static volatile int do_bench = 0;
-volatile uint64_t *bench_counter = 0;
-static globalConfig_t *GLOBAL_CONFIG;
 
 
 

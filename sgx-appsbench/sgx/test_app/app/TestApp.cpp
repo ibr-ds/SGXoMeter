@@ -367,15 +367,23 @@ static void print_array()
         float warmRate    = (float)array[i].warmCnt / (float)GLOBAL_CONFIG.WARMUP_TIME;
         float runtimeRate = (float)array[i].runCnt  / (float)GLOBAL_CONFIG.RUNTIME;
 #ifdef WRITE_LOG_FILE
+
         if(strcmp(test_names[i + DUMMY_INDEX], "custom SHA256 test") == 0)
         {
+    #ifdef CUSTOM_SHA256_TEST
             fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.HASH256_LEN ,array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+    #endif //CUSTOM_SHA256_TEST
+        } else if(strcmp(test_names[i + DUMMY_INDEX], "rsa key gen") == 0)
+        {
+    #ifdef RSA_KEY_GEN
+            fprintf(fp,"%s,%d,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.RSA_BITS, array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+    #endif // RSA_KEY_GEN
         } else {
             fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
         }
 #else
         printf("%s,%lu, %.5f, %lu, %.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);   //ToDo: think of an idea to append the name of the test ran for this calculation
-#endif
+#endif //WRITE_LOG_FILE
     }
 #ifdef WRITE_LOG_FILE
     fprintf(stderr, "Results are saved in a text file with the name: %s\n", GLOBAL_CONFIG.DATA_FILE_NAME);
@@ -490,7 +498,6 @@ int ucreate_thread()
 /*  ToDo: memset is used in seeq libraries, therefore i defined the two methods below just in case. However seeq seems to work without adding them, so maybe remove them if not needed?!   */
 
 #ifdef MEMSET_SGX
-void* memset_s(void* dest, size_t destsz, int c, size_t len) {
     return memset(dest, c, destsz < len ? destsz : len);
 }
 
@@ -529,7 +536,6 @@ int main(int argc, char *argv[])
 #ifdef PRINT_CHECKS
     fprintf(stderr, "# Warmup phase: %lus\n", GLOBAL_CONFIG.WARMUP_TIME);
     fprintf(stderr, "# Runtime phase: %lus\n", GLOBAL_CONFIG.RUNTIME);
-
 #endif
 
     signal(SIGINT, ecallInterruptHandler);

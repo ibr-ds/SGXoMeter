@@ -5,6 +5,14 @@
 #include "BenchThread.h"
 
 
+/*
+ * Local variables referring global variables, which their values are changed from multiple threads
+ */
+static volatile int do_bench = 0;
+volatile uint64_t *bench_counter = 0;
+static globalConfig_t *GLOBAL_CONFIG;
+
+
 struct evp_pkey_st {
     int type;
     int save_type;
@@ -50,7 +58,7 @@ int rsa_key_gen()
 		printf("RSA_new failure: %ld\n", ERR_get_error());
 	    return 1;
 	}
-	ret = RSA_generate_key_ex(keypair, 4096, bn, NULL);
+	ret = RSA_generate_key_ex(keypair, GLOBAL_CONFIG->RSA_BITS, bn, NULL);
 	if (!ret) {
         printf("RSA_generate_key_ex failure: %ld\n", ERR_get_error());
 	    return 1;
@@ -106,7 +114,6 @@ int rsa_key_gen()
 	}
 	return 0;
 }
-
 #endif //RSA KEY GEN
 
 #define ADD_ENTROPY_SIZE	32
@@ -183,19 +190,7 @@ int ec_key_gen()
 	}
 	return 0;
 }
-
 #endif  //ELLIPTIC CURVE KEY GEN
-
-
-
-/*
- * Local variables referring global variables, which their values are changed from multiple threads
- */
-static volatile int do_bench = 0;
-volatile uint64_t *bench_counter = 0;
-static globalConfig_t *GLOBAL_CONFIG;
-
-
 
 
 /*

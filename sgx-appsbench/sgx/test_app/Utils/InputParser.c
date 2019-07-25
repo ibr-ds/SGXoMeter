@@ -3,7 +3,6 @@
 
 #ifdef RUNTIME_PARSER
 
-
 /*  ToDo: Here is the definition of the globalConfig with default values   */
 globalConfig_t GLOBAL_CONFIG = {
 #ifdef WRITE_LOG_FILE
@@ -14,8 +13,13 @@ globalConfig_t GLOBAL_CONFIG = {
         .WARMUP_TIME = WARMUP_PHASE
 
 #ifdef CUSTOM_SHA256_TEST
-,
+        ,
         .HASH256_LEN = SHA_INPUT_LEN
+#endif
+
+#ifdef RSA_KEY_GEN
+        ,
+        .RSA_BITS = DEFAULT_RSA_BITS
 #endif
 
 #ifdef DNA_PATTERN_MATCHING
@@ -53,9 +57,13 @@ static const char *TOOL_USAGE = "Tool Usage:"
 #endif
                            "    -R --runtime-phase  [#]          sets the runtime phase for each benchmark test [default 60 seconds]\n"
                            "    -I --iteration [#]               sets the number of iterations [default 0 (unlimited)]\n"
-                           "    -w --warmup-phase [#]            sets the warmup phase time for each benchmark test [default 10 seconds)]\n"
+                           "    -w --warmup-phase [#]            sets the warmup phase time for each benchmark test [default 10 seconds]\n"
 #ifdef CUSTOM_SHA256_TEST
-                           "    -L --hash256-length [#]          sets the input length of the hashed string [default 100 chars)]\n"
+                           "    -L --hash256-length [#]          sets the input length of the hashed string [default 100 chars]\n"
+#endif
+
+#ifdef RSA_KEY_GEN
+                           "    -B --rsa-bits [#]                sets the value of the rsa bits [default 1024 bits]\n"
 #endif
 ;
 
@@ -117,6 +125,10 @@ void parseInput(int argc, char **argv)
     int hash_flag = FLAG_NOT_SET;
 #endif
 
+#ifdef RSA_KEY_GEN
+    int rsa_bits_flag = FLAG_NOT_SET;
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
     int pattern_flag   = FLAG_NOT_SET;
     int dna_flag       = FLAG_NOT_SET;
@@ -154,6 +166,10 @@ void parseInput(int argc, char **argv)
                 {"hash256-length"   ,  required_argument, 0, 'L'},
 #endif
 
+#ifdef RSA_KEY_GEN
+                {"rsa-bits"         ,  required_argument, 0, 'B'},
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
                 {"pattern"          ,  required_argument, 0, 'P'},
                 {"DNA-input"        ,  required_argument, 0, 'D'},
@@ -186,6 +202,9 @@ void parseInput(int argc, char **argv)
 #endif
 #ifdef CUSTOM_SHA256_TEST
                       "L:"
+#endif
+#ifdef RSA_KEY_GEN
+                      "B:"
 #endif
 #ifdef DNA_PATTERN_MATCHING
                                       "apmnilczfvkherby:d:x:P:D:"
@@ -253,7 +272,6 @@ void parseInput(int argc, char **argv)
                 }
                 break;
 
-
             case 'I':
                 if (t_flag == FLAG_NOT_SET) {
                     int iterations = atoi(optarg);
@@ -286,6 +304,26 @@ void parseInput(int argc, char **argv)
                 }
                 else {
                     fprintf(stderr, "error: Hash input length value is set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+#endif
+
+#ifdef RSA_KEY_GEN
+            case 'B':
+                if (rsa_bits_flag == FLAG_NOT_SET) {
+                    int bit_size = atoi(optarg);
+                    if (bit_size < 0) {
+                        fprintf(stderr, "error: Invalid bit size value!.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    rsa_bits_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.RSA_BITS = bit_size;
+                }
+                else {
+                    fprintf(stderr, "error: Bit size value is set more than once.\n");
                     say_help();
                     exit(EXIT_FAILURE);
                 }

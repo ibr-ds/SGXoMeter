@@ -14,7 +14,6 @@ set(APP_INCLUDE_PATHS 		 ${UNTRUSTED_DIR} ${SGXSDK_INCLUDE_DIRS} ${Global_Variab
 set(CMAKE_C_FLAGS 		    "${CMAKE_C_FLAGS} ${SGX_COMMON_CFLAGS} -fPIC -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes")
 set(CMAKE_CXX_FLAGS 		"${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++11")
 
-
 set(APP_Link_Flags		    "${SGX_COMMON_CFLAGS} ${Security_Link_Flags} -L${SGXSDK_LIBRARIES} -l${SGX_URTS_LIB} -l${SGX_USVC_LIB} -L${OPENSSL_LIBRARY_PATH} -l${SgxSSK_LINK_LIB} -lpthread")
 set(APP_SRC_FILES 		     TestEnclave_u.c ../Utils/InputParser.c TestApp.cpp)
 

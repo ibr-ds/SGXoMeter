@@ -59,6 +59,12 @@ check_and_increment_counter(MODULE_CUSTOM_SHA256_TEST		NUMBER_OF_TESTS_VALUE)
 add_definitions(-DNUM_OF_TEST_MODULES=${NUMBER_OF_TESTS_VALUE})
 
 
+########################## RSA Key Gen Module ##########################
+if (MODULE_RSA_KEY_GEN)
+	set(VALUE_RSA_BITS										1024 CACHE STRING "Sets the value of rsa bits. Default value is 1024 bits")
+	add_definitions(-DDEFAULT_RSA_BITS=${VALUE_RSA_BITS})
+endif ()
+
 ########################## Custom SHA256 Module ##########################
 if(MODULE_CUSTOM_SHA256_TEST)
 	set(VALUE_SHA_INPUT_LEN									100	CACHE STRING "Sets the size of the string array to hash in the SHA256 test. Default size is 100")

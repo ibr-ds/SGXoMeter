@@ -20,6 +20,10 @@ typedef struct globalConfig{
     size_t HASH256_LEN;
 #endif
 
+#ifdef RSA_KEY_GEN
+    int RSA_BITS;
+#endif
+
 #ifdef DNA_PATTERN_MATCHING
     char *DNA_INPUT;
     char *PATTERN_INPUT;

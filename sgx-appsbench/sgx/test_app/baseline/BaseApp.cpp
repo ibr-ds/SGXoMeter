@@ -185,9 +185,17 @@ static void print_array()
         float runtimeRate = (float)array[i].runCnt  / (float)GLOBAL_CONFIG.RUNTIME;
 #ifdef WRITE_LOG_FILE
         //ToDo do this in a more elegant way
+
         if(strcmp(test_names[i + DUMMY_INDEX], "custom SHA256 test") == 0)
         {
+    #ifdef CUSTOM_SHA256_TEST
             fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.HASH256_LEN ,array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+    #endif //CUSTOM_SHA256_TEST
+        } else if(strcmp(test_names[i + DUMMY_INDEX], "rsa key gen") == 0)
+        {
+    #ifdef RSA_KEY_GEN
+            fprintf(fp,"%s,%d,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.RSA_BITS, array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+    #endif // RSA_KEY_GEN
         } else {
             fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
         }
