@@ -81,10 +81,10 @@ if(MODULE_DNA_PATTERN_MATCHING)
 	set(VALUE_PATTERN										"ACT" CACHE STRING "The searched Pattern in the DNA")
 	string(LENGTH VALUE_PATTERN PATTERN_LENGTH)
 
-	set(VALUE_INPUT_DNA										"ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCTCGT\\nACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCATCA\\n   	       CATGTTACAAATAAAGCAATAGCATCA\\nCATGTTACAAA                       TAAAGCAATAGCATCA\\n              CATOGTTACAAATAAAGCAATAGCATCA			\\nACCTCGTAAAAGCTATAGACTTG" CACHE STRING "The required DNA sequence for the search/matching")
+	set(VALUE_INPUT_DNA										"ACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCTCGT\\nACCTCGTAAAAGCTATAGACTTGCATGTTACAAATAAAGCAATAGCATCA\\n" CACHE STRING "The required DNA sequence for the search/matching")
 
 	add_definitions(-DPATTERN="${VALUE_PATTERN}" -DINPUT_DNA="${VALUE_INPUT_DNA}" -DINPUT_DNA_SIZE=sizeof\(INPUT_DNA\))
-	
+
 	set(VALUE_COUNT_FLAG									0 CACHE STRING "0 or 1. Returns only the count of matching lines. If enabled all other options will be ignored")
 	set(VALUE_SHOW_DIST_FLAG								0 CACHE STRING "0 or 1. Shows the Levenshtein distance of the match")
 	set(VALUE_SHOW_POS_FLAG									0 CACHE STRING "0 or 1. Shows the position of the match in the text")
@@ -101,7 +101,8 @@ if(MODULE_DNA_PATTERN_MATCHING)
 	set(VALUE_MEMORY_FLAG									0 CACHE STRING "Sets the DFA memory limit (in MB). Default is 0 (unlimited)")
 	set(VALUE_ALL_FLAG										0 CACHE STRING "Returns all the matching positions of each line")
 	set(VALUE_PRINT_LINE_FLAG								0 CACHE STRING "Does not print the matched line")
-	
+
+
 	if(VALUE_COUNT_FLAG EQUAL 0)
 		set(VALUE_MASK_COUNT								1)
 	else()

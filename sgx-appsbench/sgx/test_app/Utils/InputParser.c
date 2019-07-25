@@ -73,6 +73,7 @@ static const char *SEEQ_USAGE = "DNA MATCHER Usage:\n"
                                 "\n   INPUT OPTION:\n"
                                 "    -P --pattern [sought pattern]    sets the pattern to seek in the DNA [default predefined pattern]\n"
                                 "    -D --DNA [search DNA]            sets the DNA for the pattern search process [default predefined DNA]\n"
+                                "    -M --DNA-multiplicator [#]       sets the DNA pattern multiplicator value [default (1)]\n"
                                 "\n   MATCHING OPTIONS:\n"
                                 "    -d --distance [#]                maximum Levenshtein distance [default 0]\n"
                                 "    -i --invert                      return only the non-matching lines\n"
@@ -132,6 +133,7 @@ void parseInput(int argc, char **argv)
 #ifdef DNA_PATTERN_MATCHING
     int pattern_flag   = FLAG_NOT_SET;
     int dna_flag       = FLAG_NOT_SET;
+    int multipli_flag  = FLAG_NOT_SET;
     int showdist_flag  = FLAG_NOT_SET;
     int showpos_flag   = FLAG_NOT_SET;
     int printline_flag = FLAG_NOT_SET;
@@ -173,6 +175,7 @@ void parseInput(int argc, char **argv)
 #ifdef DNA_PATTERN_MATCHING
                 {"pattern"          ,  required_argument, 0, 'P'},
                 {"DNA-input"        ,  required_argument, 0, 'D'},
+                {"DNA-multiplicator",  required_argument, 0, 'M'},
                 {"positions"        ,    no_argument    , 0, 'p'},
                 {"match-only"       ,    no_argument    , 0, 'm'},
                 {"no-printline"     ,    no_argument    , 0, 'n'},
@@ -207,7 +210,7 @@ void parseInput(int argc, char **argv)
                       "B:"
 #endif
 #ifdef DNA_PATTERN_MATCHING
-                                      "apmnilczfvkherby:d:x:P:D:"
+                                      "apmnilczfvkherby:d:x:P:D:M:"
 #endif
         ;
 
@@ -367,6 +370,23 @@ void parseInput(int argc, char **argv)
                 }
                 break;
 
+            case 'M':
+                if (multipli_flag < 0) {
+                    int multiplicator = atoi(optarg);
+                    if (multiplicator < 0) {
+                        fprintf(stderr, "error: DNA multiplicator must be a positive integer.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    multipli_flag = multiplicator;
+                }
+                else {
+                    fprintf(stderr, "error: distance option set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+
             case 'd':
                 if (dist_flag < 0) {
                     int dist = atoi(optarg);
@@ -375,7 +395,7 @@ void parseInput(int argc, char **argv)
                         say_help();
                         exit(EXIT_FAILURE);
                     }
-                    dist_flag = atoi(optarg);
+                    dist_flag = dist;
                 }
                 else {
                     fprintf(stderr, "error: distance option set more than once.\n");
@@ -392,7 +412,7 @@ void parseInput(int argc, char **argv)
                         say_help();
                         exit(EXIT_FAILURE);
                     }
-                    memory_flag = atoi(optarg);
+                    memory_flag = memory;
                 }
                 else {
                     fprintf(stderr, "error: memory option set more than once.\n");
@@ -574,6 +594,7 @@ void parseInput(int argc, char **argv)
                 break;
         }
     }
+
 #ifdef DNA_PATTERN_MATCHING
     if (count_flag == -1) count_flag = 0;
     if (showdist_flag == -1) showdist_flag = 0;
@@ -617,6 +638,19 @@ void parseInput(int argc, char **argv)
     GLOBAL_CONFIG.NON_DNA       = nondna_flag;
     GLOBAL_CONFIG.ALL           = all_flag;
     GLOBAL_CONFIG.MEMORY        = (size_t)memory_flag * 1024*1024;
+
+    if(multipli_flag > 1)
+    {
+        size_t dna_length = strlen(GLOBAL_CONFIG.DNA_INPUT);
+        char *old_dna = GLOBAL_CONFIG.DNA_INPUT;
+        size_t new_dna_length = multipli_flag * dna_length * sizeof(char);
+        GLOBAL_CONFIG.DNA_INPUT = (char *) malloc(new_dna_length + 1);
+        for (int i = 0; i < multipli_flag; i++)
+        {
+            memcpy(GLOBAL_CONFIG.DNA_INPUT + (i * dna_length), old_dna, dna_length);
+        }
+        GLOBAL_CONFIG.DNA_INPUT[new_dna_length] = '\0';
+    }
 #endif
 }
 

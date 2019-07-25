@@ -196,11 +196,15 @@ static void print_array()
     #ifdef RSA_KEY_GEN
             fprintf(fp,"%s,%d,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.RSA_BITS, array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
     #endif // RSA_KEY_GEN
+        }else if(strcmp(test_names[i + DUMMY_INDEX], "DNA matching") == 0) {
+    #ifdef DNA_PATTERN_MATCHING
+            fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], strlen(GLOBAL_CONFIG.DNA_INPUT), array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+    #endif //DNA_PATTERN_MATCHING
         } else {
             fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
         }
 #else
-        printf("%s,%lu, %.5f, %lu, %.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);   //ToDo: think of an idea to append the name of the test ran for this calculation
+        printf("%s,%lu, %.5f, %lu, %.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
 #endif
     }
 #ifdef WRITE_LOG_FILE
@@ -248,7 +252,6 @@ static void run_tests()
 
 static void exec_bench_setup()
 {
-
     set_config((uint64_t *)&counter, &GLOBAL_CONFIG);
 
     // Run the benchmarks for each chosen test
