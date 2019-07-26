@@ -27,7 +27,8 @@ static globalConfig_t *globConfPtr;
 void initCustomSHA256(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
-    toHashStr = (char *) malloc(globalConfig->HASH256_LEN * sizeof(char));
+    size_t hashStrSize = globalConfig->HASH256_LEN * sizeof(char);
+    toHashStr = (char *) malloc(hashStrSize + 1);
     if(toHashStr == NULL)
     {
         fprintf(stderr, "Malloc failed!");
@@ -36,6 +37,7 @@ void initCustomSHA256(globalConfig_t *globalConfig)
     {
         toHashStr[i] = 'a';
     }
+    toHashStr[hashStrSize] = '\0';
 }
 
 void post_SHA256_test()

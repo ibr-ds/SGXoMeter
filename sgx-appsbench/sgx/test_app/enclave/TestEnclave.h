@@ -102,6 +102,11 @@ void pre_rsa_crypto_test(globalConfig_t *globalConfig);
 int rsa_crypto_test();
 void post_rsa_crypto_test();
 #endif
+#ifdef RSA_SIGN_TEST
+void pre_rsa_sign_test(globalConfig_t *globalConfig);
+int rsa_sign_test();
+void post_rsa_sign_test();
+#endif
 
 #if defined(__cplusplus)
 }

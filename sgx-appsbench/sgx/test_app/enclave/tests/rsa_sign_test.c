@@ -1,4 +1,4 @@
-#ifdef RSA_CRYPTO_TEST
+#ifdef RSA_SIGN_TEST
 
 #include "UtilsStructs.h"
 #include <stdio.h>
@@ -35,7 +35,7 @@ RSA *keypair;
 static char *errMsg;
 
 
-void pre_rsa_crypto_test(globalConfig_t *globalConfig)
+void pre_rsa_sign_test(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
     size_t rsa_message_size = globConfPtr->RSA_MESSAGE_LEN * sizeof(unsigned char);
@@ -105,21 +105,21 @@ void pre_rsa_crypto_test(globalConfig_t *globalConfig)
 }
 
 
-void post_rsa_crypto_test()
+void post_rsa_sign_test()
 {
     free(rsa_message);
     RSA_free(keypair);
 }
 
 #define ERROR -1
-int rsa_crypto_test()
+int rsa_sign_test()
 {
     int rsaMsgLen = globConfPtr->RSA_MESSAGE_LEN;
     unsigned char encodedText[(globConfPtr->RSA_BITS / 8)]; //ToDo message length should not be longer than (rsabits/8 - 11)
     unsigned char decodedText[rsaMsgLen];
     int rsa_len, out_len;
 
-    rsa_len = RSA_public_encrypt(rsaMsgLen, rsa_message, encodedText, keypair, RSA_PKCS1_PADDING);
+    rsa_len = RSA_private_encrypt(rsaMsgLen, rsa_message, encodedText, keypair, RSA_PKCS1_PADDING);
 
     if(rsa_len == ERROR)
     {
@@ -127,7 +127,7 @@ int rsa_crypto_test()
         goto error;
     }
 
-    out_len = RSA_private_decrypt(rsa_len, encodedText, decodedText, keypair, RSA_PKCS1_PADDING);
+    out_len = RSA_public_decrypt(rsa_len, encodedText, decodedText, keypair, RSA_PKCS1_PADDING);
     decodedText[out_len] = '\0';
     if(out_len != rsaMsgLen || memcmp(decodedText, rsa_message, rsaMsgLen) != 0)
     {

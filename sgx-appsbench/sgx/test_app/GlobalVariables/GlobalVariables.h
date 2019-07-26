@@ -22,11 +22,11 @@
             .HASH256_LEN = SHA_INPUT_LEN
 #endif
 
-#if  defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
+#if  defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
             .RSA_BITS_MULTIPLICATOR = DEFAULT_RSA_BITS;
 #endif
 
-#if defined(RSA_CRYPTO_TEST)
+#if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
             .RSA_MESSAGE_LEN = RSA_MSG_LEN;
 #endif
 

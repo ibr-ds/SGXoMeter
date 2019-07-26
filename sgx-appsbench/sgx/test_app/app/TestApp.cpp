@@ -215,6 +215,10 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
             , "rsa crypto test"
 #endif
 
+#ifdef RSA_SIGN_TEST
+            , "rsa signing test"
+#endif
+
 #ifdef RSA_KEY_GEN
             , "rsa key gen"
 #endif
@@ -387,11 +391,16 @@ static void print_array()
     #ifdef DNA_PATTERN_MATCHING
             fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], strlen(GLOBAL_CONFIG.DNA_INPUT), array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
     #endif //DNA_PATTERN_MATCHING
+        } else if(strcmp(test_names[i + DUMMY_INDEX], "rsa crypto test") == 0 || strcmp(test_names[i + DUMMY_INDEX], "rsa signing test") == 0)
+        {
+    #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
+            fprintf(fp,"%s,%d,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.RSA_BITS, GLOBAL_CONFIG.RSA_MESSAGE_LEN, array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+    #endif //RSA_CRYPTO_TEST || RSA_SIGN_TEST
         } else {
             fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
         }
 #else
-        printf("%s,%lu, %.5f, %lu, %.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
+        printf("%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
 #endif //WRITE_LOG_FILE
     }
 #ifdef WRITE_LOG_FILE

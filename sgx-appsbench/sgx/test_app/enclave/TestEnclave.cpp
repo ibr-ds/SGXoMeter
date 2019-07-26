@@ -316,6 +316,10 @@ GEN_TEST_MODULE_FUNCTION(custom_SHA256_test)
 GEN_TEST_MODULE_FUNCTION(rsa_crypto_test)
 #endif
 
+#ifdef RSA_SIGN_TEST
+GEN_TEST_MODULE_FUNCTION(rsa_sign_test)
+#endif
+
 #ifdef RSA_KEY_GEN
 GEN_TEST_MODULE_FUNCTION(rsa_key_gen)
 #endif
@@ -395,6 +399,10 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
                 ,TEST_NAME(rsa_crypto_test)
 #endif
 
+#ifdef RSA_SIGN_TEST
+                ,TEST_NAME(rsa_sign_test)
+#endif
+
 #ifdef RSA_KEY_GEN
                 ,TEST_NAME(rsa_key_gen)
 #endif
@@ -457,6 +465,10 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
 
 #ifdef RSA_CRYPTO_TEST
         , "rsa crypto test"
+#endif
+
+#ifdef RSA_SIGN_TEST
+        , "rsa signing test"
 #endif
 
 #ifdef RSA_KEY_GEN
@@ -529,6 +541,9 @@ extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
     pre_rsa_crypto_test(GLOBAL_CONFIG);
 #endif
 
+#ifdef RSA_SIGN_TEST
+    pre_rsa_sign_test(GLOBAL_CONFIG);
+#endif
 }
 
 /*
@@ -599,4 +614,10 @@ extern "C" void ecall_run_bench(int test_id)
     }
 #endif
 
+#ifdef RSA_CRYPTO_TEST
+    if(strcmp(test_names[test_id], "rsa signing test") == 0)
+    {
+        post_rsa_sign_test();
+    }
+#endif
 }

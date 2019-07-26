@@ -20,11 +20,11 @@ typedef struct globalConfig{
     size_t HASH256_LEN;
 #endif
 
-#if  defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
+#if  defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
     int RSA_BITS;
 #endif
 
-#if defined(RSA_CRYPTO_TEST)
+#if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
     size_t RSA_MESSAGE_LEN;
 #endif
 

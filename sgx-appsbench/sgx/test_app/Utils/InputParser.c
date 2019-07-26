@@ -17,12 +17,12 @@ globalConfig_t GLOBAL_CONFIG = {
         .HASH256_LEN = SHA_INPUT_LEN
 #endif
 
-#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
         ,
         .RSA_BITS = DEFAULT_RSA_BITS
 #endif
 
-#if defined(RSA_CRYPTO_TEST)
+#if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
         ,
         .RSA_MESSAGE_LEN = RSA_MSG_LEN
 #endif
@@ -67,11 +67,11 @@ static const char *TOOL_USAGE = "Tool Usage:"
                            "    -L --hash256-length [#]          sets the input length of the hashed string [default 100 chars]\n"
 #endif
 
-#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                            "    -B --rsa-bits [#]                sets the value of the rsa bits [default 1024 bits]\n"
 #endif
 
-#if defined(RSA_CRYPTO_TEST)
+#if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                            "    -N --rsa-msg-length [#]          sets the length of the en-decrypted rsa message[default 100 chars]\n"
 #endif
 ;
@@ -135,11 +135,11 @@ void parseInput(int argc, char **argv)
     int hash_flag = FLAG_NOT_SET;
 #endif
 
-#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
     int rsa_bits_flag = FLAG_NOT_SET;
 #endif
 
-#if defined(RSA_CRYPTO_TEST)
+#if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
     int rsa_msg_len_flag = FLAG_NOT_SET;
 #endif
 
@@ -181,11 +181,11 @@ void parseInput(int argc, char **argv)
                 {"hash256-length"   ,  required_argument, 0, 'L'},
 #endif
 
-#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                 {"rsa-bits"         ,  required_argument, 0, 'B'},
 #endif
 
-#if defined(RSA_CRYPTO_TEST)
+#if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                 {"rsa-msg-length"   ,  required_argument, 0, 'N'},
 #endif
 
@@ -223,10 +223,10 @@ void parseInput(int argc, char **argv)
 #ifdef CUSTOM_SHA256_TEST
                       "L:"
 #endif
-#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                       "B:"
 #endif
-#if defined(RSA_CRYPTO_TEST)
+#if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                       "N:"
 #endif
 #ifdef DNA_PATTERN_MATCHING
@@ -279,7 +279,7 @@ void parseInput(int argc, char **argv)
 
             case 'R':
                 if (r_flag  == FLAG_NOT_SET) {
-                    uint64_t runtime = atol(optarg);  //ToDo you can replace this with strtoul but then you need an extra char pointer for the rest of the input and extra checks and free
+                    uint64_t runtime = atol(optarg);
                     if (runtime < 0) {
                         fprintf(stderr, "error: Runtime value should be positive!\n");
                         say_help();
@@ -333,7 +333,7 @@ void parseInput(int argc, char **argv)
                 break;
 #endif
 
-#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
             case 'B':
                 if (rsa_bits_flag == FLAG_NOT_SET) {
                     int bit_size = atoi(optarg);
@@ -353,7 +353,7 @@ void parseInput(int argc, char **argv)
                 break;
 #endif
 
-#if defined(RSA_CRYPTO_TEST)
+#if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
             case 'N':
                 if (rsa_msg_len_flag == FLAG_NOT_SET) {
                     size_t rsa_msg_len = atol(optarg);
