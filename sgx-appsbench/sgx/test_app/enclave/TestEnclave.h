@@ -33,6 +33,7 @@
 #define _TESTENCLAVE_H_
 
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 
 #include "UtilsStructs.h"

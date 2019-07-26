@@ -12,8 +12,6 @@
 #include "../../../../package/include/openssl/evp.h"
 #include <UtilsStructs.h>
 
-//#define stdout ((void*)1)
-//#define stderr ((void*)2)
 
 #ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)
@@ -36,6 +34,10 @@ void initCustomSHA256(globalConfig_t *globalConfig)
     }
 }
 
+void post_SHA256_test()
+{
+    free(toHashStr);
+}
 
 int custom_SHA256_test()
 {

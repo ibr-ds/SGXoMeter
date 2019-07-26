@@ -510,7 +510,7 @@ extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
 #endif
 
 #ifdef CUSTOM_TEST
-    preCustomTest(GLOBAL_CONFIG);   //ToDo this might not work. If so build a wrapper like seeqtest
+    preCustomTest(GLOBAL_CONFIG);
 #endif
 }
 

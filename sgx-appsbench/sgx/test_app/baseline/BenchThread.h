@@ -7,6 +7,7 @@
 
 
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include <openssl/ec.h>
 #include <openssl/bn.h>
@@ -61,12 +62,15 @@ int wrapper_seeq_test(globalConfig_t *globalConfig);
 int seeq_test();
 #endif
 #ifdef CUSTOM_TEST
+void preCustomTest(globalConfig_t *globalConfig);
 int custom_test();
+void postCustomTest();
 #endif
 
 #ifdef CUSTOM_SHA256_TEST
-int custom_SHA256_test();
 void initCustomSHA256(globalConfig_t *globalConfig);
+int custom_SHA256_test();
+void post_SHA256_test();
 #endif
 
 #if defined(__cplusplus)

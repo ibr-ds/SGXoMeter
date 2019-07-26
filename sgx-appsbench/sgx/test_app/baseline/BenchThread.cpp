@@ -363,6 +363,66 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
 #endif
         };
 
+#define MAX_TEST_NAME_LENGTH 32
+static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] = {
+        "NONE"
+#ifdef CUSTOM_SHA256_TEST
+        , "custom SHA256 test"
+#endif
+
+#ifdef CUSTOM_TEST
+        , "custom test"
+#endif
+
+#ifdef RSA_KEY_GEN
+        , "rsa key gen"
+#endif
+
+#ifdef ELLIPTIC_CURVE_KEY_GEN
+        , "EC key gen"
+#endif
+
+#ifdef DNA_PATTERN_MATCHING
+        , "DNA matching"
+#endif
+
+#ifdef RSA_TESTS
+        , "RSA tests"
+#endif
+
+#ifdef ELLIPTIC_CURVE_TESTS
+        , "EC tests"
+#endif
+
+#ifdef ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
+        , "EC & DH tests"
+#endif
+
+#ifdef ELLIPTIC_CURVE_DSA_TESTS
+        , "EC & DSA tests"
+#endif
+
+#ifdef BN_TESTS
+        , "BN Tests"
+#endif
+
+#ifdef DEFFIE_HELLMAN_TESTS
+        , "DH tests"
+#endif
+
+#ifdef SECURE_HASH_ALGORITHM_256
+        , "SHA256"
+#endif
+
+#ifdef SECURE_HASH_ALGORITHM_1
+        , "SHA1"
+#endif
+
+#ifdef THREAD_TESTS
+        , "Multi-Thread tests"
+#endif
+};
+
 
 /*
  * The 3 Benchmark status
@@ -395,7 +455,11 @@ void set_config(uint64_t *ctr, void *globalConfig)
     }
    // OPENSSL_init_crypto(0, NULL);
 #ifdef CUSTOM_SHA256_TEST
-    initCustomSHA256(GLOBAL_CONFIG);   //ToDo this might not work. If so build a wrapper like seeqtest
+    initCustomSHA256(GLOBAL_CONFIG);
+#endif
+
+#ifdef CUSTOM_TEST
+    preCustomTest(GLOBAL_CONFIG);
 #endif
 }
 
@@ -422,4 +486,18 @@ void run_bench(int test_id)
             if(iterCounter == GLOBAL_CONFIG->NUM_OF_ITERATION)      break;
         }
     }
+
+#ifdef CUSTOM_SHA256_TEST
+    if(strcmp(test_names[test_id], "custom SHA256 test") == 0)
+    {
+        post_SHA256_test();
+    }
+#endif
+
+#ifdef CUSTOM_TEST
+    if(strcmp(test_names[test_id], "custom test") == 0)
+    {
+        postCustomTest();
+    }
+#endif
 }

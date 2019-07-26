@@ -1,7 +1,6 @@
 //
 // Created by moe on 16.07.19.
 //
-#define CUSTOM_SHA256_TEST
 #ifdef CUSTOM_SHA256_TEST
 
 #include <stdio.h>
