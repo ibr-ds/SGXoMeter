@@ -17,9 +17,14 @@ globalConfig_t GLOBAL_CONFIG = {
         .HASH256_LEN = SHA_INPUT_LEN
 #endif
 
-#ifdef RSA_KEY_GEN
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
         ,
         .RSA_BITS = DEFAULT_RSA_BITS
+#endif
+
+#if defined(RSA_CRYPTO_TEST)
+        ,
+        .RSA_MESSAGE_LEN = RSA_MSG_LEN
 #endif
 
 #ifdef DNA_PATTERN_MATCHING
@@ -62,8 +67,12 @@ static const char *TOOL_USAGE = "Tool Usage:"
                            "    -L --hash256-length [#]          sets the input length of the hashed string [default 100 chars]\n"
 #endif
 
-#ifdef RSA_KEY_GEN
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
                            "    -B --rsa-bits [#]                sets the value of the rsa bits [default 1024 bits]\n"
+#endif
+
+#if defined(RSA_CRYPTO_TEST)
+                           "    -N --rsa-msg-length [#]          sets the length of the en-decrypted rsa message[default 100 chars]\n"
 #endif
 ;
 
@@ -126,8 +135,12 @@ void parseInput(int argc, char **argv)
     int hash_flag = FLAG_NOT_SET;
 #endif
 
-#ifdef RSA_KEY_GEN
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
     int rsa_bits_flag = FLAG_NOT_SET;
+#endif
+
+#if defined(RSA_CRYPTO_TEST)
+    int rsa_msg_len_flag = FLAG_NOT_SET;
 #endif
 
 #ifdef DNA_PATTERN_MATCHING
@@ -168,8 +181,12 @@ void parseInput(int argc, char **argv)
                 {"hash256-length"   ,  required_argument, 0, 'L'},
 #endif
 
-#ifdef RSA_KEY_GEN
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
                 {"rsa-bits"         ,  required_argument, 0, 'B'},
+#endif
+
+#if defined(RSA_CRYPTO_TEST)
+                {"rsa-msg-length"   ,  required_argument, 0, 'N'},
 #endif
 
 #ifdef DNA_PATTERN_MATCHING
@@ -206,8 +223,11 @@ void parseInput(int argc, char **argv)
 #ifdef CUSTOM_SHA256_TEST
                       "L:"
 #endif
-#ifdef RSA_KEY_GEN
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
                       "B:"
+#endif
+#if defined(RSA_CRYPTO_TEST)
+                      "N:"
 #endif
 #ifdef DNA_PATTERN_MATCHING
                                       "apmnilczfvkherby:d:x:P:D:M:"
@@ -313,7 +333,7 @@ void parseInput(int argc, char **argv)
                 break;
 #endif
 
-#ifdef RSA_KEY_GEN
+#if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST)
             case 'B':
                 if (rsa_bits_flag == FLAG_NOT_SET) {
                     int bit_size = atoi(optarg);
@@ -332,6 +352,27 @@ void parseInput(int argc, char **argv)
                 }
                 break;
 #endif
+
+#if defined(RSA_CRYPTO_TEST)
+            case 'N':
+                if (rsa_msg_len_flag == FLAG_NOT_SET) {
+                    size_t rsa_msg_len = atol(optarg);
+                    if (rsa_msg_len < 0) {
+                        fprintf(stderr, "error: Invalid rsa message length!.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    rsa_msg_len_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.RSA_MESSAGE_LEN = rsa_msg_len;
+                }
+                else {
+                    fprintf(stderr, "error: RSA message length value is set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+#endif
+
 
 #ifdef DNA_PATTERN_MATCHING
             case 'P':

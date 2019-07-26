@@ -4,6 +4,10 @@ set(MODULE_RSA_KEY_GEN										NO CACHE BOOL "YES OR NO for RSA key generation 
 check_add_definition(MODULE_RSA_KEY_GEN						RSA_KEY_GEN)
 check_and_increment_counter(MODULE_RSA_KEY_GEN				NUMBER_OF_TESTS_VALUE)
 
+set(MODULE_RSA_CRYPTO_TEST									NO CACHE BOOL "YES OR NO for RSA message encryption and decryption tests")
+check_add_definition(MODULE_RSA_CRYPTO_TEST					RSA_CRYPTO_TEST)
+check_and_increment_counter(MODULE_RSA_CRYPTO_TEST			NUMBER_OF_TESTS_VALUE)
+
 set(MODULE_EC_KEY_GEN										NO CACHE BOOL "YES OR NO for elliptic curve Key generation tests")
 check_add_definition(MODULE_EC_KEY_GEN						ELLIPTIC_CURVE_KEY_GEN)
 check_and_increment_counter(MODULE_EC_KEY_GEN				NUMBER_OF_TESTS_VALUE)
@@ -59,10 +63,15 @@ check_and_increment_counter(MODULE_CUSTOM_SHA256_TEST		NUMBER_OF_TESTS_VALUE)
 add_definitions(-DNUM_OF_TEST_MODULES=${NUMBER_OF_TESTS_VALUE})
 
 
-########################## RSA Key Gen Module ##########################
-if (MODULE_RSA_KEY_GEN)
+########################## Various RSA Modules ##########################
+if (MODULE_RSA_KEY_GEN OR MODULE_RSA_CRYPTO_TEST)
 	set(VALUE_RSA_BITS										1024 CACHE STRING "Sets the value of rsa bits. Default value is 1024 bits")
 	add_definitions(-DDEFAULT_RSA_BITS=${VALUE_RSA_BITS})
+endif ()
+
+if (MODULE_RSA_CRYPTO_TEST)
+	set(VALUE_RSA_MESSAGE_LEN								100 CACHE STRINT "Sets the size of the message, which is used in the rsa en-decryption tests")
+	add_definitions(-DRSA_MSG_LEN=${VALUE_RSA_MESSAGE_LEN})
 endif ()
 
 ########################## Custom SHA256 Module ##########################

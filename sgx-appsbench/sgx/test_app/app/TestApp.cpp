@@ -211,6 +211,10 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
             , "custom test"
 #endif
 
+#ifdef RSA_CRYPTO_TEST
+            , "rsa crypto test"
+#endif
+
 #ifdef RSA_KEY_GEN
             , "rsa key gen"
 #endif

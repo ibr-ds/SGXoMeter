@@ -239,6 +239,10 @@ GEN_TEST_MODULE_FUNCTION(custom_test)
 GEN_TEST_MODULE_FUNCTION(custom_SHA256_test)
 #endif
 
+#ifdef RSA_CRYPTO_TEST
+GEN_TEST_MODULE_FUNCTION(rsa_crypto_test)
+#endif
+
 #ifdef RSA_KEY_GEN
 GEN_TEST_MODULE_FUNCTION(rsa_key_gen)
 #endif
@@ -314,6 +318,10 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
                 ,TEST_NAME(custom_test)
 #endif
 
+#ifdef RSA_CRYPTO_TEST
+                ,TEST_NAME(rsa_crypto_test)
+#endif
+
 #ifdef RSA_KEY_GEN
                 ,TEST_NAME(rsa_key_gen)
 #endif
@@ -372,6 +380,10 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
 
 #ifdef CUSTOM_TEST
         , "custom test"
+#endif
+
+#ifdef RSA_CRYPTO_TEST
+        , "rsa crypto test"
 #endif
 
 #ifdef RSA_KEY_GEN
@@ -461,6 +473,12 @@ void set_config(uint64_t *ctr, void *globalConfig)
 #ifdef CUSTOM_TEST
     preCustomTest(GLOBAL_CONFIG);
 #endif
+
+#ifdef RSA_CRYPTO_TEST
+    pre_rsa_crypto_test(GLOBAL_CONFIG);
+#endif
+
+
 }
 
 void run_bench(int test_id)
@@ -500,4 +518,12 @@ void run_bench(int test_id)
         postCustomTest();
     }
 #endif
+
+#ifdef RSA_CRYPTO_TEST
+    if(strcmp(test_names[test_id], "rsa crypto test") == 0)
+    {
+        post_rsa_crypto_test();
+    }
+#endif
+
 }

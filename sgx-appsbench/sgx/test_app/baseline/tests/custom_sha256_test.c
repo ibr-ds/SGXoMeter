@@ -28,6 +28,10 @@ void initCustomSHA256(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
     toHashStr = (char *) malloc(globalConfig->HASH256_LEN * sizeof(char));
+    if(toHashStr == NULL)
+    {
+        fprintf(stderr, "Malloc failed!");
+    }
     for(int i = 0; i < globalConfig->HASH256_LEN; i++)
     {
         toHashStr[i] = 'a';

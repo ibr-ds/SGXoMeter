@@ -92,11 +92,15 @@ void preCustomTest(globalConfig_t *globalConfig);
 int custom_test();
 void postCustomTest();
 #endif
-
 #ifdef CUSTOM_SHA256_TEST
 void initCustomSHA256(globalConfig_t *globalConfig);
 int custom_SHA256_test();
 void post_SHA256_test();
+#endif
+#ifdef RSA_CRYPTO_TEST
+void pre_rsa_crypto_test(globalConfig_t *globalConfig);
+int rsa_crypto_test();
+void post_rsa_crypto_test();
 #endif
 
 #if defined(__cplusplus)

@@ -6,8 +6,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-
 #include <openssl/sha.h>
 #include <openssl/evp.h>
 #include <UtilsStructs.h>
@@ -30,6 +28,10 @@ void initCustomSHA256(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
     toHashStr = (char *) malloc(globalConfig->HASH256_LEN * sizeof(char));
+    if(toHashStr == NULL)
+    {
+        fprintf(stderr, "Malloc failed!");
+    }
     for(int i = 0; i < globalConfig->HASH256_LEN; i++)
     {
         toHashStr[i] = 'a';
