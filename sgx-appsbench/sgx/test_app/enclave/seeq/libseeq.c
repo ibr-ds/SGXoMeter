@@ -22,7 +22,6 @@
 
 #include "libseeq.h"
 #include "seeqcore.h"
-
 #ifdef DNA_PATTERN_MATCHING
 
 int seeqerr = 0;

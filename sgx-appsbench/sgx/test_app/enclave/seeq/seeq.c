@@ -31,10 +31,17 @@
 #include <time.h>
 
 /*   added these defines for test cases and removing compile errors     */
+#ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)
 #define fflush(...)
 #define stdout ((void*)0)
 #define stderr ((void*)1)
+#else
+#define fprintf(stream, msg...) {}
+#define fflush(...)
+#define stdout ((void*)0)
+#define stderr ((void*)1)
+#endif
 #define CLOCKS_PER_SEC  (1000000)
 
 /* end of test cases  */
@@ -116,8 +123,11 @@ seeq
 
    if (args.count) {
       long retval = seeqFileMatch(sqfile, sq, match_options, SQ_COUNTLINES);
-      if (retval < 0) fprintf(stderr, "error in 'seeqFileMatch()': %s\n", seeqPrintError());
-      else fprintf(stdout, "%ld\n", retval);
+      if (retval < 0) {
+          fprintf(stderr, "error in 'seeqFileMatch()': %s\n", seeqPrintError());
+      } else {
+          fprintf(stdout, "%ld\n", retval);
+      }
    } else {
       if (args.all) {
          match_options |= SQ_ALL;
@@ -136,7 +146,10 @@ seeq
          while ((retval = seeqFileMatch(sqfile, sq, match_options, SQ_MATCH)) > 0) {
             match_t * match;
             while((match = seeqMatchIter(sq)) != NULL) {
-               if (args.compact) fprintf(stdout, "%ld:%ld-%ld:%ld",sqfile->line, match->start, match->end-1, match->dist);
+               if (args.compact)
+               {
+                   fprintf(stdout, "%ld:%ld-%ld:%ld",sqfile->line, match->start, match->end-1, match->dist);
+               }
                else {
                   if (args.showline) fprintf(stdout, "%ld ", sqfile->line);
                   if (args.showpos)  fprintf(stdout, "%ld-%ld ", match->start, match->end-1);
