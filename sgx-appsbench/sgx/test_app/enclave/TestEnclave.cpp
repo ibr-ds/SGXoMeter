@@ -614,7 +614,7 @@ extern "C" void ecall_run_bench(int test_id)
     }
 #endif
 
-#ifdef RSA_CRYPTO_TEST
+#ifdef RSA_SIGN_TEST
     if(strcmp(test_names[test_id], "rsa signing test") == 0)
     {
         post_rsa_sign_test();
