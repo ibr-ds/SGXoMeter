@@ -30,7 +30,7 @@ file(GLOB Trusted_C_Files
 	    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
 	    "${CMAKE_CURRENT_SOURCE_DIR}/seeq/*.c")
 
-set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC})
+set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${COMMON_HEADERS_PATH} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC})
 
 
 set(TRUSTED_SRCS				${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c)
@@ -93,6 +93,8 @@ add_library(${ENCLAVE_LIB_NAME} SHARED ${TRUSTED_SRCS})
 
 include_directories(${Trusted_Include_Paths})
 
+#ToDo cant link the library to the enclave
+#-L${ARGON2_LIBRARY_PATH} -largon2 \
 target_link_libraries(${ENCLAVE_LIB_NAME} "${SGX_COMMON_CFLAGS} \
         -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles \
         ${Security_Link_flags} \

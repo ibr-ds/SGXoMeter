@@ -281,7 +281,6 @@ typedef struct {
 
 measurement_t array[NUM_OF_TEST_MODULES];
 uint64_t cur_elem = 0;
-uint32_t a;
 
 
 void doWarmUp()
@@ -315,7 +314,6 @@ static inline void add_warm_measurement()
 static inline void add_runtime_measurement()
 {
     array[cur_elem].runCnt = (counter - tmpCounter);
-    __sync_fetch_and_and(&counter,((uint64_t)0)); // reset the counter for the possible next warmup phase
     ++cur_elem;                                   // next element in the array for the next test
 }
 
@@ -323,6 +321,7 @@ static inline void add_runtime_measurement()
 
 void *measure_thread(void *args)
 {
+    __sync_fetch_and_and(&counter,((uint64_t)0));       // reset the counter for the possible next warmup phase
     while(do_bench == 0)
     {
         __asm__("pause");
@@ -369,40 +368,11 @@ static void print_array()
     }
 #endif
 
-    // print array either to an output file or to the console
-    for (int i = 0; i < NUM_OF_TEST_MODULES; ++i)
-    {
-        float warmRate    = (float)array[i].warmCnt / (float)GLOBAL_CONFIG.WARMUP_TIME;
-        float runtimeRate = (float)array[i].runCnt  / (float)GLOBAL_CONFIG.RUNTIME;
-#ifdef WRITE_LOG_FILE
+    /*
+     * This includes the printing loop of the data in the measurement array
+     */
+    #include "arrayPrintLoop.h"
 
-        if(strcmp(test_names[i + DUMMY_INDEX], "custom SHA256 test") == 0)
-        {
-    #ifdef CUSTOM_SHA256_TEST
-            fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.HASH256_LEN ,array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-    #endif //CUSTOM_SHA256_TEST
-        } else if(strcmp(test_names[i + DUMMY_INDEX], "rsa key gen") == 0)
-        {
-    #ifdef RSA_KEY_GEN
-            fprintf(fp,"%s,%d,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.RSA_BITS, array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-    #endif // RSA_KEY_GEN
-        } else if(strcmp(test_names[i + DUMMY_INDEX], "DNA matching") == 0)
-        {
-    #ifdef DNA_PATTERN_MATCHING
-            fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], strlen(GLOBAL_CONFIG.DNA_INPUT), array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-    #endif //DNA_PATTERN_MATCHING
-        } else if(strcmp(test_names[i + DUMMY_INDEX], "rsa crypto test") == 0 || strcmp(test_names[i + DUMMY_INDEX], "rsa signing test") == 0)
-        {
-    #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
-            fprintf(fp,"%s,%d,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.RSA_BITS, GLOBAL_CONFIG.RSA_MESSAGE_LEN, array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-    #endif //RSA_CRYPTO_TEST || RSA_SIGN_TEST
-        } else {
-            fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-        }
-#else
-        printf("%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-#endif //WRITE_LOG_FILE
-    }
 #ifdef WRITE_LOG_FILE
     fprintf(stderr, "Results are saved in a text file with the name: %s\n", GLOBAL_CONFIG.DATA_FILE_NAME);
     fclose(fp);
@@ -444,7 +414,7 @@ static void run_tests()
         abort_measure = 1;
         fprintf(stderr, "Joining measure \n");
         pthread_join(measure, nullptr);
-
+        do_bench = 0;
         pthread_barrier_destroy(&worker_barrier);
     }
 }

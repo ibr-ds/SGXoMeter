@@ -203,249 +203,20 @@ int seeq_test()
 }
 #endif
 
+/**
+ * This includes the generation of the test function wrappers
+ */
+#include "testFunctionsGeneration.h"
 
-#ifdef PRINT_CHECKS
-#define GEN_TEST_MODULE_FUNCTION_END(NAME)  printf("Test %s completed\n", #NAME);\
-}
-#else
-#define GEN_TEST_MODULE_FUNCTION_END(NAME)  }
-#endif
-
-#define TEST_NAME(NAME) execute_##NAME
-
-#define GEN_TEST_MODULE_FUNCTION(NAME) static void execute_##NAME() \
-    { \
-        int ret = 0; \
-        ret = NAME(); \
-        if(ret != 0) \
-        { \
-        printf("%s has failed!\n", #NAME); \
-        }\
-    GEN_TEST_MODULE_FUNCTION_END(NAME)
-
-
-
-#define TEST_NAME(NAME) execute_##NAME
+/**
+ * This includes a common array of test names
+ */
+#include "testNames.h"
 
 /*
- * generating wrapper functions for the chosen test modules
- * these will be added later in the function ptr array
+ * This includes a function pointer array of all chosen modules
  */
-#ifdef CUSTOM_TEST
-GEN_TEST_MODULE_FUNCTION(custom_test)
-#endif
-
-#ifdef CUSTOM_SHA256_TEST
-GEN_TEST_MODULE_FUNCTION(custom_SHA256_test)
-#endif
-
-#ifdef RSA_CRYPTO_TEST
-GEN_TEST_MODULE_FUNCTION(rsa_crypto_test)
-#endif
-
-#ifdef RSA_SIGN_TEST
-GEN_TEST_MODULE_FUNCTION(rsa_sign_test)
-#endif
-
-#ifdef RSA_KEY_GEN
-GEN_TEST_MODULE_FUNCTION(rsa_key_gen)
-#endif
-
-#ifdef ELLIPTIC_CURVE_KEY_GEN
-GEN_TEST_MODULE_FUNCTION(ec_key_gen)
-#endif
-
-#ifdef DNA_PATTERN_MATCHING
-GEN_TEST_MODULE_FUNCTION(seeq_test)
-#endif
-
-#ifdef RSA_TESTS
-GEN_TEST_MODULE_FUNCTION(rsa_test)
-#endif
-
-#ifdef ELLIPTIC_CURVE_TESTS
-GEN_TEST_MODULE_FUNCTION(ec_test)
-#endif
-
-#ifdef ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
-GEN_TEST_MODULE_FUNCTION(ecdh_test)
-#endif
-
-#ifdef ELLIPTIC_CURVE_DSA_TESTS
-GEN_TEST_MODULE_FUNCTION(ecdsa_test)
-#endif
-
-#ifdef BN_TESTS
-GEN_TEST_MODULE_FUNCTION(bn_test)
-#endif
-
-#ifdef DEFFIE_HELLMAN_TESTS
-GEN_TEST_MODULE_FUNCTION(dh_test)
-#endif
-
-#ifdef SECURE_HASH_ALGORITHM_256
-GEN_TEST_MODULE_FUNCTION(sha256_test)
-#endif
-
-#ifdef SECURE_HASH_ALGORITHM_1
-GEN_TEST_MODULE_FUNCTION(sha1_test)
-#endif
-
-#ifdef THREAD_TESTS
-GEN_TEST_MODULE_FUNCTION(threads_test)
-#endif
-
-
-
-#define DUMMY_INDEX 1
-/*
- * This is only a dummy to solve the problem of adding the test modules hybridly (P.S it won*t be called)
- * in case for some reason it gets called you will be notified with the message written in it
- */
-void dummy()
-{
-    printf("dummy is called! something is wrong\n!");
-}
-
-/*
- * The function pointer array of the generated chosen test modules
- * it also contains at first a dummy empty function to avoid the adding ',' comma problem
- */
-void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
-        {
-                dummy
-#ifdef CUSTOM_SHA256_TEST
-                ,TEST_NAME(custom_SHA256_test)
-#endif
-
-#ifdef CUSTOM_TEST
-                ,TEST_NAME(custom_test)
-#endif
-
-#ifdef RSA_CRYPTO_TEST
-                ,TEST_NAME(rsa_crypto_test)
-#endif
-
-#ifdef RSA_SIGN_TEST
-                ,TEST_NAME(rsa_sign_test)
-#endif
-
-#ifdef RSA_KEY_GEN
-                ,TEST_NAME(rsa_key_gen)
-#endif
-
-#ifdef ELLIPTIC_CURVE_KEY_GEN
-                ,TEST_NAME(ec_key_gen)
-#endif
-
-#ifdef DNA_PATTERN_MATCHING
-                ,TEST_NAME(seeq_test)
-#endif
-
-#ifdef RSA_TESTS
-                ,TEST_NAME(rsa_test)
-#endif
-
-#ifdef ELLIPTIC_CURVE_TESTS
-                ,TEST_NAME(ec_test)
-#endif
-
-#ifdef ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
-                ,TEST_NAME(ecdh_test)
-#endif
-
-#ifdef ELLIPTIC_CURVE_DSA_TESTS
-                ,TEST_NAME(ecdsa_test)
-#endif
-
-#ifdef BN_TESTS
-                ,TEST_NAME(bn_test)
-#endif
-
-#ifdef DEFFIE_HELLMAN_TESTS
-                ,TEST_NAME(dh_test)
-#endif
-
-#ifdef SECURE_HASH_ALGORITHM_256
-                ,TEST_NAME(sha256_test)
-#endif
-
-#ifdef SECURE_HASH_ALGORITHM_1
-                ,TEST_NAME(sha1_test)
-#endif
-
-#ifdef THREAD_TESTS
-                ,TEST_NAME(threads_test)
-#endif
-        };
-
-#define MAX_TEST_NAME_LENGTH 32
-static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] = {
-        "NONE"
-#ifdef CUSTOM_SHA256_TEST
-        , "custom SHA256 test"
-#endif
-
-#ifdef CUSTOM_TEST
-        , "custom test"
-#endif
-
-#ifdef RSA_CRYPTO_TEST
-        , "rsa crypto test"
-#endif
-
-#ifdef RSA_SIGN_TEST
-        , "rsa signing test"
-#endif
-
-#ifdef RSA_KEY_GEN
-        , "rsa key gen"
-#endif
-
-#ifdef ELLIPTIC_CURVE_KEY_GEN
-        , "EC key gen"
-#endif
-
-#ifdef DNA_PATTERN_MATCHING
-        , "DNA matching"
-#endif
-
-#ifdef RSA_TESTS
-        , "RSA tests"
-#endif
-
-#ifdef ELLIPTIC_CURVE_TESTS
-        , "EC tests"
-#endif
-
-#ifdef ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
-        , "EC & DH tests"
-#endif
-
-#ifdef ELLIPTIC_CURVE_DSA_TESTS
-        , "EC & DSA tests"
-#endif
-
-#ifdef BN_TESTS
-        , "BN Tests"
-#endif
-
-#ifdef DEFFIE_HELLMAN_TESTS
-        , "DH tests"
-#endif
-
-#ifdef SECURE_HASH_ALGORITHM_256
-        , "SHA256"
-#endif
-
-#ifdef SECURE_HASH_ALGORITHM_1
-        , "SHA1"
-#endif
-
-#ifdef THREAD_TESTS
-        , "Multi-Thread tests"
-#endif
-};
+#include "testFunctionPointerArray.h"
 
 
 /*
@@ -477,23 +248,12 @@ void set_config(uint64_t *ctr, void *globalConfig)
     {
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
     }
-   // OPENSSL_init_crypto(0, NULL);
-#ifdef CUSTOM_SHA256_TEST
-    initCustomSHA256(GLOBAL_CONFIG);
-#endif
+    // OPENSSL_init_crypto(0, NULL);
 
-#ifdef CUSTOM_TEST
-    preCustomTest(GLOBAL_CONFIG);
-#endif
-
-#ifdef RSA_CRYPTO_TEST
-    pre_rsa_crypto_test(GLOBAL_CONFIG);
-#endif
-
-#ifdef RSA_SIGN_TEST
-    pre_rsa_sign_test(GLOBAL_CONFIG);
-#endif
-
+    /*
+     * This includes all available pre function calls of the chosen modules
+     */
+    #include "preTestFunctionCalls.h"
 }
 
 void run_bench(int test_id)
@@ -520,32 +280,8 @@ void run_bench(int test_id)
         }
     }
 
-#ifdef CUSTOM_SHA256_TEST
-    if(strcmp(test_names[test_id], "custom SHA256 test") == 0)
-    {
-        post_SHA256_test();
-    }
-#endif
-
-#ifdef CUSTOM_TEST
-    if(strcmp(test_names[test_id], "custom test") == 0)
-    {
-        postCustomTest();
-    }
-#endif
-
-#ifdef RSA_CRYPTO_TEST
-    if(strcmp(test_names[test_id], "rsa crypto test") == 0)
-    {
-        post_rsa_crypto_test();
-    }
-#endif
-
-#ifdef RSA_SIGN_TEST
-    if(strcmp(test_names[test_id], "rsa signing test") == 0)
-    {
-        post_rsa_sign_test();
-    }
-#endif
-
+    /*
+     * This includes the available post function calls of the chosen modules
+     */
+    #include "postTestFunctionCalls.h"
 }

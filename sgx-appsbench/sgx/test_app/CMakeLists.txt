@@ -14,6 +14,7 @@ endmacro()
 
 ########################## Global Settings ##########################
 set(Global_Variables_Path		    "${CMAKE_CURRENT_SOURCE_DIR}/GlobalVariables")
+set(COMMON_HEADERS_PATH             "${CMAKE_CURRENT_SOURCE_DIR}/CommonHeaders")
 set(Utils_Path		                "${CMAKE_CURRENT_SOURCE_DIR}/Utils")
 set(Security_Link_Flags			    "-Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now -pie")
 

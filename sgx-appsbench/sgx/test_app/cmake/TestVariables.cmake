@@ -64,6 +64,10 @@ set(MODULE_CUSTOM_SHA256_TEST								NO CACHE BOOL "YES OR NO to enable the cust
 check_add_definition(MODULE_CUSTOM_SHA256_TEST 				CUSTOM_SHA256_TEST)
 check_and_increment_counter(MODULE_CUSTOM_SHA256_TEST		NUMBER_OF_TESTS_VALUE)
 
+set(MODULE_ARGON2_TEST										NO CACHE BOOL "YES OR NO for Argon2 tests")
+check_add_definition(MODULE_ARGON2_TEST 					ARGON2_TEST)
+check_and_increment_counter(MODULE_ARGON2_TEST				NUMBER_OF_TESTS_VALUE)
+
 add_definitions(-DNUM_OF_TEST_MODULES=${NUMBER_OF_TESTS_VALUE})
 
 

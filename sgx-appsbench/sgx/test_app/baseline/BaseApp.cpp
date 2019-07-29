@@ -18,74 +18,10 @@ void InterruptHandler(int dummy)
     stop_bench();
 }
 
-#define DUMMY_INDEX     1
-#define MAX_TEST_NAME_LENGTH 32
-static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] = {
-        "NONE"
-#ifdef CUSTOM_SHA256_TEST
-        , "custom SHA256 test"
-#endif
-
-#ifdef CUSTOM_TEST
-        , "custom test"
-#endif
-
-#ifdef RSA_CRYPTO_TEST
-        , "rsa crypto test"
-#endif
-
-#ifdef RSA_SIGN_TEST
-        , "rsa signing test"
-#endif
-
-#ifdef RSA_KEY_GEN
-        , "rsa key gen"
-#endif
-
-#ifdef ELLIPTIC_CURVE_KEY_GEN
-        , "EC key gen"
-#endif
-
-#ifdef DNA_PATTERN_MATCHING
-        , "DNA matching"
-#endif
-
-#ifdef RSA_TESTS
-        , "RSA tests"
-#endif
-
-#ifdef ELLIPTIC_CURVE_TESTS
-        , "EC tests"
-#endif
-
-#ifdef ELLIPTIC_CURVE_DIFFIE_HELLMAN_TESTS
-        , "EC & DH tests"
-#endif
-
-#ifdef ELLIPTIC_CURVE_DSA_TESTS
-        , "EC & DSA tests"
-#endif
-
-#ifdef BN_TESTS
-        , "BN Tests"
-#endif
-
-#ifdef DEFFIE_HELLMAN_TESTS
-        , "DH tests"
-#endif
-
-#ifdef SECURE_HASH_ALGORITHM_256
-        , "SHA256"
-#endif
-
-#ifdef SECURE_HASH_ALGORITHM_1
-        , "SHA1"
-#endif
-
-#ifdef THREAD_TESTS
-        , "Multi-Thread tests"
-#endif
-};
+/*
+ * This includes an array of all chosen test modules
+ */
+#include "testNames.h"
 
 static volatile int do_bench = 0;
 static volatile int abort_measure = 0;
@@ -134,7 +70,6 @@ static inline void add_warm_measurement()
 static inline void add_runtime_measurement()
 {
     array[cur_elem].runCnt = (counter - tmpCounter);
-    __sync_fetch_and_and(&counter,((uint64_t)0)); // reset the counter for the possible next warmup phase
     ++cur_elem;                                   // next element in the array for the next test
 }
 
@@ -142,17 +77,18 @@ static inline void add_runtime_measurement()
 
 void *measure_thread(void *args)
 {
+    __sync_fetch_and_and(&counter,((uint64_t)0)); // reset the counter for the possible next warmup phase
     while(do_bench == 0)
     {
         __asm__("pause");
     }
 
-    doWarmUp();                                 // do the warm up before starting
-    add_warm_measurement();                     // add the warmup results and reset the tests counter
+    doWarmUp();                                   // do the warm up before starting
+    add_warm_measurement();                       // add the warmup results and reset the tests counter
 
-    doRuntime();                                // do the runtime
-    pause_bench();                              // pause the Benchmark to stop incrementing the counter
-    add_runtime_measurement();                  // add the runtime results, reset the tests counter and increment the pointer to the next test
+    doRuntime();                                  // do the runtime
+    pause_bench();                                // pause the Benchmark to stop incrementing the counter
+    add_runtime_measurement();                    // add the runtime results, reset the tests counter and increment the pointer to the next test
     return nullptr;
 }
 
@@ -186,40 +122,12 @@ static void print_array()
     }
 #endif
 
-    // print array either to an output file or to the console
-    for (int i = 0; i < NUM_OF_TEST_MODULES; ++i)
-    {
-        float warmRate    = (float)array[i].warmCnt / (float)GLOBAL_CONFIG.WARMUP_TIME;
-        float runtimeRate = (float)array[i].runCnt  / (float)GLOBAL_CONFIG.RUNTIME;
-#ifdef WRITE_LOG_FILE
-        //ToDo do this in a more elegant way
 
-        if(strcmp(test_names[i + DUMMY_INDEX], "custom SHA256 test") == 0)
-        {
-    #ifdef CUSTOM_SHA256_TEST
-            fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.HASH256_LEN ,array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-    #endif //CUSTOM_SHA256_TEST
-        } else if(strcmp(test_names[i + DUMMY_INDEX], "rsa key gen") == 0)
-        {
-    #ifdef RSA_KEY_GEN
-            fprintf(fp,"%s,%d,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.RSA_BITS, array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-    #endif // RSA_KEY_GEN
-        }else if(strcmp(test_names[i + DUMMY_INDEX], "DNA matching") == 0) {
-    #ifdef DNA_PATTERN_MATCHING
-            fprintf(fp,"%s,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], strlen(GLOBAL_CONFIG.DNA_INPUT), array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-    #endif //DNA_PATTERN_MATCHING
-        } else if(strcmp(test_names[i + DUMMY_INDEX], "rsa crypto test") == 0 || strcmp(test_names[i + DUMMY_INDEX], "rsa signing test") == 0)
-        {
-    #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
-            fprintf(fp,"%s,%d,%lu,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.RSA_BITS, GLOBAL_CONFIG.RSA_MESSAGE_LEN, array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-    #endif //RSA_CRYPTO_TEST || RSA_SIGN_TEST
-        } else {
-            fprintf(fp,"%s,%lu,%.5f,%lu,%.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-        }
-#else
-        printf("%s,%lu, %.5f, %lu, %.5f\n", test_names[i + DUMMY_INDEX], array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate);
-#endif
-    }
+/*
+ * This includes the printing loop of the data in the measurement array
+ */
+#include "arrayPrintLoop.h"
+
 #ifdef WRITE_LOG_FILE
     fprintf(stderr, "Results are saved in a text file with the name: %s\n", BASELINE_DATA_FILENAME);
     fclose(fp);
@@ -258,7 +166,7 @@ static void run_tests()
         abort_measure = 1;
         fprintf(stderr, "Joining measure \n");
         pthread_join(measure, nullptr);
-
+        do_bench = 0;
         pthread_barrier_destroy(&worker_barrier);
     }
 }

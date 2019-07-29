@@ -113,6 +113,10 @@ if(NOT EXISTS "${OPENSSL_PATH}")
 	)
 endif()
 
+########################## Set Argon2 Variables ##########################
+set(ARGON2_LIBRARY_PATH				${ROOT_DIR})
+set(ARGON2_LIBRARY_NAME				libargon2.a)
+
 
 ########################## Build the benchmarking tool  ##########################
 add_subdirectory(test_app)

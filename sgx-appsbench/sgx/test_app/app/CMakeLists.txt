@@ -9,7 +9,7 @@ endif()
 
 ########################## Build Untrusted Part of BenchApp ##########################
 set(UNTRUSTED_DIR		    "${CMAKE_CURRENT_SOURCE_DIR}")
-set(APP_INCLUDE_PATHS 		 ${UNTRUSTED_DIR} ${SGXSDK_INCLUDE_DIRS} ${Global_Variables_Path} ${Utils_Path})
+set(APP_INCLUDE_PATHS 		 ${UNTRUSTED_DIR} ${SGXSDK_INCLUDE_DIRS} ${Global_Variables_Path} ${Utils_Path} ${COMMON_HEADERS_PATH})
 
 set(CMAKE_C_FLAGS 		    "${CMAKE_C_FLAGS} ${SGX_COMMON_CFLAGS} -fPIC -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes")
 set(CMAKE_CXX_FLAGS 		"${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++11")
