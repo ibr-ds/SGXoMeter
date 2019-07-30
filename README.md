@@ -9,10 +9,10 @@ This is originally a project thesis and its target is to implement multiple appl
 ----------------------------------
 
 1. SGX driver & SGX-SDK version 2.3  
-2. ***Source*** [Path of SGX-SDK]/environment   (default: source /opt/intel/sgxsdk/environment)
-3. Go to *test-app* directory and execute ***make all***. Then you can start the tool by simply running ***./TestApp***
-4. ***Ctrl+C*** would stop the benchmarks and print out the results or you can start the benchmark with a desired number of iterations
-5. Python 3 is required in case you want to play the generated benchmark data from the tool. The tool can also be configured to either directly write the generated data in a text file or just print the results out to the standard output file.
+2. Go to *sgx* directory and create **"build"** folder. Then open a terminal inside the *build* folder and execute ***"cmake-gui .."*** .
+3. After you chose the modules to test, execute ***"make"*** in order to build the Benchmarking tool.
+4. ***"Ctrl+C"*** would stop the benchmarks and print out the results or you can start the benchmark with a desired number of iterations OR for a desired warmup and runtime phases.
+5. Python 3 is required in case you want to plot the generated benchmark data from the tool. The tool can also be configured to either directly write the generated data in a text file or just print the results out to the standard output file.
 The latter also allows to pipe the outputed results into a file for later reviews/plots.
 
 
