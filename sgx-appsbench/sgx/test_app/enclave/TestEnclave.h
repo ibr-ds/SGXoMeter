@@ -84,7 +84,7 @@ int sha1_test();
 int threads_test();
 #endif
 #ifdef DNA_PATTERN_MATCHING
-int wrapper_seeq_test(globalConfig_t *globalConfig);
+void pre_seeq_test(globalConfig_t *globalConfig);
 int seeq_test();
 #endif
 #ifdef CUSTOM_TEST

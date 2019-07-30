@@ -265,18 +265,6 @@ int ec_key_gen()
 
 
 
-
-/*
- * This is a wrapper inorder to be able to added this function to the function pointer array later
- */
-#ifdef DNA_PATTERN_MATCHING
-int seeq_test()
-{
-    return wrapper_seeq_test(GLOBAL_CONFIG);
-}
-#endif
-
-
 #ifdef PRINT_CHECKS
 #define GEN_TEST_MODULE_FUNCTION_END(NAME)  printf("Test %s completed\n", #NAME);\
 }
@@ -544,6 +532,11 @@ extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
 #ifdef RSA_SIGN_TEST
     pre_rsa_sign_test(GLOBAL_CONFIG);
 #endif
+
+#ifdef DNA_PATTERN_MATCHING
+    pre_seeq_test(GLOBAL_CONFIG);
+#endif
+
 }
 
 /*

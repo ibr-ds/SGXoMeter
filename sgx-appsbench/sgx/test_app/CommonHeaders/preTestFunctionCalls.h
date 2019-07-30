@@ -25,5 +25,8 @@ pre_rsa_sign_test(GLOBAL_CONFIG);
 pre_argon2_test(GLOBAL_CONFIG);
 #endif
 
+#ifdef DNA_PATTERN_MATCHING
+pre_seeq_test(GLOBAL_CONFIG);
+#endif
 
 #endif //SGX_APPSBENCH_PRETESTFUNCTIONCALLS_H

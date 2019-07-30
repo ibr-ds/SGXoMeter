@@ -193,16 +193,6 @@ int ec_key_gen()
 #endif  //ELLIPTIC CURVE KEY GEN
 
 
-/*
- * This is a wrapper inorder to be able to added this function to the function pointer array later
- */
-#ifdef DNA_PATTERN_MATCHING
-int seeq_test()
-{
-    return wrapper_seeq_test(GLOBAL_CONFIG);
-}
-#endif
-
 /**
  * This includes the generation of the test function wrappers
  */

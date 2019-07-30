@@ -5,9 +5,15 @@
 #include "seeq.h"
 
 #ifdef DNA_PATTERN_MATCHING
-int wrapper_seeq_test(globalConfig_t *globalConfig) {
 
-    struct seeqarg_t args;
+struct seeqarg_t args;
+static globalConfig_t *globConfPtr;
+
+
+void pre_seeq_test(globalConfig_t *globalConfig)
+{
+
+    globConfPtr = globalConfig;
 
     args.showdist  = globalConfig->SHOW_DIST;
     args.showpos   = globalConfig->SHOW_POS;
@@ -26,7 +32,12 @@ int wrapper_seeq_test(globalConfig_t *globalConfig) {
     args.all       = globalConfig->ALL;
     args.memory    = globalConfig->MEMORY;
 
-    return seeq(globalConfig->PATTERN_INPUT, globalConfig->DNA_INPUT, args);
 
+}
+
+
+int seeq_test()
+{
+        return seeq(globConfPtr->PATTERN_INPUT, globConfPtr->DNA_INPUT, args);
 }
 #endif

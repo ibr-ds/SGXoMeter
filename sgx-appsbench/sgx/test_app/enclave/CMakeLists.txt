@@ -94,7 +94,9 @@ add_library(${ENCLAVE_LIB_NAME} SHARED ${TRUSTED_SRCS})
 include_directories(${Trusted_Include_Paths})
 
 #ToDo cant link the library to the enclave
-#-L${ARGON2_LIBRARY_PATH} -largon2 \
+#       -L${ARGON2_LIBRARY_PATH} -largon2 \
+#        ${ARGON2_LIBRARY_PATH}/libargon2.so.1 \
+#        ${ARGON2_LIBRARY_PATH}/${ARGON2_LIBRARY_NAME} \
 target_link_libraries(${ENCLAVE_LIB_NAME} "${SGX_COMMON_CFLAGS} \
         -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles \
         ${Security_Link_flags} \
