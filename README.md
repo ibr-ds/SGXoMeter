@@ -41,13 +41,16 @@ It also offers the opportunity for third developer parties to benchmark their ap
 that can be implemented as desired(as long as SGX driver/SDK support the used libraries/operations).
 
 ##### *app/CMakeLists.txt*
-Here is where the untrusted part of the sgx benchmark application is built and contains the dependencies and necessary src files and libraries
+Here is where the untrusted part of the sgx benchmark application is built and contains the dependencies and necessary src files and libraries.
+This is the third cmake file of the hierarchy (Level 3).
 
 ##### *enclave/CMakeLists.txt*
-Here is where the trust part of the sgx benchmark application is built and contains the dependencies and necessary src files and libraries. Also, it includes the building of the shared library and enclave signing.
+Here is where the trust part of the sgx benchmark application is built and contains the dependencies and necessary src files and libraries. 
+Also, it includes the building of the shared library and enclave signing. This is the third cmake file of the hierarchy (Level 3).
 
 ##### *baseline/CMakeLists.txt*
-Here is where the baseline part of the benchmark application is built. This runs the same chosen test modules but with no sgx implementation
+Here is where the baseline part of the benchmark application is built. This runs the same chosen test modules but with no sgx implementation.
+This is the third cmake file of the hierarchy (Level 3).
 
 ### **Available Benchmark Applications**
 -----------------------------------------
