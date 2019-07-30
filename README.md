@@ -21,6 +21,17 @@ The latter also allows to pipe the outputed results into a file for later review
 The benchmarking tool is implemented in a modular way. Such that, each each test is a module that can be added or removed if desired.
 In order to do so, there exists multiple cmake files, through which you can configure the whole tool to only compile&prepare the desired modules(tests).
 
+##### *sgx/CMakeLists.txt*
+Here are where the environment variables are set(for sgx, openssl, argon2 etc..) and its the first cmake file of the cmake hierarchy (Level 1). 
+
+##### *ConfigSGX.cmake & FindSGXSDK.cmake*
+Here ,as the name tells their content, the SGX-SDK libraries and configurations are set and prepared for later usages for building the enclave and signing it. These two cmake files are included in the sgx/CMakeLists.txt
+
+
+##### *test-app/CMakeLists.txt*
+Here exists some of macros definitions that will be used later at the module selection. It also contains global settings (like variables for common headers & utilities pathes etc.. ).
+Furthermore, it includes Global/TestVariables.cmake and its the second cmake file of the hierarchy (Level 2).
+
 ##### *GlobalVariables.cmake*
 Here you can configure the runtime options of the tool. For example: compile with debug outputs, enable the desired features or set some global variables(number of benchmark iterations, warmup/runtime phase) etc...
 
@@ -28,6 +39,15 @@ Here you can configure the runtime options of the tool. For example: compile wit
 Here you can choose the wanted applications/modules to benchmark and set the possible runtime flags for some of them. 
 It also offers the opportunity for third developer parties to benchmark their applications/function payloads inside enclaves by offering an "interface"-like function ("customtest.c") 
 that can be implemented as desired(as long as SGX driver/SDK support the used libraries/operations).
+
+##### *app/CMakeLists.txt*
+Here is where the untrusted part of the sgx benchmark application is built and contains the dependencies and necessary src files and libraries
+
+##### *enclave/CMakeLists.txt*
+Here is where the trust part of the sgx benchmark application is built and contains the dependencies and necessary src files and libraries. Also, it includes the building of the shared library and enclave signing.
+
+##### *baseline/CMakeLists.txt*
+Here is where the baseline part of the benchmark application is built. This runs the same chosen test modules but with no sgx implementation
 
 ### **Available Benchmark Applications**
 -----------------------------------------
