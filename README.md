@@ -19,28 +19,31 @@ The latter also allows to pipe the outputed results into a file for later review
 ### **Features & Configurations**
 ---------------------------------
 The benchmarking tool is implemented in a modular way. Such that, each each test is a module that can be added or removed if desired.
-In order to do so, there exists two header files "GobalMacros.h" & "TestMacros.h", through which you can configure the whole tool to only compile&prepare the desired modules(tests).
+In order to do so, there exists multiple cmake files, through which you can configure the whole tool to only compile&prepare the desired modules(tests).
 
-##### *GlobalMacros*
-Here you can configure the runtime options of the tool. For example: compile with debug outputs, enable the desired features or set some global variables(number of benchmark iterations) etc...
+##### *GlobalVariables.cmake*
+Here you can configure the runtime options of the tool. For example: compile with debug outputs, enable the desired features or set some global variables(number of benchmark iterations, warmup/runtime phase) etc...
 
-##### *TestMacros*
-Here you can choose the wanted applications to benchmark and set the possible runntime flags for some of them. 
+##### *TestVariables.cmake*
+Here you can choose the wanted applications/modules to benchmark and set the possible runtime flags for some of them. 
 It also offers the opportunity for third developer parties to benchmark their applications/function payloads inside enclaves by offering an "interface"-like function ("customtest.c") 
-that can be implemented as desired(as long as SGX driver/SDK supports the used libraries/operations).
+that can be implemented as desired(as long as SGX driver/SDK support the used libraries/operations).
 
 ### **Available Benchmark Applications**
 -----------------------------------------
 Currently there are couple modules(tests) available:
 
 1.  RSA key generation
-2.  Elliptic curve key generation
-3.  RSA tests. This includes: generating different public/private keys and encrypting and decrypting a plain text
-4.  Elliptic curve tests similar to the RSA tests
-5.  Elliptic curve with diffie hellman method tests
-6.  Elliptic curve with digital signature algorithm(DSA) tests
-7.  Diffie Hellman tests
-8.  SHA 256 & SHA 1 tests
-9.  Multi threaded tests with crypto rw locks 
-10. SGX-Port version of "seeq" library fpr DNA pattern search
-11. Custom test. Which can be implemented by third dev parties for their own benchmarking reasons
+2.  Custom RSA key generation
+3.  RSA Crypto tests (encryption and decryption of messages)
+4.  RSA Signing tests
+5.  Custom SHA256 test
+6.  Elliptic curve key generation
+7.  RSA tests. This includes: generating different public/private keys and encrypting and decrypting a plain text
+8.  Elliptic curve tests similar to the RSA tests
+9.  Elliptic curve with diffie hellman method tests
+10. Elliptic curve with digital signature algorithm(DSA) tests
+11. Diffie Hellman tests
+12. SHA 256 & SHA 1 tests
+13. SGX-Port version of "seeq" library fpr DNA pattern search
+14. Custom test. Which can be implemented by third dev parties for their own benchmarking reasons
