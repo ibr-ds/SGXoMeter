@@ -36,7 +36,6 @@ typedef struct {
 
 measurement_t array[NUM_OF_TEST_MODULES];
 uint64_t cur_elem = 0;
-uint32_t a;
 
 
 void doWarmUp()

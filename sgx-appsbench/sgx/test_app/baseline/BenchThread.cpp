@@ -261,7 +261,7 @@ void run_bench(int test_id)
     while(do_bench == RUNNING)
     {
         (*testFuncPtr[test_id])();
-        __sync_fetch_and_add(bench_counter, 1);
+        *bench_counter += 1;
 
         if(GLOBAL_CONFIG->NUM_OF_ITERATION > 0) {
             iterCounter++;

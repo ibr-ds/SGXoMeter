@@ -117,6 +117,9 @@ endif()
 set(ARGON2_LIBRARY_PATH				${ROOT_DIR})
 set(ARGON2_LIBRARY_NAME				libargon2.a)
 
+########################## Set LibSodium Variables ##########################
+#include(cmake/Findsodium.cmake)
+#message(WARNING "sodium library is at ${sodium_LIBRARY_RELEASE}")
 
 ########################## Build the benchmarking tool  ##########################
 add_subdirectory(test_app)
