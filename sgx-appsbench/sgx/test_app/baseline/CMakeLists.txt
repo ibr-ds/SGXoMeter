@@ -27,4 +27,4 @@ target_include_directories(${BASE_APP_NAME} PRIVATE
         ${BASELINE_INCLUDE_PATHS}
         )
 
-target_link_libraries(${BASE_APP_NAME}   ${BASELINE_Link_Flags} ${ARGON2_LIBRARY_PATH}/${ARGON2_LIBRARY_NAME})
+target_link_libraries(${BASE_APP_NAME}   ${BASELINE_Link_Flags} ${ARGON2_LIBRARY_PATH}/${ARGON2_LIBRARY_NAME}) #ToDo later link ${sodium_LIBRARY_RELEASE} instead of argon because it contains argon internally

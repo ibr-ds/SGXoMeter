@@ -1,7 +1,7 @@
 //
 // Created by moe on 24.05.19.
 //
-#include <GlobalVariables/UtilsStructs.h>
+#include <UtilsStructs.h>
 #include "../seeq/seeq.h"
 
 #ifdef DNA_PATTERN_MATCHING
