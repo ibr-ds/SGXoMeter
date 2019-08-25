@@ -2,7 +2,7 @@
 set(BASELINE_DIR		                "${CMAKE_CURRENT_SOURCE_DIR}")
 set(BASELINE_INCLUDE_PATHS 		         ${BASELINE_DIR} ${Global_Variables_Path} ${Utils_Path} ${BASELINE_OPENSSL_LIBRARY_INC} ${COMMON_HEADERS_PATH})
 
-set(CMAKE_C_FLAGS 		                "${CMAKE_C_FLAGS} -fPIC -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes")
+set(CMAKE_C_FLAGS 		                "${CMAKE_C_FLAGS} -O2 -fPIC -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes")
 set(CMAKE_CXX_FLAGS 		            "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++11")
 
 file(GLOB Tests_C_FILES

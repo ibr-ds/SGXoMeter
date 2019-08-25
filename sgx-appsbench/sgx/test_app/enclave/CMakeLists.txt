@@ -32,7 +32,9 @@ file(GLOB Trusted_C_Files
 
 set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${COMMON_HEADERS_PATH} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC})
 
-
+#ToDo filter the unselected source files out (newly detected flaw :/ 20.08.2019)
+#add and include(cmake/filter.cmake) that sets the TRUSTED_SRCS variable incrementally with the appropriate source files
+#this is important in order to make the size of the enclave smaller/bigger deppending on the selected Modules
 set(TRUSTED_SRCS				${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c)
 
 
