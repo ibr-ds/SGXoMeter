@@ -5,6 +5,10 @@ set(BASELINE_INCLUDE_PATHS 		         ${BASELINE_DIR} ${Global_Variables_Path} $
 set(CMAKE_C_FLAGS 		                "${CMAKE_C_FLAGS} -O2 -fPIC -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes")
 set(CMAKE_CXX_FLAGS 		            "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++11")
 
+
+#ToDo filter the unselected source files out (newly detected flaw :/ 20.08.2019)
+#add and include(cmake/filter.cmake) that sets the TRUSTED_SRCS variable incrementally with the appropriate source files
+#this is important in order to make the size of the enclave smaller/bigger deppending on the selected Modules
 file(GLOB Tests_C_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
         "${CMAKE_CURRENT_SOURCE_DIR}/../enclave/seeq/*.c")      #ToDo move these two to the outside and adjust them accordingly in the cmakelist file used in
