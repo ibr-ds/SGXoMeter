@@ -8,7 +8,7 @@ This is originally a project thesis and its target is to implement multiple appl
 ### **Prerequisites, Setup & Run**
 ----------------------------------
 
-1. SGX driver & SGX-SDK version 2.3  
+1. SGX driver & SGX-SDK version 2.3 (also tested on version 2.6)
 2. Go to *sgx* directory and create **"build"** folder. Then open a terminal inside the *build* folder and execute ***"cmake-gui .."*** .
 3. After you chose the modules to test, execute ***"make"*** in order to build the Benchmarking tool.
 4. ***"Ctrl+C"*** would stop the benchmarks and print out the results or you can start the benchmark with a desired number of iterations OR for a desired warmup and runtime phases.
