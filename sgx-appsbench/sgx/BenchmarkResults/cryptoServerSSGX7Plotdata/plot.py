@@ -59,7 +59,7 @@ plt.xticks(visible=False)
 ax.xaxis.set_visible('False')
 ax.yaxis.set_visible('False')
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
-mark_inset(ax, axins, loc1=1, loc2=4, fc="none", ec="0.5")
+mark_inset(ax, axins, loc1=3, loc2=4, fc="none", ec="0.5")
 
 #plt.tight_layout()
 plt.savefig("en-decryptionRsa.pdf")
