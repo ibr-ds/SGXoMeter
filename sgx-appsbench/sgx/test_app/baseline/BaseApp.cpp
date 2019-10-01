@@ -23,56 +23,10 @@ void InterruptHandler(int dummy)
  */
 #include "testNames.h"
 
-static volatile int do_bench = 0;
-static volatile int abort_measure = 0;
-volatile uint64_t counter = 0;
-uint64_t tmpCounter = 0;
-
-typedef struct {
-    uint64_t warmCnt;
-    uint64_t runCnt;
-} measurement_t;
-
-
-measurement_t array[NUM_OF_TEST_MODULES];
-uint64_t cur_elem = 0;
-
-
-void doWarmUp()
-{
-    TimeVar initTime = timeNow();
-    TimeVar currentTime;
-    do
-    {
-        __asm__("pause");
-        currentTime = timeNow();
-    } while(abort_measure == 0 && duration(currentTime - initTime) <  GLOBAL_CONFIG.WARMUP_TIME);
-}
-
-void doRuntime()
-{
-    TimeVar initTime = timeNow();
-    TimeVar curTime = timeNow();
-    while(abort_measure == 0 && duration(curTime - initTime) < GLOBAL_CONFIG.RUNTIME)
-    {
-        curTime = timeNow();
-        __asm__("pause");
-    }
-}
-
-static inline void add_warm_measurement()
-{
-    tmpCounter = array[cur_elem].warmCnt = counter;
-}
-
-
-static inline void add_runtime_measurement()
-{
-    array[cur_elem].runCnt = (counter - tmpCounter);
-    ++cur_elem;                                   // next element in the array for the next test
-}
-
-
+/*
+ * This includes the time measurement struct and the associated functions
+ */
+#include "measurementUtils.h"
 
 void *measure_thread(void *args)
 {
@@ -82,12 +36,9 @@ void *measure_thread(void *args)
         __asm__("pause");
     }
 
-    doWarmUp();                                   // do the warm up before starting
-    add_warm_measurement();                       // add the warmup results and reset the tests counter
-
-    doRuntime();                                  // do the runtime
+    doWarmUp();                                   // do the warm up phase and store its result in the array
+    doRuntime();                                  // do the runtime phase and store its result in the array
     pause_bench();                                // pause the Benchmark to stop incrementing the counter
-    add_runtime_measurement();                    // add the runtime results, reset the tests counter and increment the pointer to the next test
     return nullptr;
 }
 

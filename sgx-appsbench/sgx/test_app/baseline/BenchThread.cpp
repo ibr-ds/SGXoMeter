@@ -252,8 +252,6 @@ void run_bench(int test_id)
     while(do_bench == PAUSED)
     { __asm__("pause");}
 
-    int iterCounter = 0;
-
 #ifdef PRINT_CHECKS
     printf("Start tests\n");
 #endif
@@ -262,12 +260,6 @@ void run_bench(int test_id)
     {
         (*testFuncPtr[test_id])();
         *bench_counter += 1;
-
-        if(GLOBAL_CONFIG->NUM_OF_ITERATION > 0) {
-            iterCounter++;
-            //check the counter either against the given one with a query or the one set globally
-            if(iterCounter == GLOBAL_CONFIG->NUM_OF_ITERATION)      break;
-        }
     }
 
     /*
