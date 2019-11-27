@@ -68,11 +68,24 @@ set(MODULE_ARGON2_TEST										NO CACHE BOOL "YES OR NO for Argon2 tests")
 check_add_definition(MODULE_ARGON2_TEST 					ARGON2_TEST)
 check_and_increment_counter(MODULE_ARGON2_TEST				NUMBER_OF_TESTS_VALUE)
 
+set(MODULE_SGX_CRYPTO_ENCRYPT								NO CACHE BOOL "YES OR NO for sgx tcrypto encryption tests")
+check_add_definition(MODULE_SGX_CRYPTO_ENCRYPT 				SGX_ENCRYPTO_TEST)
+check_and_increment_counter(MODULE_SGX_CRYPTO_ENCRYPT		NUMBER_OF_TESTS_VALUE)
+
+set(MODULE_SGX_CRYPTO_DECRYPT								NO CACHE BOOL "YES OR NO for sgx tcrypto decryption on in-enclave buffers tests")
+check_add_definition(MODULE_SGX_CRYPTO_DECRYPT 				SGX_DECRYPTO_TEST)
+check_and_increment_counter(MODULE_SGX_CRYPTO_DECRYPT		NUMBER_OF_TESTS_VALUE)
+
+set(MODULE_SGX_CRYPTO_DECRYPT_EXT							NO CACHE BOOL "YES OR NO for sgx tcrypto decryption on external buffers tests")
+check_add_definition(MODULE_SGX_CRYPTO_DECRYPT_EXT			SGX_DECRYPTO_EXT_TEST)
+check_and_increment_counter(MODULE_SGX_CRYPTO_DECRYPT_EXT	NUMBER_OF_TESTS_VALUE)
+
+
 add_definitions(-DNUM_OF_TEST_MODULES=${NUMBER_OF_TESTS_VALUE})
 
 
 ########################## Various RSA Modules ##########################
-if (MODULE_RSA_KEY_GEN OR MODULE_RSA_CRYPTO_TEST OR MODULE_RSA_SIGN_TEST)
+if(MODULE_RSA_KEY_GEN OR MODULE_RSA_CRYPTO_TEST OR MODULE_RSA_SIGN_TEST)
 	set(VALUE_RSA_BITS										1024 CACHE STRING "Sets the value of rsa bits. Default value is 1024 bits")
 	add_definitions(-DDEFAULT_RSA_BITS=${VALUE_RSA_BITS})
 endif ()
@@ -86,6 +99,12 @@ endif ()
 if(MODULE_CUSTOM_SHA256_TEST)
 	set(VALUE_SHA_INPUT_LEN									100	CACHE STRING "Sets the size of the string array to hash in the SHA256 test. Default size is 100")
 	add_definitions(-DSHA_INPUT_LEN=${VALUE_SHA_INPUT_LEN})
+endif()
+
+########################## SGX SDK Crypto Module ##########################
+if(MODULE_SGX_CRYPTO_ENCRYPT OR MODULE_SGX_CRYPTO_DECRYPT OR MODULE_SGX_CRYPTO_DECRYPT_EXT)
+	set(VALUE_CRYPTO_BUFFER_LEN								16 CACHE STRING "Sets the size of the to be en/decrypted string buffer. Default size is 16 Bytes")
+	add_definitions(-DCRYPTO_BUF_LEN=${VALUE_CRYPTO_BUFFER_LEN})
 endif()
 
 ########################## DNA Pattern Module Configuration ##########################

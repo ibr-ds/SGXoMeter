@@ -29,4 +29,16 @@ pre_argon2_test(GLOBAL_CONFIG);
 pre_seeq_test(GLOBAL_CONFIG);
 #endif
 
+#ifdef SGX_ENCRYPTO_TEST
+pre_sgx_encrypto_test(GLOBAL_CONFIG);
+#endif
+
+#ifdef SGX_DECRYPTO_TEST
+pre_sgx_decrypto_test(GLOBAL_CONFIG);
+#endif
+
+#ifdef SGX_DECRYPTO_EXT_TEST
+pre_sgx_decrypto_ext_test(GLOBAL_CONFIG);
+#endif
+
 #endif //SGX_APPSBENCH_PRETESTFUNCTIONCALLS_H

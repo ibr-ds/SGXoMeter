@@ -11,6 +11,19 @@
 
 static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] = {
         "NONE"
+
+#ifdef SGX_ENCRYPTO_TEST
+        , "sgx encrypto test"
+#endif
+
+#ifdef SGX_DECRYPTO_TEST
+        , "sgx decrypto test"
+#endif
+
+#ifdef SGX_DECRYPTO_EXT_TEST
+        , "sgx decrypto ext test"
+#endif
+
 #ifdef CUSTOM_SHA256_TEST
         , "custom SHA256 test"
 #endif

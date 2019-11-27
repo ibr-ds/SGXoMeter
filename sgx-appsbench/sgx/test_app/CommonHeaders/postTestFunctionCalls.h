@@ -40,4 +40,25 @@ if(strcmp(test_names[test_id], "argon2 test") == 0)
     }
 #endif
 
+#ifdef SGX_ENCRYPTO_TEST
+if(strcmp(test_names[test_id], "sgx encrypto test") == 0)
+    {
+        post_sgx_encrypto_test();
+    }
+#endif
+
+#ifdef SGX_DECRYPTO_TEST
+if(strcmp(test_names[test_id], "sgx decrypto test") == 0)
+    {
+        post_sgx_decrypto_test();
+    }
+#endif
+
+#ifdef SGX_DECRYPTO_EXT_TEST
+if(strcmp(test_names[test_id], "sgx decrypto ext test") == 0)
+    {
+        post_sgx_decrypto_ext_test();
+    }
+#endif
+
 #endif //SGX_APPSBENCH_POSTTESTFUNCTIONCALLS_H

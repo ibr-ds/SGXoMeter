@@ -13,10 +13,10 @@ file(GLOB Tests_C_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
         "../commonTestFiles/seeq/*.c")      #ToDo move these two to the outside and adjust them accordingly in the cmakelist file used in
 
-set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/)
+set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${SGXSDK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/)
 #list(REMOVE_ITEM Tests_C_FILES "tests/missing_funcs.c")
 
-set(BASELINE_Link_Flags		            "${Security_Link_Flags} -L${BASELINE_OPENSSL_LIBRARY_PATH} -lcrypto -lpthread")
+set(BASELINE_Link_Flags		            "${Security_Link_Flags} -L${BASELINE_OPENSSL_LIBRARY_PATH} -lcrypto -lpthread -L${SGX_LIBRARY_PATH} -Wl,--start-group -lsgx_tcrypto -Wl,--end-group")
 set(BASELINE_SRC_FILES 		             ../Utils/InputParser.c BaseApp.cpp  BenchThread.cpp ${Tests_C_FILES})
 
 
@@ -31,4 +31,8 @@ target_include_directories(${BASE_APP_NAME} PRIVATE
         ${BASELINE_INCLUDE_PATHS}
         )
 
+#-L${SGX_LIBRARY_PATH} -lsgx_tcrypto
 target_link_libraries(${BASE_APP_NAME}   ${BASELINE_Link_Flags} ${ARGON2_LIBRARY_PATH}/${ARGON2_LIBRARY_NAME}) #ToDo later link ${sodium_LIBRARY_RELEASE} instead of argon because it contains argon internally
+
+
+

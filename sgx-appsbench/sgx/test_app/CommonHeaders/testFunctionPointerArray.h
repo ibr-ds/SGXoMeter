@@ -21,6 +21,19 @@ void dummy()
 void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
         {
                 dummy
+
+#ifdef SGX_ENCRYPTO_TEST
+                ,TEST_NAME(sgx_encrypto_test)
+#endif
+
+#ifdef SGX_DECRYPTO_TEST
+                ,TEST_NAME(sgx_decrypto_test)
+#endif
+
+#ifdef SGX_DECRYPTO_EXT_TEST
+                ,TEST_NAME(sgx_decrypto_ext_test)
+#endif
+
 #ifdef CUSTOM_SHA256_TEST
                 ,TEST_NAME(custom_SHA256_test)
 #endif

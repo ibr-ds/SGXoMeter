@@ -22,6 +22,11 @@ globalConfig_t GLOBAL_CONFIG = {
         .RSA_BITS = DEFAULT_RSA_BITS
 #endif
 
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+        ,
+        .CRYPTO_BUFLEN = CRYPTO_BUF_LEN
+#endif
+
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
         ,
         .RSA_MESSAGE_LEN = RSA_MSG_LEN
@@ -69,6 +74,10 @@ static const char *TOOL_USAGE = "Tool Usage:"
 
 #if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                            "    -B --rsa-bits [#]                sets the value of the rsa bits [default 1024 bits]\n"
+#endif
+
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+                           "    -s --crypto-buflen [#]           sets the size of the to be en/decrypted string buffer [default 16 Byte]"
 #endif
 
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
@@ -132,11 +141,15 @@ void parseInput(int argc, char **argv)
     int r_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET, w_flag = FLAG_NOT_SET;
 
 #ifdef CUSTOM_SHA256_TEST
-    int hash_flag = FLAG_NOT_SET;
+    int hash_flag        = FLAG_NOT_SET;
 #endif
 
 #if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
-    int rsa_bits_flag = FLAG_NOT_SET;
+    int rsa_bits_flag    = FLAG_NOT_SET;
+#endif
+
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+    int crypto_buf_flag  = FLAG_NOT_SET;
 #endif
 
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
@@ -178,45 +191,49 @@ void parseInput(int argc, char **argv)
                 {"help"             ,  required_argument, 0, 'h'},
 
 #ifdef CUSTOM_SHA256_TEST
-                {"hash256-length"   ,  required_argument, 0, 'L'},
+                {"hash256-length"          ,  required_argument,      0,      'L'},
 #endif
 
 #if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
-                {"rsa-bits"         ,  required_argument, 0, 'B'},
+                {"rsa-bits"                ,  required_argument,      0,      'B'},
+#endif
+
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+                {"crypto-buflen"           ,  required_argument,     0,       's'},
 #endif
 
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
-                {"rsa-msg-length"   ,  required_argument, 0, 'N'},
+                {"rsa-msg-length"          ,  required_argument,     0,       'N'},
 #endif
 
 #ifdef DNA_PATTERN_MATCHING
-                {"pattern"          ,  required_argument, 0, 'P'},
-                {"DNA-input"        ,  required_argument, 0, 'D'},
-                {"DNA-multiplicator",  required_argument, 0, 'M'},
-                {"positions"        ,    no_argument    , 0, 'p'},
-                {"match-only"       ,    no_argument    , 0, 'm'},
-                {"no-printline"     ,    no_argument    , 0, 'n'},
-                {"print-dist"       ,    no_argument    , 0, 'k'},
-                {"nondna"           ,  required_argument, 0, 'x'},
-                {"lines"            ,    no_argument    , 0, 'l'},
-                {"count"            ,    no_argument    , 0, 'c'},
-                {"invert"           ,    no_argument    , 0, 'i'},
-                {"format-compact"   ,    no_argument    , 0, 'f'},
-                {"verbose"          ,    no_argument    , 0, 'z'},
-                {"version"          ,    no_argument    , 0, 'v'},
-                {"help"             ,    no_argument    , 0, 'h'},
-                {"end"              ,    no_argument    , 0, 'e'},
-                {"prefix"           ,    no_argument    , 0, 'r'},
-                {"best"             ,    no_argument    , 0, 'b'},
-                {"all"              ,    no_argument    , 0, 'a'},
-                {"memory"           ,  required_argument, 0, 'y'},
-                {"distance"         ,  required_argument, 0, 'd'},
+                {"pattern"                 ,  required_argument,     0,       'P'},
+                {"DNA-input"               ,  required_argument,     0,       'D'},
+                {"DNA-multiplicator"       ,  required_argument,     0,       'M'},
+                {"positions"               ,    no_argument    ,     0,       'p'},
+                {"match-only"              ,    no_argument    ,     0,       'm'},
+                {"no-printline"            ,    no_argument    ,     0,       'n'},
+                {"print-dist"              ,    no_argument    ,     0,       'k'},
+                {"nondna"                  ,  required_argument,     0,       'x'},
+                {"lines"                   ,    no_argument    ,     0,       'l'},
+                {"count"                   ,    no_argument    ,     0,       'c'},
+                {"invert"                  ,    no_argument    ,     0,       'i'},
+                {"format-compact"          ,    no_argument    ,     0,       'f'},
+                {"verbose"                 ,    no_argument    ,     0,       'z'},
+                {"version"                 ,    no_argument    ,     0,       'v'},
+                {"help"                    ,    no_argument    ,     0,       'h'},
+                {"end"                     ,    no_argument    ,     0,       'e'},
+                {"prefix"                  ,    no_argument    ,     0,       'r'},
+                {"best"                    ,    no_argument    ,     0,       'b'},
+                {"all"                     ,    no_argument    ,     0,       'a'},
+                {"memory"                  ,  required_argument,     0,       'y'},
+                {"distance"                ,  required_argument,     0,       'd'},
 
 #endif
-                {0                  ,         0         , 0,  0 }
+                {0                  ,    0      ,0,   0 }
         };
 
-        const char * allowedOptions = "hw:R:S:I:"
+        const char * allowedOptions = "hw:R:I:"
 #ifdef WRITE_LOG_FILE
 				      "o:"
 #endif
@@ -225,6 +242,9 @@ void parseInput(int argc, char **argv)
 #endif
 #if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                       "B:"
+#endif
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+                      "s:"
 #endif
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                       "N:"
@@ -347,6 +367,26 @@ void parseInput(int argc, char **argv)
                 }
                 else {
                     fprintf(stderr, "error: Bit size value is set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+#endif
+
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+            case 's':
+                if (crypto_buf_flag == FLAG_NOT_SET) {
+                    size_t buf_len = atol(optarg);
+                    if (buf_len < 0) {
+                        fprintf(stderr, "error: Invalid string buffer size!.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    crypto_buf_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.CRYPTO_BUFLEN = buf_len;
+                }
+                else {
+                    fprintf(stderr, "error: Crypto string buffer size value is set more than once.\n");
                     say_help();
                     exit(EXIT_FAILURE);
                 }

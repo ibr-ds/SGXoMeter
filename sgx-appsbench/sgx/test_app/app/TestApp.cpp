@@ -366,6 +366,7 @@ int ucreate_thread()
 /*  ToDo: memset is used in seeq libraries, therefore i defined the two methods below just in case. However seeq seems to work without adding them, so maybe remove them if not needed?!   */
 
 #ifdef MEMSET_SGX
+void* memset_s(void* dest, size_t destsz, int c, size_t len) {
     return memset(dest, c, destsz < len ? destsz : len);
 }
 

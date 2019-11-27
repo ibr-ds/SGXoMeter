@@ -38,23 +38,38 @@ int seeq_test();
 #endif
 #ifdef CUSTOM_TEST
 void preCustomTest(globalConfig_t *globalConfig);
-int custom_test();
 void postCustomTest();
+int  custom_test();
 #endif
 #ifdef CUSTOM_SHA256_TEST
 void initCustomSHA256(globalConfig_t *globalConfig);
-int custom_SHA256_test();
+int  custom_SHA256_test();
 void post_SHA256_test();
 #endif
 #ifdef RSA_CRYPTO_TEST
 void pre_rsa_crypto_test(globalConfig_t *globalConfig);
-int  rsa_crypto_test();
 void post_rsa_crypto_test();
+int  rsa_crypto_test();
 #endif
 #ifdef RSA_SIGN_TEST
 void pre_rsa_sign_test(globalConfig_t *globalConfig);
-int  rsa_sign_test();
 void post_rsa_sign_test();
+int  rsa_sign_test();
+#endif
+#ifdef SGX_ENCRYPTO_TEST
+void pre_sgx_encrypto_test(globalConfig_t *globalConfig);
+void post_sgx_encrypto_test();
+int  sgx_encrypto_test();
+#endif
+#ifdef SGX_DECRYPTO_TEST
+void pre_sgx_decrypto_test(globalConfig_t *globalConfig);
+void post_sgx_decrypto_test();
+int  sgx_decrypto_test();
+#endif
+#ifdef SGX_DECRYPTO_EXT_TEST
+void pre_sgx_decrypto_ext_test(globalConfig_t *globalConfig);
+void post_sgx_decrypto_ext_test();
+int  sgx_decrypto_ext_test();
 #endif
 
 #ifdef ARGON2_TEST

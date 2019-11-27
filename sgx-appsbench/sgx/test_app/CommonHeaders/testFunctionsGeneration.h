@@ -27,12 +27,23 @@
 
 
 
-#define TEST_NAME(NAME) execute_##NAME
-
 /*
  * generating wrapper functions for the chosen test modules
  * these will be added later in the function ptr array
  */
+
+#ifdef SGX_ENCRYPTO_TEST
+GEN_TEST_MODULE_FUNCTION(sgx_encrypto_test);
+#endif
+
+#ifdef SGX_DECRYPTO_TEST
+GEN_TEST_MODULE_FUNCTION(sgx_decrypto_test);
+#endif
+
+#ifdef SGX_DECRYPTO_EXT_TEST
+GEN_TEST_MODULE_FUNCTION(sgx_decrypto_ext_test);
+#endif
+
 #ifdef CUSTOM_TEST
 GEN_TEST_MODULE_FUNCTION(custom_test)
 #endif
