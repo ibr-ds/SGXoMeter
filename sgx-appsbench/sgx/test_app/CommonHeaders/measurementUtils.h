@@ -61,8 +61,8 @@ void doRuntime()
         uint64_t runTimeCounter = 0;
         do{
             __asm__("pause");
-            curTime = timeNow();
             runTimeCounter = counter - tmpCounter;
+            curTime = timeNow();
         } while (abort_measure == 0 && runTimeCounter < GLOBAL_CONFIG.NUM_OF_ITERATION);
     } else {                                                        // in case measuring the number of iteration for a specific runtime
         while(abort_measure == 0 && duration(curTime - initTime) < GLOBAL_CONFIG.RUNTIME)

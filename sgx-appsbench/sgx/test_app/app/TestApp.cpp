@@ -41,14 +41,6 @@
 #include "InputParser.h"
 #endif
 
-typedef std::chrono::high_resolution_clock::time_point TimeVar;
-
-#define timeNow() std::chrono::high_resolution_clock::now()
-#define duration(a) std::chrono::duration_cast<std::chrono::seconds>(a).count()
-
-
-
-
 /* Global EID shared by multiple threads */
 sgx_enclave_id_t global_eid = 0;
 
@@ -172,7 +164,6 @@ void print_ret_error(sgx_status_t ret) {
  */
 int initialize_enclave(void)
 {
-    char token_path[MAX_PATH] = {'\0'};
     sgx_launch_token_t token = {0};
     sgx_status_t ret = SGX_ERROR_UNEXPECTED;
     int updated = 0;

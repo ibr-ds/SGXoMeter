@@ -11,9 +11,9 @@ set(CMAKE_CXX_FLAGS 		            "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++1
 #this is important in order to make the size of the enclave smaller/bigger deppending on the selected Modules
 file(GLOB Tests_C_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
-        "${CMAKE_CURRENT_SOURCE_DIR}/../enclave/seeq/*.c")      #ToDo move these two to the outside and adjust them accordingly in the cmakelist file used in
+        "../commonTestFiles/seeq/*.c")      #ToDo move these two to the outside and adjust them accordingly in the cmakelist file used in
 
-set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ${CMAKE_CURRENT_SOURCE_DIR}/../enclave/seeq/)
+set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/)
 #list(REMOVE_ITEM Tests_C_FILES "tests/missing_funcs.c")
 
 set(BASELINE_Link_Flags		            "${Security_Link_Flags} -L${BASELINE_OPENSSL_LIBRARY_PATH} -lcrypto -lpthread")
