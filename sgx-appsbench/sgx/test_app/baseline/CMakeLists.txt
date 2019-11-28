@@ -16,7 +16,7 @@ file(GLOB Tests_C_FILES
 set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${SGXSDK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/)
 #list(REMOVE_ITEM Tests_C_FILES "tests/missing_funcs.c")
 
-set(BASELINE_Link_Flags		            "${Security_Link_Flags} -L${BASELINE_OPENSSL_LIBRARY_PATH} -lcrypto -lpthread -L${SGX_LIBRARY_PATH} -Wl,--start-group -lsgx_tcrypto -Wl,--end-group")
+set(BASELINE_Link_Flags		            "${Security_Link_Flags} -L${BASELINE_OPENSSL_LIBRARY_PATH} -lcrypto -lpthread -L${SGX_LIBRARY_PATH} -lsgx_tcrypto -l${SGX_TSVC_LIB}")
 set(BASELINE_SRC_FILES 		             ../Utils/InputParser.c BaseApp.cpp  BenchThread.cpp ${Tests_C_FILES})
 
 
