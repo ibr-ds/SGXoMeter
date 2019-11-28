@@ -85,8 +85,7 @@
 
 #define fprintf(stream, msg...) printf(msg)
 
-#define stdout ((void*)1)
-#define stderr ((void*)2)
+
 
 static const char rnd_seed[] =
     "string to make the random number generator think it has entropy";

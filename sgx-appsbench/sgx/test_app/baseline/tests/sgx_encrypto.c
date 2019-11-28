@@ -7,9 +7,7 @@
 #include <sgx_tcrypto.h>
 #include "UtilsStructs.h"
 #include "sgx_error.h"
-
-#define stdout ((void*)1)
-#define stderr ((void*)2)
+#include "cryptoMemset.h"
 
 #ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)
@@ -18,8 +16,6 @@
 #define fprintf(stream, msg...)
 #define fflush(...)
 #endif
-
-
 
 static globalConfig_t *globConfPtr;
 static char *plainText;

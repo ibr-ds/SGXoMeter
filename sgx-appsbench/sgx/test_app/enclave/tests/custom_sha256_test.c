@@ -10,12 +10,8 @@
 #include <openssl/evp.h>
 #include <UtilsStructs.h>
 
-#define stdout ((void*)1)
-#define stderr ((void*)2)
 
 #ifdef PRINT_CHECKS
-#define fprintf(stream, msg...) printf(msg)
-#define fflush(...)
 #else
 #define fprintf(stream, msg...)
 #define fflush(...)

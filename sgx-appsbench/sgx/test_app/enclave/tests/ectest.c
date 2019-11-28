@@ -95,8 +95,12 @@
 
 #endif
 
-#define stdout ((void*)0)
-#define stderr ((void*)1)
+#ifndef stdout
+#define stdout ((void*)1)
+#endif
+#ifndef stderr
+#define stderr ((void*)2)
+#endif
 
 # if defined(_MSC_VER) && defined(_MIPS_) && (_MSC_VER/100==12)
 /* suppress "too big too optimize" warning */

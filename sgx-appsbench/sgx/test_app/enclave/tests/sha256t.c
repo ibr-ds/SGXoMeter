@@ -59,8 +59,6 @@
 #include <openssl/sha.h>
 #include <openssl/evp.h>
 
-#define stdout ((void*)1)
-#define stderr ((void*)2)
 
 #ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)

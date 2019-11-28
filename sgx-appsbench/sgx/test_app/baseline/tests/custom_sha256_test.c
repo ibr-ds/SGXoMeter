@@ -13,15 +13,6 @@
 #include <UtilsStructs.h>
 
 
-#ifdef PRINT_CHECKS
-#define fprintf(stream, msg...) printf(msg)
-#define fflush(...)
-#else
-#define fprintf(stream, msg...)
-#define fflush(...)
-#endif
-
-
 char *toHashStr;
 static globalConfig_t *globConfPtr;
 void initCustomSHA256(globalConfig_t *globalConfig)

@@ -9,8 +9,6 @@
 #include "UtilsStructs.h"
 #include "sgx_error.h"
 
-#define stdout ((void*)1)
-#define stderr ((void*)2)
 
 #ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)
@@ -31,6 +29,33 @@ _Static_assert(sizeof(encrypKey) == sizeof(sgx_aes_gcm_128bit_key_t), "KEY SIZE 
 static const uint8_t initVector[SGX_AESGCM_IV_SIZE] = {0};
 _Static_assert(sizeof(initVector) == SGX_AESGCM_IV_SIZE, "initialization vector SIZE INVALID");
 
+
+
+static void private_encrypt()
+{
+    const uint8_t *p_src = plainText;
+    uint32_t src_len = globConfPtr->CRYPTO_BUFLEN;
+    uint32_t cipherTextSizeWithMac = src_len + SGX_AESGCM_MAC_SIZE; // the size of the encrypted plain text with the mac appeneded at its end
+    cipherText = (uint8_t *) malloc(cipherTextSizeWithMac); // destination buffer bigger than the encrypted original packet to append the MAC at the end of the KEY
+
+    sgx_status_t status = sgx_rijndael128GCM_encrypt(
+            (sgx_aes_gcm_128bit_key_t*)&encrypKey,
+            p_src,
+            src_len,
+            cipherText,
+            &initVector,
+            SGX_AESGCM_IV_SIZE,
+            NULL,
+            0,
+            cipherText + src_len // Where to append the generated GCM MAC
+    );
+
+    if (status != SGX_SUCCESS)
+    {
+        fprintf(stderr, "encypting the plain text privately went wrong!\n");
+        return;
+    }
+}
 
 void pre_sgx_decrypto_test(globalConfig_t *globalConfig)
 {
@@ -87,29 +112,4 @@ int sgx_decrypto_test()
 	return 0;
 }
 
-void private_encrypt()
-{
-    const uint8_t *p_src = plainText;
-    uint32_t src_len = globConfPtr->CRYPTO_BUFLEN;
-    uint32_t cipherTextSizeWithMac = src_len + SGX_AESGCM_MAC_SIZE; // the size of the encrypted plain text with the mac appeneded at its end
-    cipherText = (uint8_t *) malloc(cipherTextSizeWithMac); // destination buffer bigger than the encrypted original packet to append the MAC at the end of the KEY
-
-    sgx_status_t status = sgx_rijndael128GCM_encrypt(
-            (sgx_aes_gcm_128bit_key_t*)&encrypKey,
-            p_src,
-            src_len,
-            cipherText,
-            &initVector,
-            SGX_AESGCM_IV_SIZE,
-            NULL,
-            0,
-            cipherText + src_len // Where to append the generated GCM MAC
-    );
-
-    if (status != SGX_SUCCESS)
-    {
-        fprintf(stderr, "encypting the plain text privately went wrong!\n");
-        return;
-    }
-}
 #endif

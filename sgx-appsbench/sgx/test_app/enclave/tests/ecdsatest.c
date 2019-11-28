@@ -86,8 +86,12 @@
 # include <openssl/err.h>
 # include <openssl/rand.h>
 
+#ifndef stdout
 #define stdout ((void*)1)
+#endif
+#ifndef stderr
 #define stderr ((void*)2)
+#endif
 
 #ifdef PRINT_CHECKS
 #define BIO_printf(x, ...) printf(__VA_ARGS__)

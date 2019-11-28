@@ -80,8 +80,6 @@
 #include <openssl/x509.h>
 #include <openssl/err.h>
 
-#define stdout ((void*)1)
-#define stderr ((void*)2)
 
 #ifdef PRINT_CHECKS
 

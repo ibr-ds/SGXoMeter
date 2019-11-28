@@ -69,8 +69,12 @@
 
 # include <openssl/dh.h>
 
+#ifndef stdout
 #define stdout ((void*)1)
+#endif
+#ifndef stderr
 #define stderr ((void*)2)
+#endif
 
 #ifdef PRINT_CHECKS
 

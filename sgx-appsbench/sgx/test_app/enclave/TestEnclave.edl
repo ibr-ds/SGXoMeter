@@ -53,6 +53,8 @@ from "sgx_tsgxssl.edl" import *;
      */
     untrusted {
         void uprint([in, string] const char *str);
+        void* ocallMalloc(size_t size);
+        void ocallFree([user_check] void * buffer);
         void usgx_exit(int reason);
         int ucreate_thread();
     };

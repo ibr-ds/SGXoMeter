@@ -6,10 +6,10 @@
 #include <assert.h>
 #include <sgx_tcrypto.h>
 #include "UtilsStructs.h"
+#include "cryptoMemset.h"
 #include "sgx_error.h"
 
-#define stdout ((void*)1)
-#define stderr ((void*)2)
+
 
 #ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)
