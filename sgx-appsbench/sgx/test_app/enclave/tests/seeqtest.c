@@ -1,10 +1,11 @@
 //
 // Created by moe on 24.05.19.
 //
-#include <UtilsStructs.h>
-#include "../seeq/seeq.h"
 
 #ifdef DNA_PATTERN_MATCHING
+#include <UtilsStructs.h>
+#include "seeq.h"
+
 
 struct seeqarg_t args;
 static globalConfig_t *globConfPtr;
