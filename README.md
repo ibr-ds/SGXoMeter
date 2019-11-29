@@ -78,3 +78,4 @@ Currently there are couple modules(tests) available:
 12. SHA 256 & SHA 1 tests
 13. SGX-Port version of "seeq" library fpr DNA pattern search
 14. Custom test. Which can be implemented by third dev parties for their own benchmarking reasons
+15. SGXSDK AES-GCM encryption & decryption on in-enclave or external buffers
