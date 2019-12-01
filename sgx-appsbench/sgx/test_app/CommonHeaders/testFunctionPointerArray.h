@@ -34,6 +34,10 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
                 ,TEST_NAME(sgx_decrypto_ext_test)
 #endif
 
+#ifdef SGX_DECRYPTO_ENCRYPTO
+                ,TEST_NAME(sgx_dencrypto_test)
+#endif
+
 #ifdef CUSTOM_SHA256_TEST
                 ,TEST_NAME(custom_SHA256_test)
 #endif

@@ -45,9 +45,10 @@ for (int i = 0; i < NUM_OF_TEST_MODULES; ++i)
     #endif //RSA_CRYPTO_TEST || RSA_SIGN_TEST
     } else if(strcmp(test_names[i + DUMMY_INDEX], "sgx encrypto test")     == 0
            || strcmp(test_names[i + DUMMY_INDEX], "sgx decrypto test")     == 0
-           || strcmp(test_names[i + DUMMY_INDEX], "sgx decrypto ext test") == 0)
+           || strcmp(test_names[i + DUMMY_INDEX], "sgx decrypto ext test") == 0
+           || strcmp(test_names[i + DUMMY_INDEX], "sgx decrypto encrypto test") == 0)
     {
-    #if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+    #if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
     printOut("%s,%lu,%lu,%.5f,%lu,%.5f,%lu\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.CRYPTO_BUFLEN,
             array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate, array[i].totalRuntime);
     #endif //SGX SDK EN/DECRYPTO

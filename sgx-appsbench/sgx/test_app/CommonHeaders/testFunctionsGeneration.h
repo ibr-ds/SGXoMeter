@@ -44,6 +44,10 @@ GEN_TEST_MODULE_FUNCTION(sgx_decrypto_test);
 GEN_TEST_MODULE_FUNCTION(sgx_decrypto_ext_test);
 #endif
 
+#ifdef SGX_DECRYPTO_ENCRYPTO
+GEN_TEST_MODULE_FUNCTION(sgx_dencrypto_test);
+#endif
+
 #ifdef CUSTOM_TEST
 GEN_TEST_MODULE_FUNCTION(custom_test)
 #endif

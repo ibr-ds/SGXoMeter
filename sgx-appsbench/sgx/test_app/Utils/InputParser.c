@@ -22,7 +22,7 @@ globalConfig_t GLOBAL_CONFIG = {
         .RSA_BITS = DEFAULT_RSA_BITS
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
         ,
         .CRYPTO_BUFLEN = CRYPTO_BUF_LEN
 #endif
@@ -76,7 +76,7 @@ static const char *TOOL_USAGE = "Tool Usage:"
                            "    -B --rsa-bits [#]                sets the value of the rsa bits [default 1024 bits]\n"
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
                            "    -s --crypto-buflen [#]           sets the size of the to be en/decrypted string buffer [default 16 Byte]"
 #endif
 
@@ -148,7 +148,7 @@ void parseInput(int argc, char **argv)
     int rsa_bits_flag    = FLAG_NOT_SET;
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
     int crypto_buf_flag  = FLAG_NOT_SET;
 #endif
 
@@ -198,7 +198,7 @@ void parseInput(int argc, char **argv)
                 {"rsa-bits"                ,  required_argument,      0,      'B'},
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
                 {"crypto-buflen"           ,  required_argument,     0,       's'},
 #endif
 
@@ -243,7 +243,7 @@ void parseInput(int argc, char **argv)
 #if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                       "B:"
 #endif
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
                       "s:"
 #endif
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
@@ -373,7 +373,7 @@ void parseInput(int argc, char **argv)
                 break;
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
             case 's':
                 if (crypto_buf_flag == FLAG_NOT_SET) {
                     size_t buf_len = atol(optarg);

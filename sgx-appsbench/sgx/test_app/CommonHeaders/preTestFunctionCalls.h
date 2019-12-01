@@ -41,4 +41,8 @@ pre_sgx_decrypto_test(GLOBAL_CONFIG);
 pre_sgx_decrypto_ext_test(GLOBAL_CONFIG);
 #endif
 
+#ifdef SGX_DECRYPTO_ENCRYPTO
+pre_sgx_dencrypto_test(GLOBAL_CONFIG);
+#endif
+
 #endif //SGX_APPSBENCH_PRETESTFUNCTIONCALLS_H

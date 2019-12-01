@@ -24,6 +24,10 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
         , "sgx decrypto ext test"
 #endif
 
+#ifdef SGX_DECRYPTO_ENCRYPTO
+        , "sgx decrypto encrypto test"
+#endif
+
 #ifdef CUSTOM_SHA256_TEST
         , "custom SHA256 test"
 #endif

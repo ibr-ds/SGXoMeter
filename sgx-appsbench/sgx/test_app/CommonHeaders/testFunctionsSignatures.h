@@ -71,7 +71,11 @@ void pre_sgx_decrypto_ext_test(globalConfig_t *globalConfig);
 void post_sgx_decrypto_ext_test();
 int  sgx_decrypto_ext_test();
 #endif
-
+#ifdef SGX_DECRYPTO_ENCRYPTO
+void pre_sgx_dencrypto_test(globalConfig_t *globalConfig);
+void post_sgx_dencrypto_test();
+int  sgx_dencrypto_test();
+#endif
 #ifdef ARGON2_TEST
 void pre_argon2_test(globalConfig_t *globalConfig);
 int  argon2_test();

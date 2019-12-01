@@ -27,7 +27,7 @@
             .RSA_BITS_MULTIPLICATOR = DEFAULT_RSA_BITS
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
             ,
             .CRYPTO_BUFLEN = CRYPTO_BUF_LEN
 #endif

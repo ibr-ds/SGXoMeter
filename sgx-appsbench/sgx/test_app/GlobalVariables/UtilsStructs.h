@@ -20,7 +20,7 @@ typedef struct globalConfig{
     size_t HASH256_LEN;
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
     size_t CRYPTO_BUFLEN;
 #endif
 

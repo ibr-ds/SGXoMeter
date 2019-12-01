@@ -61,4 +61,11 @@ if(strcmp(test_names[test_id], "sgx decrypto ext test") == 0)
     }
 #endif
 
+#ifdef SGX_DECRYPTO_ENCRYPTO
+if(strcmp(test_names[test_id], "sgx decrypto encrypto test") == 0)
+    {
+        post_sgx_dencrypto_test();
+    }
+#endif
+
 #endif //SGX_APPSBENCH_POSTTESTFUNCTIONCALLS_H

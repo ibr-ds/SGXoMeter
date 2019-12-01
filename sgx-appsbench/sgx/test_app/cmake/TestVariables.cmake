@@ -72,13 +72,17 @@ set(MODULE_SGX_CRYPTO_ENCRYPT								NO CACHE BOOL "YES OR NO for sgx tcrypto en
 check_add_definition(MODULE_SGX_CRYPTO_ENCRYPT 				SGX_ENCRYPTO_TEST)
 check_and_increment_counter(MODULE_SGX_CRYPTO_ENCRYPT		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_SGX_CRYPTO_DECRYPT								NO CACHE BOOL "YES OR NO for sgx tcrypto decryption on in-enclave buffers tests")
+set(MODULE_SGX_CRYPTO_DECRYPT								NO CACHE BOOL "YES OR NO for sgx tcrypto decryption tests on in-enclave buffers")
 check_add_definition(MODULE_SGX_CRYPTO_DECRYPT 				SGX_DECRYPTO_TEST)
 check_and_increment_counter(MODULE_SGX_CRYPTO_DECRYPT		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_SGX_CRYPTO_DECRYPT_EXT							NO CACHE BOOL "YES OR NO for sgx tcrypto decryption on external buffers tests")
+set(MODULE_SGX_CRYPTO_DECRYPT_EXT							NO CACHE BOOL "YES OR NO for sgx tcrypto decryption tests on external buffers")
 check_add_definition(MODULE_SGX_CRYPTO_DECRYPT_EXT			SGX_DECRYPTO_EXT_TEST)
 check_and_increment_counter(MODULE_SGX_CRYPTO_DECRYPT_EXT	NUMBER_OF_TESTS_VALUE)
+
+set(MODULE_SGX_CRYPTO_DEC_ENC								NO CACHE BOOL "YES OR NO for sgx tcrypto decryption then encryption tests on internal buffers")
+check_add_definition(MODULE_SGX_CRYPTO_DEC_ENC				SGX_DECRYPTO_ENCRYPTO)
+check_and_increment_counter(MODULE_SGX_CRYPTO_DEC_ENC		NUMBER_OF_TESTS_VALUE)
 
 
 add_definitions(-DNUM_OF_TEST_MODULES=${NUMBER_OF_TESTS_VALUE})
@@ -102,7 +106,7 @@ if(MODULE_CUSTOM_SHA256_TEST)
 endif()
 
 ########################## SGX SDK Crypto Module ##########################
-if(MODULE_SGX_CRYPTO_ENCRYPT OR MODULE_SGX_CRYPTO_DECRYPT OR MODULE_SGX_CRYPTO_DECRYPT_EXT)
+if(MODULE_SGX_CRYPTO_ENCRYPT OR MODULE_SGX_CRYPTO_DECRYPT OR MODULE_SGX_CRYPTO_DECRYPT_EXT OR MODULE_SGX_CRYPTO_DEC_ENC)
 	set(VALUE_CRYPTO_BUFFER_LEN								16 CACHE STRING "Sets the size of the to be en/decrypted string buffer. Default size is 16 Bytes")
 	add_definitions(-DCRYPTO_BUF_LEN=${VALUE_CRYPTO_BUFFER_LEN})
 endif()
