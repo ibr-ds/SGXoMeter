@@ -31,23 +31,23 @@ _Static_assert(sizeof(initVector) == SGX_AESGCM_IV_SIZE, "initialization vector 
 
 
 
-static void private_encrypt(char *plText, char *ciphText)
+static void private_encrypt(char *plText, char **ciphText)
 {
     const uint8_t *p_src = plText;
     uint32_t src_len = globConfPtr->CRYPTO_BUFLEN;
     uint32_t cipherTextSizeWithMac = src_len + SGX_AESGCM_MAC_SIZE; // the size of the encrypted plain text with the mac appeneded at its end
-    ciphText = (uint8_t *) malloc(cipherTextSizeWithMac); // destination buffer bigger than the encrypted original packet to append the MAC at the end of the KEY
+    *ciphText = (uint8_t *) malloc(cipherTextSizeWithMac); // destination buffer bigger than the encrypted original packet to append the MAC at the end of the KEY
 
     sgx_status_t status = sgx_rijndael128GCM_encrypt(
             (sgx_aes_gcm_128bit_key_t*)&encrypKey,
             p_src,
             src_len,
-            ciphText,
+            *ciphText,
             &initVector,
             SGX_AESGCM_IV_SIZE,
             NULL,
             0,
-            ciphText + src_len // Where to append the generated GCM MAC
+            *ciphText + src_len // Where to append the generated GCM MAC
     );
 
     if (status != SGX_SUCCESS)
@@ -71,7 +71,7 @@ void pre_sgx_dencrypto_test(globalConfig_t *globalConfig)
         plainText[i] = 'a';
     }
     plainText[plainBufferSize] = '\0';
-    private_encrypt(plainText, cipherText);
+    private_encrypt(plainText, &cipherText);
 }
 
 void post_sgx_dencrypto_test()
@@ -101,14 +101,13 @@ int sgx_dencrypto_test()
 	{
 		return 1;
 	}
-
 	if (memcmp(p_dst, plainText, src_len) != 0)
 	{
         return 1;
 	}
 
 	uint8_t *enc_dst = NULL;
-    private_encrypt(p_dst, enc_dst);
+    private_encrypt(p_dst, &enc_dst);
 
 	if (memcmp(enc_dst, cipherText, src_len + SGX_AESGCM_MAC_SIZE) != 0)
 	{
