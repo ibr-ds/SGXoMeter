@@ -73,7 +73,7 @@ int sgx_encrypto_test()
 
     if (status != SGX_SUCCESS)
     {
-        return -1;
+        return 1;
     }
 
     free(cipherTextWithMac);

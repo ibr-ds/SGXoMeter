@@ -101,7 +101,7 @@ int sgx_decrypto_ext_test()
 
     if (status != SGX_SUCCESS)
     {
-        return NULL;
+        return 1;
     }
 
 

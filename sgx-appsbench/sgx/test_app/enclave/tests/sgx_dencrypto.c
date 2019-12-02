@@ -99,7 +99,7 @@ int sgx_dencrypto_test()
 
 	if (status != SGX_SUCCESS)
 	{
-		return NULL;
+		return 1;
 	}
 
 	if (memcmp(p_dst, plainText, src_len) != 0)
