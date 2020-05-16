@@ -58,7 +58,12 @@ endif()
 #ToDo this is number of tests global variable which will be later incremented for each added test Module
 set(NUMBER_OF_TESTS_VALUE									0)
 
-
+set(GLOB_WORKER_THREAD_NUM		1 CACHE STRING "Sets the number of worker threads. default is a single threaded benchmark and should not exceed the allowed threads(tcs) in the enclave")
+if(GLOB_WORKER_THREAD_NUM GREATER 0)
+	add_definitions(-DWTHREAD_NUM=${GLOB_WORKER_THREAD_NUM})
+else()
+	message(FATAL_ERROR "Invalid number of worker thread. Please reconfigure again with correct values")
+endif()
 
 
 

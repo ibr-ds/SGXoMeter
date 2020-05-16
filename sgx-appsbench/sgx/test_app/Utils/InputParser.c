@@ -10,7 +10,8 @@ globalConfig_t GLOBAL_CONFIG = {
 #endif
         .NUM_OF_ITERATION = NUMBER_OF_ITERATIONS,
         .RUNTIME = RUNTIME_PHASE,
-        .WARMUP_TIME = WARMUP_PHASE
+        .WARMUP_TIME = WARMUP_PHASE,
+        .NUM_OF_WTHREADS = WTHREAD_NUM
 
 #ifdef CUSTOM_SHA256_TEST
         ,
@@ -68,6 +69,8 @@ static const char *TOOL_USAGE = "Tool Usage:"
                            "    -R --runtime-phase  [#]          sets the runtime phase for each benchmark test [default 60 seconds]\n"
                            "    -I --iteration [#]               sets the number of iterations [default 0 (unlimited)]\n"
                            "    -w --warmup-phase [#]            sets the warmup phase time for each benchmark test [default 10 seconds]\n"
+                           "    -T --thread-num [#]              sets the number of simultaneous worker threads [default 1 worker thread]\n"
+
 #ifdef CUSTOM_SHA256_TEST
                            "    -L --hash256-length [#]          sets the input length of the hashed string [default 100 chars]\n"
 #endif
@@ -138,7 +141,7 @@ void parseInput(int argc, char **argv)
     int o_flag = FLAG_NOT_SET; 
 #endif
 
-    int r_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET, w_flag = FLAG_NOT_SET;
+    int r_flag = FLAG_NOT_SET, i_flag = FLAG_NOT_SET, w_flag = FLAG_NOT_SET, t_flag = FLAG_NOT_SET;
 
 #ifdef CUSTOM_SHA256_TEST
     int hash_flag        = FLAG_NOT_SET;
@@ -185,6 +188,8 @@ void parseInput(int argc, char **argv)
                 {"runtime-phase"    ,  required_argument, 0, 'R'},
                 {"iteration"        ,  required_argument, 0, 'I'},
                 {"warmup-phase"     ,  required_argument, 0, 'w'},
+                {"thread-num"       ,  required_argument, 0, 'T'},
+
 #ifdef WRITE_LOG_FILE
                 {"data-output"      ,  required_argument, 0, 'o'},
 #endif
@@ -233,7 +238,7 @@ void parseInput(int argc, char **argv)
                 {0                  ,    0      ,0,   0 }
         };
 
-        const char * allowedOptions = "hw:R:I:"
+        const char * allowedOptions = "hw:R:I:T:"
 #ifdef WRITE_LOG_FILE
 				      "o:"
 #endif
@@ -316,14 +321,14 @@ void parseInput(int argc, char **argv)
                 break;
 
             case 'I':
-                if (t_flag == FLAG_NOT_SET) {
+                if (i_flag == FLAG_NOT_SET) {
                     int iterations = atoi(optarg);
                     if (iterations < 0) {
                         fprintf(stderr, "error: Number of iterations must be 0(unlimited) or a positive integer.\n");
                         say_help();
                         exit(EXIT_FAILURE);
                     }
-                    t_flag = FLAG_IS_SET;
+                    i_flag = FLAG_IS_SET;
                     GLOBAL_CONFIG.NUM_OF_ITERATION = iterations;
                 }
                 else {
@@ -332,6 +337,25 @@ void parseInput(int argc, char **argv)
                     exit(EXIT_FAILURE);
                 }
                 break;
+
+            case 'T':
+                if (t_flag  == FLAG_NOT_SET) {
+                    uint64_t thread_num = atol(optarg);
+                    if (thread_num < 0) {
+                        fprintf(stderr, "error: Invalid number of worker threads!.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    t_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.NUM_OF_WTHREADS = thread_num;
+                }
+                else {
+                    fprintf(stderr, "error: number of worker threads is set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+
 
 #ifdef CUSTOM_SHA256_TEST
             case 'L':

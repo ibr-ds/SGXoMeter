@@ -14,8 +14,9 @@ typedef std::chrono::high_resolution_clock::time_point TimeVar;
 
 static volatile int do_bench = 0;
 static volatile int abort_measure = 0;
-volatile uint64_t counter = 0;
+volatile uint64_t *counter = NULL;
 uint64_t tmpCounter = 0;
+
 
 typedef struct {
     uint64_t warmCnt;
@@ -29,13 +30,21 @@ uint64_t cur_elem = 0;
 
 static inline void add_warm_measurement()
 {
-    tmpCounter = array[cur_elem].warmCnt = counter;
+    uint64_t total_throughput = 0;
+    for (int i = 0; i < GLOBAL_CONFIG.NUM_OF_WTHREADS; ++i) {
+        total_throughput += counter[i];
+    }
+    tmpCounter = array[cur_elem].warmCnt = total_throughput;
 }
 
 
 static inline void add_runtime_measurement(uint64_t totalRuntime)
 {
-    array[cur_elem].runCnt = (counter - tmpCounter);
+    uint64_t total_throughput = 0;
+    for (int i = 0; i < GLOBAL_CONFIG.NUM_OF_WTHREADS; ++i) {
+        total_throughput += counter[i];
+    }
+    array[cur_elem].runCnt = (total_throughput - tmpCounter);
     array[cur_elem].totalRuntime = totalRuntime;
     ++cur_elem;                                                     // next element in the array for the next test
 }
@@ -61,7 +70,11 @@ void doRuntime()
         uint64_t runTimeCounter = 0;
         do{
             __asm__("pause");
-            runTimeCounter = counter - tmpCounter;
+            uint64_t total_throughput = 0;
+            for (int i = 0; i < GLOBAL_CONFIG.NUM_OF_WTHREADS; ++i) {
+                total_throughput += counter[i];
+            }
+            runTimeCounter = total_throughput - tmpCounter;
             curTime = timeNow();
         } while (abort_measure == 0 && runTimeCounter < GLOBAL_CONFIG.NUM_OF_ITERATION);
     } else {                                                        // in case measuring the number of iteration for a specific runtime

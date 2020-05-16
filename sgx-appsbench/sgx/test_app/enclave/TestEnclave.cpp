@@ -80,7 +80,7 @@ int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
  * Local variables referring global variables, which their values are changed from multiple threads
  */
 static volatile int do_bench = 0;
-volatile uint64_t *bench_counter = 0;
+volatile uint64_t *bench_counter = NULL;
 static globalConfig_t *GLOBAL_CONFIG;
 
 
@@ -280,9 +280,9 @@ int ec_key_gen()
 #include "testFunctionPointerArray.h"
 
 
-extern "C" void ecall_set_config(uint64_t *ctr, void *globalConfig)
+extern "C" void ecall_set_config(uint64_t **ctr, void *globalConfig)
 {
-    bench_counter = ctr;
+    bench_counter = *ctr;
     if(globalConfig != NULL)
     {
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
@@ -318,7 +318,7 @@ extern "C" void ecall_pause_bench(void)
     do_bench = PAUSED;
 }
 
-extern "C" void ecall_run_bench(int test_id)
+extern "C" void ecall_run_bench(int test_id, int thread_id)
 {
 
     while(do_bench == PAUSED)
@@ -332,8 +332,8 @@ extern "C" void ecall_run_bench(int test_id)
     while(do_bench == RUNNING)
     {
         (*testFuncPtr[test_id])();
-        __sync_fetch_and_add(bench_counter, 1);
-	// *bench_counter +=1;
+        //__sync_fetch_and_add(bench_counter, 1);
+	    bench_counter[thread_id] +=1;
     }
 
 }

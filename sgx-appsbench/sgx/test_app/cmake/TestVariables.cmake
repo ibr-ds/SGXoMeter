@@ -114,7 +114,7 @@ endif()
 ########################## DNA Pattern Module Configuration ##########################
 if(FEATURE_RUNTIME_PARSER AND MODULE_DNA_PATTERN_MATCHING)
 	message(STATUS "Building with the DNA Pattern module. The parameter/flags should be entered manually and parsed while runtime or the standard values will be applied. Consider using the formats from seeq repository")
-else()
+elseif(MODULE_DNA_PATTERN_MATCHING)
 	message(STATUS "Building with the DNA Pattern module. The parameter/flags should be entered manually and parsed while compile or the standard values will be applied. Consider using cmake-gui")
 endif()
 if(MODULE_DNA_PATTERN_MATCHING)

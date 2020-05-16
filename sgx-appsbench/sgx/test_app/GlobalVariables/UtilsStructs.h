@@ -15,6 +15,7 @@ typedef struct globalConfig{
     int NUM_OF_ITERATION;
     uint64_t RUNTIME;
     uint64_t WARMUP_TIME;
+    uint64_t NUM_OF_WTHREADS;
 
 #ifdef CUSTOM_SHA256_TEST
     size_t HASH256_LEN;

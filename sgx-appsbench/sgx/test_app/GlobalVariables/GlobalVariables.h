@@ -16,7 +16,8 @@
 #endif
             .NUM_OF_ITERATION = NUMBER_OF_ITERATIONS,
             .RUNTIME = RUNTIME_PHASE,
-            .WARMUP_TIME = WARMUP_PHASE
+            .WARMUP_TIME = WARMUP_PHASE,
+            .NUM_OF_WTHREADS = WWTHREAD_NUM
 #ifdef CUSTOM_SHA256_TEST
             ,
             .HASH256_LEN = SHA_INPUT_LEN
