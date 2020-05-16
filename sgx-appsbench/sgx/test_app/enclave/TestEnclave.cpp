@@ -332,9 +332,15 @@ extern "C" void ecall_run_bench(int test_id)
     while(do_bench == RUNNING)
     {
         (*testFuncPtr[test_id])();
-        *bench_counter +=1;
+        __sync_fetch_and_add(bench_counter, 1);
+	// *bench_counter +=1;
     }
-    /*
+
+}
+
+extern "C" void ecall_cleanup_bench(void)
+{
+	/*
      * This includes the available post function calls of the chosen modules
      */
     #include "postTestFunctionCalls.h"

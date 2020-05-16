@@ -230,6 +230,7 @@ void *worker_thread(void *args)
     {
         __asm__("pause");
     }
+
     sgx_status_t ret = ecall_run_bench(global_eid, test_id);
     print_ret_error(ret);
     return nullptr;
@@ -274,7 +275,7 @@ static void run_tests()
         {
             //ToDo danger: i didnt pass by value because we only have 1 worker thread and its okay in this case but
             // if multiple threads then its better to pass by value as thread creation and execution may differ
-            pthread_create(worker+j, nullptr, worker_thread, &test_id);
+            pthread_create(&worker[j], nullptr, worker_thread, (void *)&test_id);
         }
         pthread_barrier_wait(&worker_barrier);
 
@@ -321,6 +322,10 @@ static void exec_bench_setup()
 
     // Run the benchmarks for each chosen test
     run_tests();
+
+    // call the post benchmark functions for clean up
+    ret = ecall_cleanup_bench(global_eid);
+    print_ret_error(ret);
 
     // Destroy the enclave after all tests have been run and executed completely
     ret = sgx_destroy_enclave(global_eid);

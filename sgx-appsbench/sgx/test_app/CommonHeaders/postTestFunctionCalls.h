@@ -5,6 +5,9 @@
 #ifndef SGX_APPSBENCH_POSTTESTFUNCTIONCALLS_H
 #define SGX_APPSBENCH_POSTTESTFUNCTIONCALLS_H
 
+
+for (int test_id = 1; test_id < NUM_OF_TEST_MODULES+DUMMY_INDEX; ++test_id)
+{
 #ifdef CUSTOM_SHA256_TEST
 if(strcmp(test_names[test_id], "custom SHA256 test") == 0)
     {
@@ -67,5 +70,5 @@ if(strcmp(test_names[test_id], "sgx decrypto encrypto test") == 0)
         post_sgx_dencrypto_test();
     }
 #endif
-
+}
 #endif //SGX_APPSBENCH_POSTTESTFUNCTIONCALLS_H
