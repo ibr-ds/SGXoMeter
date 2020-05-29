@@ -52,11 +52,11 @@ int fflush(void* stream)
 
 extern char* sgxssl_getenv(char* name);
 
-char* getenv(char* name)
+/*char* getenv(char* name)
 {
 	return sgxssl_getenv(name);
 }
-
+*/
 
 extern void printf(const char *fmt, ...);
 int puts(const char* str)
