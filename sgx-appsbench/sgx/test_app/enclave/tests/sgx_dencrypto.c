@@ -23,6 +23,7 @@
 static globalConfig_t *globConfPtr;
 static char *plainText;
 static char *cipherText;
+static char *copyVar;
 
 static const char encrypKey[SGX_AESGCM_KEY_SIZE] = "THISISASHAREDKEY";
 _Static_assert(sizeof(encrypKey) == sizeof(sgx_aes_gcm_128bit_key_t), "KEY SIZE INVALID");
@@ -65,6 +66,7 @@ void pre_sgx_dencrypto_test(globalConfig_t *globalConfig)
     if(plainText == NULL)
     {
         fprintf(stderr, "Malloc failed!");
+        abort();
     }
     for(int i = 0; i < globConfPtr->CRYPTO_BUFLEN; i++)
     {
@@ -72,12 +74,19 @@ void pre_sgx_dencrypto_test(globalConfig_t *globalConfig)
     }
     plainText[plainBufferSize] = '\0';
     private_encrypt(plainText, &cipherText);
+    if((copyVar = (char *) malloc(plainBufferSize+1)) == NULL)
+    {
+        fprintf(stderr, "Malloc failed!");
+        abort();
+
+    }
 }
 
 void post_sgx_dencrypto_test()
 {
     free(plainText);
     free(cipherText);
+    free(copyVar);
 }
 
 int sgx_dencrypto_test()
@@ -85,6 +94,7 @@ int sgx_dencrypto_test()
 	uint32_t src_len = globConfPtr->CRYPTO_BUFLEN;
 	uint8_t *p_dst = (uint8_t *) malloc(src_len);
 
+    memcpy(copyVar, cipherText, src_len + 1);
 	sgx_status_t status = sgx_rijndael128GCM_decrypt(
 		(sgx_aes_gcm_128bit_key_t*)&encrypKey,
 		cipherText,
@@ -113,6 +123,8 @@ int sgx_dencrypto_test()
 	{
         return 1;
 	}
+    memcpy(copyVar, cipherText, src_len + 1);
+
     free(p_dst);
     free(enc_dst);
 
