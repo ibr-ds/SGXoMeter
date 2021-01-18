@@ -43,7 +43,7 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
-#include <sgx_tae_service.h>
+//#include <sgx_tae_service.h> // not needed after sgxsdk version 2.8
 
 
 #define ADD_ENTROPY_SIZE	32

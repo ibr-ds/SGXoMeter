@@ -84,14 +84,14 @@ if(NOT EXISTS "${OPENSSL_PATH}")
 	message(STATUS "downloading openssl library")
 	execute_process (
 			COMMAND mkdir -p ${OPENSSL_PATH}
-			COMMAND wget https://www.openssl.org/source/openssl-1.1.1b.tar.gz --ca-directory=/etc/ssl/certs/
+			COMMAND wget https://www.openssl.org/source/openssl-1.1.1i.tar.gz --ca-directory=/etc/ssl/certs/
 			OUTPUT_QUIET
 			ERROR_QUIET
 	)
 
 	message(STATUS "extracting openssl library")
 	execute_process(
-			COMMAND tar -zxvf openssl-1.1.1b.tar.gz -C ${OPENSSL_PATH} --strip 1
+			COMMAND tar -zxvf openssl-1.1.1i.tar.gz -C ${OPENSSL_PATH} --strip 1
 			OUTPUT_QUIET
 	)
 
@@ -109,7 +109,7 @@ if(NOT EXISTS "${OPENSSL_PATH}")
 
 	message(STATUS "removing openssl tar archiv")
 	execute_process(
-			COMMAND rm openssl-1.1.1b.tar.gz
+			COMMAND rm openssl-1.1.1i.tar.gz
 	)
 endif()
 

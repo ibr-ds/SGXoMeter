@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2011-2017 Intel Corporation. All rights reserved.
+# Copyright (C) 2011-2020 Intel Corporation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions
@@ -28,6 +28,7 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 #
+include ../../buildenv.mk
 include ../buildenv.mk
 ######## SGX SDK Settings ########
 SGX_MODE ?= HW
@@ -79,9 +80,9 @@ endif
 
 SGX_EDL_FILE := $(PACKAGE_INC)/sgx_tsgxssl.edl
 
-Sgx_tssl_Cpp_Files := $(wildcard *.cpp)
-Sgx_tssl_C_Files := $(wildcard *.c)
-Sgx_tssl_S_Files := $(wildcard *.S)
+Sgx_tssl_Cpp_Files := $(sort $(wildcard *.cpp))
+Sgx_tssl_C_Files := $(sort $(wildcard *.c))
+Sgx_tssl_S_Files := $(sort $(wildcard *.S))
 
 Sgx_tssl_Cpp_Objects := $(addprefix $(OBJDIR)/, $(Sgx_tssl_Cpp_Files:.cpp=.o))
 Sgx_tssl_C_Objects := $(addprefix $(OBJDIR)/, $(Sgx_tssl_C_Files:.c=.o))
@@ -90,8 +91,8 @@ Sgx_tssl_S_Objects := $(addprefix $(OBJDIR)/, $(Sgx_tssl_S_Files:.S=.o))
 Sgx_tssl_Include_Paths := -I. -I$(PACKAGE_INC) -I$(SGX_SDK_INC) -I$(SGX_SDK_INC)/tlibc -I$(LIBCXX_INC)
 
 Common_C_Cpp_Flags := -DOS_ID=$(OS_ID) $(SGX_COMMON_CFLAGS) -nostdinc -fdata-sections -ffunction-sections -Os -Wl,--gc-sections -fvisibility=hidden -fpie -fpic -fstack-protector -fno-builtin-printf -Wformat -Wformat-security $(Sgx_tssl_Include_Paths)
-Sgx_tssl_C_Flags := $(Common_C_Cpp_Flags) -Wno-implicit-function-declaration -std=c11
-Sgx_tssl_Cpp_Flags := $(Common_C_Cpp_Flags) -std=c++11 -nostdinc++
+Sgx_tssl_C_Flags := $(Common_C_Cpp_Flags) -Wno-implicit-function-declaration -std=c11 $(MITIGATION_CFLAGS)
+Sgx_tssl_Cpp_Flags := $(Common_C_Cpp_Flags) -std=c++11 -nostdinc++ $(MITIGATION_CFLAGS)
 $(shell mkdir -p $(OBJDIR))
 
 .PHONY: all run
@@ -107,11 +108,11 @@ sgx_tsgxssl_t.o: sgx_tsgxssl_t.c
 	$(VCC) $(Sgx_tssl_C_Flags) -c $< -o $@
 	@echo "CC   <=  $<"
 
-$(OBJDIR)/%.o : %.cpp
+$(OBJDIR)/%.o : %.cpp sgx_tsgxssl_t.c
 	$(VCXX) $(Sgx_tssl_Cpp_Flags) -c $< -o $@
 	@echo "CXX  <=  $<"
 
-$(OBJDIR)/%.o : %.c
+$(OBJDIR)/%.o : %.c sgx_tsgxssl_t.c
 	$(VCC) $(Sgx_tssl_C_Flags) -c $< -o $@
 	@echo "CC  <=  $<"
 
@@ -126,4 +127,3 @@ $(TRUSTED_LIB): sgx_tsgxssl_t.c $(Sgx_tssl_Cpp_Objects) $(Sgx_tssl_C_Objects) $(
 
 clean:
 	@rm -f libsgx_tsgxssl.* libsgx_tsgxssld.* sgx_tsgxssl_t.* $(Sgx_tssl_Cpp_Objects) $(Sgx_tssl_C_Objects) $(Sgx_tssl_S_Objects)
-	

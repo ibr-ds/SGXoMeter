@@ -50,6 +50,7 @@ add_subdirectory(enclave)
 ########################## Build the Baseline Part ##########################
 set(BASE_APP_NAME                        BaselineApp)
 set(BASELINE_APP_PATH                    ${CMAKE_BINARY_DIR}/${BASE_APP_NAME})
-if(NOT EXISTS ${BASELINE_APP_PATH})
+
+#if(NOT EXISTS ${BASELINE_APP_PATH})   ### TODO: add a cached variable that changes its value to true upon module selection changes and recompiles the baseline only then otherwise the baselines compilation could be skipped other idea is to compile 3 parts at the same time baseline sgx in hardware and simulated mode
     add_subdirectory(baseline)
-endif()
+#endif()
