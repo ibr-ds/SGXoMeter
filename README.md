@@ -3,17 +3,19 @@
 ### **Description**
 -------------------
 
-This is originally a project thesis and its target is to implement multiple application benchmarks for SGX 
+This is originally a project thesis and its target is to implement multiple application benchmarks for SGX. <br/>
+It supports single and multithreaded benchmark executions.
 
 ### **Prerequisites, Setup & Run**
 ----------------------------------
-
-1. SGX driver & SGX-SDK version 2.3 (also tested on version 2.6)
-2. Go to *sgx* directory and create **"build"** folder. Then open a terminal inside the *build* folder and execute ***"cmake-gui .."*** .
-3. After you chose the modules to test, execute ***"make"*** in order to build the Benchmarking tool.
-4. ***"Ctrl+C"*** would stop the benchmarks and print out the results or you can start the benchmark with a desired number of iterations OR for a desired warmup and runtime phases.
-5. Python 3 is required in case you want to plot the generated benchmark data from the tool. The tool can also be configured to either directly write the generated data in a text file or just print the results out to the standard output file.
+1. SGX driver & SGX-SDK [version 2.12](https://download.01.org/intel-sgx/sgx-linux/2.12/distro/ubuntu20.04-server/)
+2. Developped and tested on Ubuntu 18 & 20 lts
+3. Go to *sgx* directory and create **"build"** folder. Then open a terminal inside the *build* folder and execute ***"cmake-gui .."*** .
+4. After you chose the modules to test, execute ***"make"*** in order to build the Benchmarking tool.
+5. ***"Ctrl+C"*** would stop the benchmarks and print out the results or you can start the benchmark with a desired number of iterations OR for a desired warmup and runtime phases.
+6. Python 3 is required in case you want to plot the generated benchmark data from the tool. The tool can also be configured to either directly write the generated data in a text file or just print the results out to the standard output file.
 The latter also allows to pipe the outputed results into a file for later reviews/plots.
+7. For more usage instructions execute the binary with ***"-h"*** or ***"--help"*** to see the possible execution commands
 
 
 ### **Features & Configurations**
