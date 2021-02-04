@@ -231,9 +231,9 @@ void pause_bench(void)
     do_bench = PAUSED;
 }
 
-void set_config(uint64_t *ctr, void *globalConfig)
+void set_config(uint64_t **ctr, void *globalConfig)
 {
-    bench_counter = ctr;
+    bench_counter = *ctr;
     if(globalConfig != NULL)
     {
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
@@ -246,7 +246,7 @@ void set_config(uint64_t *ctr, void *globalConfig)
     #include "preTestFunctionCalls.h"
 }
 
-void run_bench(int test_id)
+void run_bench(int test_id, int thread_id)
 {
 
     while(do_bench == PAUSED)
@@ -259,7 +259,7 @@ void run_bench(int test_id)
     while(do_bench == RUNNING)
     {
         (*testFuncPtr[test_id])();
-        *bench_counter += 1;
+        bench_counter[thread_id] += 1;
     }
 
     /*

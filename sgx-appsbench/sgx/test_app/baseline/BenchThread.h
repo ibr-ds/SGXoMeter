@@ -26,8 +26,8 @@ extern "C" {
 void start_bench(void);
 void pause_bench(void);
 void stop_bench(void);
-void run_bench(int test_id);
-void set_config(uint64_t *ctr, void *globalConfig);
+void run_bench(int test_id, int thread_id);
+void set_config(uint64_t **ctr, void *globalConfig);
 
 /*
  * This includes the function signatures of the chosen modules

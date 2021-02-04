@@ -28,9 +28,15 @@ void InterruptHandler(int dummy)
  */
 #include "measurementUtils.h"
 
+uint64_t WORKER_THREADS = 1;
+pthread_barrier_t worker_barrier;
+
 void *measure_thread(void *args)
 {
-    __sync_fetch_and_and(&counter,((uint64_t)0)); // reset the counter for the possible next warmup phase
+    for (int i = 0; i < WORKER_THREADS ; ++i) {
+        __sync_fetch_and_and(&counter[i],((uint64_t)0));       // reset the counter for the possible next warmup phase
+
+    }
     while(do_bench == 0)
     {
         __asm__("pause");
@@ -42,20 +48,26 @@ void *measure_thread(void *args)
     return nullptr;
 }
 
-uint64_t WORKER_THREADS = 1;
-pthread_barrier_t worker_barrier;
+
+
+typedef struct {
+    int test_id;
+    int thread_id;
+} wthread_args_t;
+
 
 void *worker_thread(void *args)
 {
-    int *argptr = (int*) args;
-    int test_id = *argptr;
+    wthread_args_t *argptr = (wthread_args_t*) args;
+    int test_id = argptr->test_id;
+    int thread_id = argptr->thread_id;
 
     pthread_barrier_wait(&worker_barrier);  // register +1 to the thread barrier instance
     while(do_bench == 0)
     {
         __asm__("pause");
     }
-    run_bench(test_id);
+    run_bench(test_id, thread_id);
     return nullptr;
 }
 
@@ -91,18 +103,20 @@ static void run_tests()
     {
         abort_measure = 0;
         pthread_t measure, worker[WORKER_THREADS];
+        wthread_args_t wthreadArgs[WORKER_THREADS];
         pthread_create(&measure, nullptr, measure_thread, nullptr); // start the measure thread
         pthread_barrier_init(&worker_barrier, nullptr, WORKER_THREADS + 1);
         for (int j = 0; j < (int)WORKER_THREADS; ++j)
         {
             //ToDo danger: i didnt pass by value because we only have 1 worker thread and its okay in this case but
             // if multiple threads then its better to pass by value as thread creation and execution may differ
-            pthread_create(worker+j, nullptr, worker_thread, &test_id);
+            wthreadArgs[j] = {test_id, j};
+            pthread_create(worker+j, nullptr, worker_thread, (void *)&wthreadArgs[j]);
         }
         pthread_barrier_wait(&worker_barrier);
 
         fprintf(stderr, "Starting to benchmark the Module %s \n", test_names[test_id]);
-        counter = 0;
+        //counter = 0;
         start_bench();
         do_bench = 1;
 
@@ -123,7 +137,9 @@ static void run_tests()
 
 static void exec_bench_setup()
 {
-    set_config((uint64_t *)&counter, &GLOBAL_CONFIG);
+    WORKER_THREADS = GLOBAL_CONFIG.NUM_OF_WTHREADS;
+    counter = (uint64_t *) calloc(WORKER_THREADS, sizeof(uint64_t));
+    set_config((uint64_t **)&counter, &GLOBAL_CONFIG);
 
     // Run the benchmarks for each chosen test
     run_tests();
