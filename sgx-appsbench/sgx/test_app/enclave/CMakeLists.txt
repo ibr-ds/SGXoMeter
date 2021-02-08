@@ -98,12 +98,12 @@ include_directories(${Trusted_Include_Paths})
 #ToDo cant link the library to the enclave
 #       -L${ARGON2_LIBRARY_PATH} -largon2 \
 #        ${ARGON2_LIBRARY_PATH}/${ARGON2_LIBRARY_NAME} \
+#        -Wl,--whole-archive -lsgx_tcmalloc -Wl,--no-whole-archive \              # ToDo this is causing errors when using sgx in simulation mode
 target_link_libraries(${ENCLAVE_LIB_NAME} "${SGX_COMMON_CFLAGS} \
         -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles \
         ${Security_Link_flags} \
         ${SgxSSL_LINK_LIB} -L${SGX_LIBRARY_PATH} \
         -Wl,--whole-archive -l${SGX_TRTS_LIB} -Wl,--no-whole-archive \
-        -Wl,--whole-archive -lsgx_tcmalloc -Wl,--no-whole-archive \
         -Wl,--start-group -lsgx_tstdc -lsgx_tcxx -lsgx_tcrypto -lsgx_pthread -l${SGX_TSVC_LIB} -Wl,--end-group \
         -Wl,-Bstatic -Wl,-Bsymbolic -Wl,--no-undefined \
         -Wl,-pie,-eenclave_entry -Wl,--export-dynamic \
