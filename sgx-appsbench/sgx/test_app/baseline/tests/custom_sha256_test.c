@@ -12,6 +12,11 @@
 #include "../../../../package/include/openssl/evp.h"
 #include <UtilsStructs.h>
 
+#ifdef PRINT_CHECKS
+#else
+#define fprintf(stream, msg...)
+#define fflush(...)
+#endif
 
 char *toHashStr;
 static globalConfig_t *globConfPtr;
