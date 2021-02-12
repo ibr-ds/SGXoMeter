@@ -111,12 +111,11 @@ static void run_tests()
             //ToDo danger: i didnt pass by value because we only have 1 worker thread and its okay in this case but
             // if multiple threads then its better to pass by value as thread creation and execution may differ
             wthreadArgs[j] = {test_id, j};
-            pthread_create(worker+j, nullptr, worker_thread, (void *)&wthreadArgs[j]);
+            pthread_create(&worker[j], nullptr, worker_thread, (void *)&wthreadArgs[j]);
         }
         pthread_barrier_wait(&worker_barrier);
 
         fprintf(stderr, "Starting to benchmark the Module %s \n", test_names[test_id]);
-        //counter = 0;
         start_bench();
         do_bench = 1;
 

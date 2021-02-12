@@ -273,7 +273,6 @@ static void run_tests()
 {
     for (int test_id = 1; test_id < NUM_OF_TEST_MODULES+DUMMY_INDEX; ++test_id)
     {
-        //ToDo Maybe we should reset the counter just in case?! (Ask Nico)
         abort_measure = 0;
         sgx_status_t ret = SGX_SUCCESS;
         pthread_t measure, worker[WORKER_THREADS];
@@ -290,7 +289,6 @@ static void run_tests()
         pthread_barrier_wait(&worker_barrier);
 
         fprintf(stderr, "Starting to benchmark the Module %s \n", test_names[test_id]);
-        //counter = 0;
         ret = ecall_start_bench(global_eid);
         print_ret_error(ret);
         do_bench = 1;

@@ -238,8 +238,6 @@ void set_config(uint64_t **ctr, void *globalConfig)
     {
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
     }
-    // OPENSSL_init_crypto(0, NULL);
-
     /*
      * This includes all available pre function calls of the chosen modules
      */
