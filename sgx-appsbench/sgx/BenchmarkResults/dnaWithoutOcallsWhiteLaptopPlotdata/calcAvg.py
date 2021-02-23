@@ -23,8 +23,8 @@ for num, sgxValue in enumerate(sgx, start=0):
     result += (sgxValue/baseline[num]);
     print(result)
 
-print( len(sgx) )
+print (len(sgx))
 
-f= open("sha256Avg.txt","w+")
+f= open("dnaWithoutOcallAvg.txt","w+")
 f.write("%f" % (result/len(sgx)))
 f.close()
