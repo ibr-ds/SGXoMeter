@@ -81,3 +81,21 @@ Currently there are couple modules(tests) available:
 13. SGX-Port version of "seeq" library fpr DNA pattern search
 14. Custom test. Which can be implemented by third dev parties for their own benchmarking reasons
 15. SGXSDK AES-GCM encryption & decryption on in-enclave or external buffers
+
+
+### **Known Issues** 
+---------------------
+Since the start of this project till now, many changes happened (e.g. new kernels, libc versions and other SGX-SDK updates)
+
+1. In new kernels both in Ubuntu18&20 the baselines crashes when choosing multiple modules. (new issue and currently investigating the origins since they neither existed before nor happen in SGX both in hardware and simulation mode)
+2. The structure and CMake files need to be refined more to fully support the modularity as intended too.
+
+### **Detected and Reported Issues for Intel SGX-SDK**
+-------------------------------------------------------
+1. detected an error with sgx_tcmalloc at runtime in SGX simulation mode with SGX-SDK version > 12 and opened an [issue](https://github.com/intel/linux-sgx/issues/670) for it.
+2. reported large performance degredation between SGX-SDK 2.7 and 2.12 [(link)](https://github.com/intel/linux-sgx/issues/679)
+
+
+### **Future Work and Planned Ideas**
+--------------------------------------
+A list of new features and ideas we want to extend the framework with:
