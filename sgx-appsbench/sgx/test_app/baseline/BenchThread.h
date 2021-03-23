@@ -28,6 +28,7 @@ void pause_bench(void);
 void stop_bench(void);
 void run_bench(int test_id, int thread_id);
 void set_config(uint64_t **ctr, void *globalConfig);
+void cleanup_bench(void);
 
 /*
  * This includes the function signatures of the chosen modules

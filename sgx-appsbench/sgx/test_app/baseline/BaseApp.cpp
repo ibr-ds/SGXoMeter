@@ -142,7 +142,7 @@ static void exec_bench_setup()
 
     // Run the benchmarks for each chosen test
     run_tests();
-
+    cleanup_bench();
     // Print the array to an output file with some statistics information. For example, the rate of the executed tests per seconds
     print_array();
 }

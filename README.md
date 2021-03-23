@@ -87,8 +87,7 @@ Currently there are couple modules(tests) available:
 ---------------------
 Since the start of this project till now, many changes happened (e.g. new kernels, libc versions and other SGX-SDK updates)
 
-1. In new kernels both in Ubuntu18&20 the baselines crashes when choosing multiple modules. (new issue and currently investigating the origins since they neither existed before nor happen in SGX both in hardware and simulation mode)
-2. The structure and CMake files need to be refined more to fully support the modularity as intended too.
+1. The structure and CMake files need to be refined more to fully support the modularity as intended too.
 
 ### **Detected and Reported Issues for Intel SGX-SDK**
 -------------------------------------------------------

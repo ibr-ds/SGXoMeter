@@ -259,8 +259,11 @@ void run_bench(int test_id, int thread_id)
         (*testFuncPtr[test_id])();
         bench_counter[thread_id] += 1;
     }
+}
 
-    /*
+void cleanup_bench(void)
+{
+	/*
      * This includes the available post function calls of the chosen modules
      */
     #include "postTestFunctionCalls.h"
