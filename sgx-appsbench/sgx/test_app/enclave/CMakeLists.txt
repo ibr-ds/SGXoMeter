@@ -99,6 +99,7 @@ include_directories(${Trusted_Include_Paths})
 #       -L${ARGON2_LIBRARY_PATH} -largon2 \
 #        ${ARGON2_LIBRARY_PATH}/${ARGON2_LIBRARY_NAME} \
 #        -Wl,--whole-archive -lsgx_tcmalloc -Wl,--no-whole-archive \              # ToDo this is causing errors when using sgx in simulation mode
+# 	 remove the -lsgx_pthread when using older SGX-SDK versions because its not included
 target_link_libraries(${ENCLAVE_LIB_NAME} "${SGX_COMMON_CFLAGS} \
         -Wl,--no-undefined -nostdlib -nodefaultlibs -nostartfiles \
         ${Security_Link_flags} \
