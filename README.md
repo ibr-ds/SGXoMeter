@@ -6,6 +6,16 @@
 This is originally a project thesis and its target is to implement multiple application benchmarks for SGX. <br/>
 It supports single and multithreaded benchmark executions.
 
+
+### **Paper**
+-------------
+
+The paper will be presented at Eurosec 2021 and is available here: https://www.ibr.cs.tu-bs.de/users/mahhouk/papers/euroseco2021.pdf and DOI link
+
+Please cite us if you use our work in your research:
+
+
+
 ### **Prerequisites, Setup & Run**
 ----------------------------------
 1. SGX driver & SGX-SDK [version 2.12](https://download.01.org/intel-sgx/sgx-linux/2.12/distro/ubuntu20.04-server/)
