@@ -10,7 +10,7 @@ It supports single and multithreaded benchmark executions.
 ### **Paper**
 -------------
 
-The paper will be presented at Eurosec 2021 and is available here: https://www.ibr.cs.tu-bs.de/users/mahhouk/papers/euroseco2021.pdf and DOI link
+The paper will be presented at Eurosec 2021 and is available here: https://www.ibr.cs.tu-bs.de/users/mahhouk/papers/eurosec2021.pdf and DOI link
 
 Please cite us if you use our work in your research:
 
