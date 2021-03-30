@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import text
 from matplotlib.lines import Line2D
 import csv
+plt.rc('text', usetex=True)
 
 fn_sgx = 'plotdata.txt'
 fn_sim = 'plotdata_sim.txt'
@@ -58,12 +59,14 @@ plt.yticks(fontsize=8)
 plt.vlines(32, ymin=0, ymax=baseline[0], color='0.55', linestyles='dashed',linewidth=1)
 #text(32, (10000), "optimisations", rotation=90, verticalalignment='center', size='large')
 #plt.set_minor_formatter(FormatStrFormatter('%d'))
-plt.ylabel('#Operations Per Sec')
+plt.ylabel('Operations Per Sec')
 
-plt.title("simulation mode [....] , hardware mode [----]", fontsize=10)
-colors = ['red', 'blue', 'green']
-lines = [Line2D([0], [0], color=c, linewidth=1, linestyle='solid') for c in colors]
-labels = ['Baseline', 'SGX-SDK 2.7', 'SGX-SDK 2.12']
+#plt.title("simulation mode [....] , hardware mode [----]", fontsize=10)
+cnt=[0,1,2,3,4]
+colors = ['red', 'blue', 'green','black','black']
+styles = ['solid','solid','solid','dotted','dashed']
+lines = [Line2D([0], [0], color=colors[c], linewidth=1, linestyle=styles[c]) for c in cnt]
+labels = ['Baseline', 'SGX-SDK 2.7', 'SGX-SDK 2.12', 'Simulation Mode' , 'Hardware Mode']
 
 
 

@@ -1,10 +1,9 @@
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import csv
-
-
 plt.rc('text', usetex=True)
 #plt.rc('font', family='serif')
+
 
 fn_sgx = 'plotdata.txt'
 fn_sim = 'plotdata_sim.txt'
@@ -46,9 +45,9 @@ with open(fn_base,'r') as csvfile:
         baseline.append(float(row[5]))
 
 plt.figure(figsize=(5,3))
-#plt.title("simulation mode [....] , hardware mode [- - - -]", fontsize=10)
+#plt.title("simulation mode [....] , hardware mode [----]", fontsize=10)
 plt.semilogy(basey=10)
-plt.semilogx(basex=10)
+plt.semilogx(basex=2)
 #plt.xscale('log', basex=2)
 plt.plot(x,baseline,'r')
 plt.plot(x,sim,'g:')
@@ -61,12 +60,12 @@ cnt=[0,1,2,3,4]
 colors = ['red', 'blue', 'green','black','black']
 styles = ['solid','solid','solid','dotted','dashed']
 lines = [Line2D([0], [0], color=colors[c], linewidth=1, linestyle=styles[c]) for c in cnt]
-labels = ['Baseline', 'SGX-SDK 2.7', 'SGX-SDK 2.12', 'SIM mode' , 'HW mode']
+labels = ['Baseline', 'SGX-SDK 2.7', 'SGX-SDK 2.12', 'Simulation Mode' , 'Hardware Mode']
 
 plt.xticks(x,fontsize=8)
 plt.yticks(fontsize=8)
 #plt.set_minor_formatter(FormatStrFormatter('%d'))
-plt.ylabel('Number of Operations Per Sec')
+plt.ylabel('Operations Per Sec')
 #plt.title('Plot of the benchmark DNA pattern matching of Seeq without ocalls')
 plt.legend(lines,labels,fontsize=9)
 plt.tight_layout()

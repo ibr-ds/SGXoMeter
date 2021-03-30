@@ -10,7 +10,7 @@ It supports single and multithreaded benchmark executions.
 ### **Paper**
 -------------
 
-The paper will be presented at Eurosec 2021 and is available here: https://www.ibr.cs.tu-bs.de/users/mahhouk/papers/eurosec2021.pdf and DOI link
+The paper will be presented at Eurosec 2021 and is available here: https://www.ibr.cs.tu-bs.de/users/mahhouk/papers/eurosec2021.pdf and https://doi.org/10.1145/3447852.3458722
 
 Please cite us if you use our work in your research:
 
@@ -19,7 +19,7 @@ Please cite us if you use our work in your research:
 ### **Prerequisites, Setup & Run**
 ----------------------------------
 1. SGX driver & SGX-SDK [version 2.12](https://download.01.org/intel-sgx/sgx-linux/2.12/distro/ubuntu20.04-server/)
-2. Developped and tested on Ubuntu 18 & 20 lts
+2. Developped and tested on Ubuntu 18 & 20 LTS
 3. Go to *sgx* directory and create **"build"** folder. Then open a terminal inside the *build* folder and execute ***"cmake-gui .."*** .
 4. After you chose the modules to test, execute ***"make"*** in order to build the Benchmarking tool.
 5. ***"Ctrl+C"*** would stop the benchmarks and print out the results or you can start the benchmark with a desired number of iterations OR for a desired warmup and runtime phases.

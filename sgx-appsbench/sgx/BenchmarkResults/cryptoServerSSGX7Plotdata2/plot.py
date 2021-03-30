@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import csv
-
+plt.rc('text', usetex=True)
 
 t1 = np.arange(0.0, 3.0, 0.01)
 fn_sgx = 'plotdata.txt'
@@ -47,7 +47,7 @@ with open(fn_base,'r') as csvfile:
 
 #plt.semilogy(basey=2)
 plt.figure(figsize=(5,3))
-plt.title("simulation mode [....] , hardware mode [----]", fontsize=10)
+#plt.title("simulation mode [....] , hardware mode [----]", fontsize=10)
 #plt.xscale('log', basex=2)
 ax = plt.subplot() # create a new figure with a default 111 subplot
 ax.semilogy(basey=10)
@@ -60,12 +60,15 @@ plt.xlabel('RSA Bit Size')
 plt.xticks(x,fontsize=8)
 plt.yticks(fontsize=8)
 #plt.set_minor_formatter(FormatStrFormatter('%d'))
-plt.ylabel('#Operations Per Sec')
+plt.ylabel('Operations Per Sec')
 plt.tight_layout()
 
-colors = ['red', 'blue', 'green']
-lines = [Line2D([0], [0], color=c, linewidth=1, linestyle='solid') for c in colors]
-labels = ['Baseline', 'SGX-SDK 2.7', 'SGX-SDK 2.12']
+cnt=[0,1,2,3,4]
+colors = ['red', 'blue', 'green','black','black']
+styles = ['solid','solid','solid','dotted','dashed']
+lines = [Line2D([0], [0], color=colors[c], linewidth=1, linestyle=styles[c]) for c in cnt]
+labels = ['Baseline', 'SGX-SDK 2.7', 'SGX-SDK 2.12', 'Simulation Mode' , 'Hardware Mode']
+
 plt.legend(lines,labels)
 
 
