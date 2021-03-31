@@ -69,6 +69,14 @@
 
 #include "../TestEnclave.h"
 
+
+#ifdef PRINT_CHECKS
+#define printf(msg...) printf(msg)
+#else
+#define printf(msg...)
+#endif
+
+
 # define SetKey \
     RSA_set0_key(key,                                           \
                  BN_bin2bn(n, sizeof(n)-1, NULL),               \

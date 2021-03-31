@@ -1,16 +1,12 @@
-//
-// Created by moe on 28.11.19.
-//
+#include "cryptoMemset.h"
 
-#ifndef SGX_APPSBENCH_CRYPTOMEMSET_H
-#define SGX_APPSBENCH_CRYPTOMEMSET_H
-#include <stdlib.h>
-void* memset_s(void* dest, size_t destsz, int c, size_t len); /* {
+
+void* memset_s(void* dest, size_t destsz, int c, size_t len) {
     return memset(dest, c, destsz < len ? destsz : len);
-}*/
+}
 
-int consttime_memequal(const void *b1, const void *b2, size_t len);
-/*{
+int consttime_memequal(const void *b1, const void *b2, size_t len)
+{
     const unsigned char *c1 = b1, *c2 = b2;
     unsigned int res = 0;
 
@@ -26,7 +22,5 @@ int consttime_memequal(const void *b1, const void *b2, size_t len);
      * advantage of them, certain compilers generate branches on
      * certain CPUs for `!res'.
      */
-/*    return (1 & ((res - 1) >> 8));
-}*/
-
-#endif //SGX_APPSBENCH_CRYPTOMEMSET_H
+    return (1 & ((res - 1) >> 8));
+}
