@@ -22,6 +22,7 @@
         if(ret != 0) \
         { \
         printf("%s has failed!\n", #NAME); \
+        abort();\
         }\
     GEN_TEST_MODULE_FUNCTION_END(NAME)
 

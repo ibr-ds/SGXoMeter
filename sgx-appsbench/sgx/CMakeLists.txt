@@ -3,17 +3,20 @@ project(SGX-AppsBench "C" "CXX")
 
 ########################## SGX SETTINGS ##########################
 set(SGX_SDK 						/opt/intel/sgxsdk  CACHE PATH "Set the path to the SGX-SDK directory")
+set(SGX_SDK_VERSION					2.12 CACHE STRING "Set the wanted SGX SDK version")
 set(SGX_ARCH 						x64)
 set(SGX_MODE 						HW CACHE STRING "SGX mode: SIM or HW") # SGX mode: sim, hw
 set(SGX_BUILD						DEBUG CACHE STRING "Build: DEBUG, PRERELEASE or RELEASE")
 include(cmake/Init.cmake)
 include(cmake/ConfigSGX.cmake)
+include(cmake/GitUtils.cmake)
 
 
 ########################## Set Environment Variables ##########################
 set(ROOT_DIR 						${CMAKE_CURRENT_SOURCE_DIR})
-set(PACKAGE_LIB 					${ROOT_DIR}/../package/lib64)
-set(PACKAGE_INC 					${ROOT_DIR}/../package/include/)
+set(PACKAGE_PATH 					${ROOT_DIR}/../package)
+set(PACKAGE_LIB 					${PACKAGE_PATH}/lib64)
+set(PACKAGE_INC 					${PACKAGE_PATH}/include/)
 set(TRUSTED_LIB_DIR 				${ROOT_DIR}/libsgx_tsgxssl/)
 set(UNTRUSTED_LIB_DIR 				${ROOT_DIR}/libsgx_usgxssl/)
 set(TEST_DIR 						${ROOT_DIR}/test_app/)
@@ -36,10 +39,6 @@ endif()
 if(NOT VERBOSE)
 	set(VERBOSE 					NO CACHE BOOL "Set '@' before the C and CXX compiler. Value 1(on) or 0(off)")
 endif()
-
-execute_process (
-    	COMMAND mkdir -p ${PACKAGE_LIB}
-)
 
 set(UBUNTU_CONFNAME					/usr/include/x86_64-linux-gnu/bits/confname.h)
 if(EXISTS "${UBUNTU_CONFNAME}")
@@ -79,6 +78,70 @@ set(BASELINE_OPENSSL_LIBRARY_INC	${ROOT_DIR}/../openssl/include)
 set(BASELINE_CRYPTO_LIB_NAME		libcrypto.a)
 
 set(OPENSSL_PATH	${ROOT_DIR}/../openssl)
+
+if(NOT EXISTS "${PACKAGE_PATH}")
+	message(STATUS "installing necessary SGX-SSL packages")
+	set(SGXSSL_PATH		${ROOT_DIR}/../sgxssl)
+	execute_process(
+			COMMAND mkdir -p ${SGXSSL_PATH}
+			OUTPUT_QUIET
+	)
+
+	git_clone(
+        PROJECT_NAME    intel-sgx-ssl
+        GIT_URL         https://github.com/intel/intel-sgx-ssl.git
+        GIT_BRANCH      master
+		DIRECTORY		${SGXSSL_PATH}
+		)
+
+
+	if(SGX_SDK_VERSION STREQUAL "2.12")
+	set(OPENSSL_VERSION		openssl-1.1.1i)
+	elseif(SGX_SDK_VERSION STREQUAL "2.7")
+	set(OPENSSL_VERSION 	openssl-1.1.1b)
+	endif()
+
+	message(STATUS "downloading a  ${OPENSSL_VERSION} library for the chosen SGX-SDK ${SGX_SDK_VERSION} version")
+	execute_process(
+			COMMAND wget -P  ${SGXSSL_PATH}/intel-sgx-ssl/openssl_source/    https://www.openssl.org/source/${OPENSSL_VERSION}.tar.gz
+			OUTPUT_QUIET
+			ERROR_QUIET
+	)
+
+	message(STATUS "building and extracting the SGXSSL library package")
+
+	execute_process(
+			COMMAND make all test
+			WORKING_DIRECTORY ${SGXSSL_PATH}/intel-sgx-ssl/Linux
+			OUTPUT_QUIET
+	)
+	execute_process(
+			COMMAND scp -r ${SGXSSL_PATH}/intel-sgx-ssl/Linux/package ${PACKAGE_PATH}
+			OUTPUT_QUIET
+	)
+
+	if(NOT EXISTS "${TRUSTED_LIB_DIR}")
+	execute_process(
+	COMMAND scp -r ${SGXSSL_PATH}/intel-sgx-ssl/Linux/sgx/libsgx_tsgxssl ${ROOT_DIR}
+	OUTPUT_QUIET
+	)
+	endif()
+
+
+	if(NOT EXISTS "${UNTRUSTED_LIB_DIR}")
+	execute_process(
+	COMMAND scp -r ${SGXSSL_PATH}/intel-sgx-ssl/Linux/sgx/libsgx_usgxssl ${ROOT_DIR}
+	OUTPUT_QUIET
+	)
+	endif()
+
+
+	message(STATUS "cleaning up")
+	execute_process(
+			COMMAND rm -rf ${SGXSSL_PATH}
+	)
+
+endif()
 
 if(NOT EXISTS "${OPENSSL_PATH}")
 	message(STATUS "downloading openssl library")

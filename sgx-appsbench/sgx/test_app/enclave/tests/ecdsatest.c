@@ -564,4 +564,3 @@ int ecdsa_test()
     BIO_free(out);
     return ret;
 }
-

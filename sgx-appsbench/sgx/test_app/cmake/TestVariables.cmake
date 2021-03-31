@@ -95,7 +95,7 @@ if(MODULE_RSA_KEY_GEN OR MODULE_RSA_CRYPTO_TEST OR MODULE_RSA_SIGN_TEST)
 endif ()
 
 if (MODULE_RSA_CRYPTO_TEST OR MODULE_RSA_SIGN_TEST)
-	set(VALUE_RSA_MESSAGE_LEN								100 CACHE STRINT "Sets the size of the message, which is used in the rsa en-decryption tests")
+	set(VALUE_RSA_MESSAGE_LEN								100 CACHE STRING "Sets the size of the message, which is used in the rsa en-decryption tests")
 	add_definitions(-DRSA_MSG_LEN=${VALUE_RSA_MESSAGE_LEN})
 endif ()
 
