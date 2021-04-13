@@ -1,4 +1,4 @@
-# SGX-AppsBench
+# SGXoMeter
 
 ### **Description**
 -------------------
