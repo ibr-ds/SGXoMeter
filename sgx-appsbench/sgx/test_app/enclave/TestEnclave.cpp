@@ -318,16 +318,15 @@ extern "C" void ecall_pause_bench(void)
     do_bench = PAUSED;
 }
 
+
 extern "C" void ecall_run_bench(int test_id, int thread_id)
 {
-
     while(do_bench == PAUSED)
     { __asm__("pause");}
 
-
-#ifdef PRINT_CHECKS
-    printf("Start tests\n");
-#endif
+	#ifdef PRINT_CHECKS
+		printf("Start tests\n");
+	#endif
 
     while(do_bench == RUNNING)
     {
@@ -335,7 +334,12 @@ extern "C" void ecall_run_bench(int test_id, int thread_id)
         //__sync_fetch_and_add(bench_counter, 1);
 	    bench_counter[thread_id] +=1;
     }
+}
 
+extern "C" void ecall_run_bench_with_transitions(int test_id, int thread_id)
+{
+	(*testFuncPtr[test_id])();
+	bench_counter[thread_id] +=1;
 }
 
 extern "C" void ecall_cleanup_bench(void)

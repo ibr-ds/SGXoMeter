@@ -244,6 +244,7 @@ void set_config(uint64_t **ctr, void *globalConfig)
     #include "preTestFunctionCalls.h"
 }
 
+#ifndef INCLUDE_TRANSITIONS
 void run_bench(int test_id, int thread_id)
 {
 
@@ -260,6 +261,13 @@ void run_bench(int test_id, int thread_id)
         bench_counter[thread_id] += 1;
     }
 }
+#else
+void run_bench_with_transitions(int test_id, int thread_id)
+{
+	(*testFuncPtr[test_id])();
+	bench_counter[thread_id] += 1;
+}
+#endif
 
 void cleanup_bench(void)
 {

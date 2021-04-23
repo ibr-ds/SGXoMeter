@@ -210,15 +210,20 @@ void *measure_thread(void *args)
         __sync_fetch_and_and(&counter[i],((uint64_t)0));       // reset the counter for the possible next warmup phase
 
     }
-    while(do_bench == 0)
+    while(do_bench == PAUSED)
     {
         __asm__("pause");
     }
 
     doWarmUp();                                          // do the warm up phase and store its result in the array
     doRuntime();                                         // do the runtime phase and store its result in the array
+
+#ifndef INCLUDE_TRANSITIONS
     sgx_status_t ret = ecall_pause_bench(global_eid);   // pause the Benchmark to stop incrementing the counter
     print_ret_error(ret);
+#else
+    do_bench = PAUSED;
+#endif
     return nullptr;
 }
 
@@ -234,16 +239,23 @@ void *worker_thread(void *args)
     int test_id = argptr->test_id;
     int thread_id = argptr->thread_id;
     pthread_barrier_wait(&worker_barrier);  // register +1 to the thread barrier instance
-    while(do_bench == 0)
+    while(do_bench == PAUSED)
     {
         __asm__("pause");
     }
-
+#ifndef INCLUDE_TRANSITIONS
     sgx_status_t ret = ecall_run_bench(global_eid, test_id, thread_id);
     print_ret_error(ret);
+#else
+ while(do_bench == RUNNING)
+    {
+        sgx_status_t ret = ecall_run_bench_with_transitions(global_eid, test_id, thread_id);
+        print_ret_error(ret);
+    }
+
+#endif
     return nullptr;
 }
-
 
 static void print_array()
 {
@@ -269,6 +281,7 @@ static void print_array()
 }
 
 
+
 static void run_tests()
 {
     for (int test_id = 1; test_id < NUM_OF_TEST_MODULES+DUMMY_INDEX; ++test_id)
@@ -291,7 +304,8 @@ static void run_tests()
         fprintf(stderr, "Starting to benchmark the Module %s \n", test_names[test_id]);
         ret = ecall_start_bench(global_eid);
         print_ret_error(ret);
-        do_bench = 1;
+
+        do_bench = RUNNING;
 
 
         for (int j = 0; j < (int)WORKER_THREADS; ++j)
@@ -303,7 +317,7 @@ static void run_tests()
         abort_measure = 1;
         fprintf(stderr, "Joining measure \n");
         pthread_join(measure, nullptr);
-        do_bench = 0;
+        do_bench = PAUSED;
         pthread_barrier_destroy(&worker_barrier);
     }
 }

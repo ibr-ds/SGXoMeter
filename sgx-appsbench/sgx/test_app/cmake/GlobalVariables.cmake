@@ -3,18 +3,24 @@
 
 
 ########################## Debug Options ##########################
-set(PRINT_CHECKS_DEBUG			NO CACHE BOOL "YES OR NO for print out debug")
+set(PRINT_CHECKS_DEBUG				NO CACHE BOOL "YES OR NO for print out debug")
 check_add_definition(PRINT_CHECKS_DEBUG PRINT_CHECKS)
 
 ########################## Available Features ##########################
 
-set(FEATURE_LOGGING_FILE		YES CACHE BOOL "YES OR NO for logging results to an external file")
+set(FEATURE_LOGGING_FILE			YES CACHE BOOL "YES OR NO for logging results to an external file")
 check_add_definition(FEATURE_LOGGING_FILE 					WRITE_LOG_FILE)
 
 set(FEATURE_MEMSET_SGX_EXTRA_CODE		NO CACHE BOOL "YES OR NO for memset code for sgx")
 check_add_definition(FEATURE_MEMSET_SGX_EXTRA_CODE 			MEMSET_SGX)
 
-set(FEATURE_RUNTIME_PARSER		YES CACHE BOOL "YES OR NO for getting the global and test variables in runtime")
+
+set(FEATURE_INCLUDE_TRANSITIONS		NO CACHE BOOL "YES OR NO for including the enclave transitions in the measurements")
+check_add_definition(FEATURE_INCLUDE_TRANSITIONS 			INCLUDE_TRANSITIONS)
+
+
+
+set(FEATURE_RUNTIME_PARSER			YES CACHE BOOL "YES OR NO for getting the global and test variables in runtime")
 check_add_definition(FEATURE_RUNTIME_PARSER 				RUNTIME_PARSER)
 if(FEATURE_RUNTIME_PARSER)
 	message(STATUS "Building the benchmarking tool with runtime parser. You can set the global/test variables manually or they will be set to the standard values")

@@ -37,14 +37,18 @@ void *measure_thread(void *args)
         __sync_fetch_and_and(&counter[i],((uint64_t)0));       // reset the counter for the possible next warmup phase
 
     }
-    while(do_bench == 0)
+    while(do_bench == PAUSED)
     {
         __asm__("pause");
     }
 
     doWarmUp();                                   // do the warm up phase and store its result in the array
     doRuntime();                                  // do the runtime phase and store its result in the array
+#ifndef INCLUDE_TRANSITIONS
     pause_bench();                                // pause the Benchmark to stop incrementing the counter
+#else
+    do_bench = PAUSED;
+#endif
     return nullptr;
 }
 
@@ -63,11 +67,18 @@ void *worker_thread(void *args)
     int thread_id = argptr->thread_id;
 
     pthread_barrier_wait(&worker_barrier);  // register +1 to the thread barrier instance
-    while(do_bench == 0)
+    while(do_bench == PAUSED)
     {
         __asm__("pause");
     }
+#ifndef INCLUDE_TRANSITIONS
     run_bench(test_id, thread_id);
+#else
+    while(do_bench == RUNNING)
+    {
+        run_bench_with_transitions(test_id, thread_id);
+    }
+#endif
     return nullptr;
 }
 
