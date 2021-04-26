@@ -14,7 +14,16 @@ The paper will be presented at Eurosec 2021 and is available here: https://www.i
 
 Please cite us if you use our work in your research:
 
-
+```
+@inproceedings{mahhouk2021EuroSec,
+author = {Mahhouk, Mohammad and Weichbrodt, Nico and Kapitza, R\"{u}diger},
+title = {SGXoMeter: Open and Modular Benchmarking for Intel SGX},
+booktitle = {Proceedings of the 14th European Workshop on Systems Security},
+series = {EuroSec '21},
+year = {2021},
+doi = {10.1145/3447852.3458722}
+}
+```
 
 ### **Prerequisites, Setup & Run**
 ----------------------------------
