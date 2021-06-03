@@ -28,6 +28,8 @@ doi = {10.1145/3447852.3458722}
 ### **Prerequisites, Setup & Run**
 ----------------------------------
 1. SGX driver & SGX-SDK [version 2.12](https://download.01.org/intel-sgx/sgx-linux/2.12/distro/ubuntu20.04-server/)
+  - make sure you followed the installation steps of the SGX-SDK [here](https://github.com/intel/linux-sgx). 
+  - run the ./download_prebuilt.sh from there and then copy the mitigation tools to the current OS distribution as explained in the [README](https://github.com/intel/linux-sgx/blob/master/README.md#prerequisites).
 2. Developped and tested on Ubuntu 18 & 20 LTS
 3. Go to *sgx* directory and create **"build"** folder. Then open a terminal inside the *build* folder and execute ***"cmake-gui .."*** .
 4. After you chose the modules to test, execute ***"make"*** in order to build the Benchmarking tool.
@@ -117,3 +119,4 @@ Since the start of this project till now, many changes happened (e.g. new kernel
 ### **Future Work and Planned Ideas**
 --------------------------------------
 A list of new features and ideas we want to extend the framework with:
+- automate the building process by shifting it to dockers 
