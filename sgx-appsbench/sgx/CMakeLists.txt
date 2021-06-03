@@ -90,13 +90,13 @@ if(NOT EXISTS "${PACKAGE_PATH}")
 	git_clone(
         PROJECT_NAME    intel-sgx-ssl
         GIT_URL         https://github.com/intel/intel-sgx-ssl.git
-        GIT_BRANCH      master
+        GIT_TAG         lin_2.11_1.1.1g
 		DIRECTORY		${SGXSSL_PATH}
 		)
 
 
 	if(SGX_SDK_VERSION STREQUAL "2.12")
-	set(OPENSSL_VERSION		openssl-1.1.1i)
+	set(OPENSSL_VERSION		openssl-1.1.1g)
 	elseif(SGX_SDK_VERSION STREQUAL "2.7")
 	set(OPENSSL_VERSION 	openssl-1.1.1b)
 	endif()
