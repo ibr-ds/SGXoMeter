@@ -1,3 +1,5 @@
+#ifdef CUSTOM_TEST
+
 /*  Include section: This should only contain allowed libraries in sgx    */
 #include "UtilsStructs.h"
 
@@ -42,5 +44,4 @@ int custom_test()
     return 0;
 }
 
-
-
+#endif
