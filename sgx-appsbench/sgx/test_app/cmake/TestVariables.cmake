@@ -84,6 +84,10 @@ set(MODULE_SGX_CRYPTO_DEC_ENC								NO CACHE BOOL "YES OR NO for sgx tcrypto de
 check_add_definition(MODULE_SGX_CRYPTO_DEC_ENC				SGX_DECRYPTO_ENCRYPTO)
 check_and_increment_counter(MODULE_SGX_CRYPTO_DEC_ENC		NUMBER_OF_TESTS_VALUE)
 
+set(MODULE_MARCEL_TEST										YES CACHE BOOL "YES OR NO for marcel test")
+check_add_definition(MODULE_MARCEL_TEST						MARCEL_TEST)
+check_and_increment_counter(MODULE_MARCEL_TEST				NUMBER_OF_TESTS_VALUE)
+
 
 add_definitions(-DNUM_OF_TEST_MODULES=${NUMBER_OF_TESTS_VALUE})
 

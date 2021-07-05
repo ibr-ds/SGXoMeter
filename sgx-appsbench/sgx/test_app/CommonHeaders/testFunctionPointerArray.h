@@ -105,6 +105,10 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
 #ifdef THREAD_TESTS
                 ,TEST_NAME(threads_test)
 #endif
+        
+#ifdef MARCEL_TEST
+                ,TEST_NAME(marcel_test)
+#endif
         };
 
 #endif //SGX_APPSBENCH_TESTFUNCTIONPOINTERARRAY_H

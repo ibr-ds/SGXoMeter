@@ -95,6 +95,10 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
 #ifdef THREAD_TESTS
         , "Multi-Thread tests"
 #endif
+
+#ifdef MARCEL_TEST
+        , "Marcel Test"
+#endif
 };
 
 

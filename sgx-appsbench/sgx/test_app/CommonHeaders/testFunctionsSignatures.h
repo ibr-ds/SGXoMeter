@@ -81,5 +81,8 @@ void pre_argon2_test(globalConfig_t *globalConfig);
 int  argon2_test();
 void post_argon2_test();
 #endif
+#ifdef MARCEL_TEST
+int marcel_test();
+#endif
 
 #endif //SGX_APPSBENCH_TESTFUNCTIONSSIGNATURES_H
