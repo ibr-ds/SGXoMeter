@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.11) # changed for Open Enclave Support
 project(SGX-AppsBench "C" "CXX")
 
 ########################## SGX SETTINGS ##########################
@@ -11,6 +11,11 @@ include(cmake/Init.cmake)
 include(cmake/ConfigSGX.cmake)
 include(cmake/GitUtils.cmake)
 
+
+
+########################## Set Open Enclave SDK Variables ##########################
+set(OPEN_ENCLAVE_ENABLE					NO CACHE BOOL "Enable Open Enclave SDK for corresponding modules")
+set(OE_CRYPTO_LIB						mbedtls CACHE STRING "Crypto library used by OE-enclaves.")
 
 ########################## Set Environment Variables ##########################
 set(ROOT_DIR 						${CMAKE_CURRENT_SOURCE_DIR})
@@ -184,6 +189,7 @@ set(ARGON2_LIBRARY_NAME				libargon2.a)
 #set(sodium_USE_STATIC_LIBS ON)
 #include(cmake/Findsodium.cmake)
 #message(WARNING "sodium library is at ${sodium_LIBRARY_RELEASE}")
+
 
 ########################## Build the benchmarking tool  ##########################
 add_subdirectory(test_app)

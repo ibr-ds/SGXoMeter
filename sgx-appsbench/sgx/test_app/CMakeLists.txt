@@ -41,11 +41,29 @@ include(cmake/GlobalVariables.cmake)
 include(cmake/TestVariables.cmake)
 
 
-########################## Build The Untrusted Part ##########################
-add_subdirectory(app)
+########################## Build The Untrusted SGX-SDK Part ##########################
+add_subdirectory(SGX-SDK/app)
 
-########################## Build the Trusted Part ##########################
-add_subdirectory(enclave)
+########################## Build the Trusted SGX-SDK Part ##########################
+add_subdirectory(SGX-SDK/enclave)
+
+
+########################## Build Open Enclave SDK Part #########################
+if (OPEN_ENCLAVE_ENABLE)
+    find_package(OpenEnclave CONFIG REQUIRED)
+    set(ENCL_DIR             "${CMAKE_CURRENT_SOURCE_DIR}/OpenEnclaveSDK/OEenclave")
+
+    ####### Open Enclave Trusted Part #######
+    add_subdirectory(OpenEnclaveSDK/OEapp)
+
+    ####### Open Enclave Untrusted Part #######
+    add_subdirectory(OpenEnclaveSDK/OEenclave)
+
+endif()
+
+
+
+
 
 ########################## Build the Baseline Part ##########################
 set(BASE_APP_NAME                        BaselineApp)

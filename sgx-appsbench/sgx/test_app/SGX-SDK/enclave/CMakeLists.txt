@@ -59,6 +59,7 @@ add_custom_command(
         COMMENT "Generating Enclave_t.{c,h}"
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
+
 #####only for tests because the shared is not working #####
 
 #add_library(TestEnclave-edlobj OBJECT TestEnclave_t.c)

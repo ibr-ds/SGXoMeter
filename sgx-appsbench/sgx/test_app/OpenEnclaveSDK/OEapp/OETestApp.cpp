@@ -29,8 +29,12 @@
  *
  */
 
-#include "TestApp.h"
-#include "TestEnclave_u.h"
+#include "OETestApp.h"
+#include "OETestEnclave_u.h"
+
+#ifdef OPEN_ENCLAVE_ENABLE
+//#include <openenclave/host.h> 
+#endif
 
 
 # define MAX_PATH FILENAME_MAX
@@ -42,7 +46,7 @@
 #endif
 
 /* Global EID shared by multiple threads */
-sgx_enclave_id_t global_eid = 0;
+oe_enclave_t global_eid;
 
 typedef struct _sgx_errlist_t {
     sgx_status_t err;
@@ -125,7 +129,7 @@ static sgx_errlist_t sgx_errlist[] = {
     {
         SGX_ERROR_ENCLAVE_FILE_ACCESS,
         "Can't open enclave file.",
-        NULL
+        NULLSGX_SUCCESS
     },
 };
 
@@ -149,9 +153,9 @@ void print_error_message(sgx_status_t ret)
 }
 
 void print_ret_error(sgx_status_t ret) {
-    if (ret != SGX_SUCCESS)
+    if (ret != OE_OK)
     {
-        fprintf(stderr, "SGX error: 0x%x\n", ret); //ToDo probably remove this as it's not important anymore
+        //fprintf(stderr, "SGX error: 0x%x\n", ret); //ToDo probably remove this as it's not important anymore
         print_error_message(ret);
         exit(-1);
     }
@@ -162,9 +166,7 @@ void print_ret_error(sgx_status_t ret) {
  *  call sgx_create_enclave to initialize an enclave instance and don't save the token inorder to avoid token conflict
  *
  */
-int initialize_enclave(void)
-{
-    sgx_launch_token_t token = {0};
+int initialize_enclave(void)SGX_SUCCESS
     sgx_status_t ret = SGX_ERROR_UNEXPECTED;
     int updated = 0;
 
@@ -287,7 +289,7 @@ static void run_tests()
     for (int test_id = 1; test_id < NUM_OF_TEST_MODULES+DUMMY_INDEX; ++test_id)
     {
         abort_measure = 0;
-        sgx_status_t ret = SGX_SUCCESS;
+        oe_result_t ret = OE_OK;
         pthread_t measure, worker[WORKER_THREADS];
         wthread_args_t wthreadArgs[WORKER_THREADS];
         pthread_create(&measure, nullptr, measure_thread, nullptr); // start the measure thread
@@ -327,16 +329,14 @@ static void exec_bench_setup()
     /*
      * enclave initialization should be done once
      */
-    sgx_status_t ret = SGX_SUCCESS;
-
-    /* Initialize the enclave */
-    if (initialize_enclave() != 0)
+    oe_enclave_t* enclave = NULL;
+    oe_result_t ret;
+    ret = oe_create_testapp_enclave(argv[1], OE_ENCLAVE_TYPE_AUTO, OE_ENCLAVE_FLAG_DEBUG, NULL, 0, &enclave); //DEBUG MODE TOGGLE
+    if(ret != OE_OK)
     {
         printf("Enclave Initialization Error\n");
         return;
     }
-
-
     WORKER_THREADS = GLOBAL_CONFIG.NUM_OF_WTHREADS;
     counter = (uint64_t *) calloc(WORKER_THREADS, sizeof(uint64_t));
     /*

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "UtilsStructs.h"
-#include "commonTestFiles/testHeaders/argon2.h"
+#include "../commonTestFiles/testHeaders/argon2.h"
 
 
 #define HASHLEN 32

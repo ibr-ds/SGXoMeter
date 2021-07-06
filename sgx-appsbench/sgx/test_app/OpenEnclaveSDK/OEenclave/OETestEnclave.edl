@@ -29,11 +29,13 @@
  *
  */
 
-/* TestEnclave.edl - Top EDL file. */
+/* OETestEnclave.edl - Top EDL file. */
 
 enclave {
 
-from "sgx_tsgxssl.edl" import *;
+from "openenclave/edl/syscall.edl" import *;
+from "platform.edl" import *;
+
 
      trusted {
         //public void execute_test();

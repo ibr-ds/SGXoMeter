@@ -1,0 +1,72 @@
+/*
+ * Copyright (C) 2011-2017 Intel Corporation. All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *   * Neither the name of Intel Corporation nor the names of its
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ */
+
+/* TestEnclave.edl - Top EDL file. */
+
+enclave {
+
+    from "sgx_tsgxssl.edl" import *;
+
+    #ifdef OPEN_ENCLAVE_ENABLE
+    from "openenclave/edl/syscall.edl" import *;
+    from "platform.edl" import *;
+    #endif
+
+
+     trusted {
+        //public void execute_test();
+        public void new_thread_func();
+        public void ecall_start_bench();
+        public void ecall_pause_bench();
+        public void ecall_stop_bench();
+        public void ecall_cleanup_bench();
+        public void ecall_run_bench(int test_id, int thread_id);
+        public void ecall_run_bench_with_transitions(int test_id, int thread_id);
+        public void ecall_set_config([user_check] uint64_t **ctr, [user_check] void *globalConfig);
+     };
+
+
+    /* 
+     * uprint - invokes OCALL to display string buffer inside the enclave.
+     *  [in]: copy the string buffer to App outside.
+     *  [string]: specifies 'str' is a NULL terminated buffer.
+     */
+    untrusted {
+        void uprint([in, string] const char *str);
+        void* ocallMalloc(size_t size);
+        void ocallFree([user_check] void * buffer);
+        void usgx_exit(int reason);
+        int ucreate_thread();
+    };
+
+
+
+};
