@@ -32,10 +32,6 @@
 #include "OETestApp.h"
 #include "OETestEnclave_u.h"
 
-#ifdef OPEN_ENCLAVE_ENABLE
-//#include <openenclave/host.h> 
-#endif
-
 
 # define MAX_PATH FILENAME_MAX
 
@@ -46,104 +42,104 @@
 #endif
 
 /* Global EID shared by multiple threads */
-oe_enclave_t global_eid;
+oe_enclave_t* global_eid;
 
-typedef struct _sgx_errlist_t {
-    sgx_status_t err;
+typedef struct _oe_errlist_t {
+    oe_result_t err;
     const char *msg;
     const char *sug; /* Suggestion */
-} sgx_errlist_t;
+} oe_errlist_t;
 
 /* Error code returned by sgx_create_enclave */
-static sgx_errlist_t sgx_errlist[] = {
+static oe_errlist_t oe_errlist[] = {
     {
-        SGX_ERROR_UNEXPECTED,
+        OE_UNEXPECTED,
         "Unexpected error occurred.",
         NULL
     },
     {
-        SGX_ERROR_INVALID_PARAMETER,
+        OE_INVALID_PARAMETER,
         "Invalid parameter.",
         NULL
     },
     {
-        SGX_ERROR_OUT_OF_MEMORY,
+        OE_OUT_OF_MEMORY,
         "Out of memory.",
         NULL
     },
-    {
-        SGX_ERROR_ENCLAVE_LOST,
-        "Power transition occurred.",
-        "Please refer to the sample \"PowerTransition\" for details."
-    },
-    {
-        SGX_ERROR_INVALID_ENCLAVE,
-        "Invalid enclave image.",
-        NULL
-    },
-    {
-        SGX_ERROR_INVALID_ENCLAVE_ID,
-        "Invalid enclave identification.",
-        NULL
-    },
-    {
-        SGX_ERROR_INVALID_SIGNATURE,
-        "Invalid enclave signature.",
-        NULL
-    },
-    {
-        SGX_ERROR_OUT_OF_EPC,
-        "Out of EPC memory.",
-        NULL
-    },
-    {
-        SGX_ERROR_NO_DEVICE,
-        "Invalid Intel® Software Guard Extensions device.",
-        "Please make sure Intel® Software Guard Extensions module is enabled in the BIOS, and install Intel® Software Guard Extensions driver afterwards."
-    },
-    {
-        SGX_ERROR_MEMORY_MAP_CONFLICT,
-        "Memory map conflicted.",
-        NULL
-    },
-    {
-        SGX_ERROR_INVALID_METADATA,
-        "Invalid enclave metadata.",
-        NULL
-    },
-    {
-        SGX_ERROR_DEVICE_BUSY,
-        "Intel® Software Guard Extensions device was busy.",
-        NULL
-    },
-    {
-        SGX_ERROR_INVALID_VERSION,
-        "Enclave version was invalid.",
-        NULL
-    },
-    {
-        SGX_ERROR_INVALID_ATTRIBUTE,
-        "Enclave was not authorized.",
-        NULL
-    },
-    {
-        SGX_ERROR_ENCLAVE_FILE_ACCESS,
-        "Can't open enclave file.",
-        NULLSGX_SUCCESS
-    },
+//    {
+//        SGX_ERROR_ENCLAVE_LOST,
+//        "Power transition occurred.",
+//        "Please refer to the sample \"PowerTransition\" for details."
+//     },
+//     {
+//         SGX_ERROR_INVALID_ENCLAVE,
+//         "Invalid enclave image.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_INVALID_ENCLAVE_ID,
+//         "Invalid enclave identification.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_INVALID_SIGNATURE,
+//         "Invalid enclave signature.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_OUT_OF_EPC,
+//         "Out of EPC memory.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_NO_DEVICE,
+//         "Invalid Intel® Software Guard Extensions device.",
+//         "Please make sure Intel® Software Guard Extensions module is enabled in the BIOS, and install Intel® Software Guard Extensions driver afterwards."
+//     },
+//     {
+//         SGX_ERROR_MEMORY_MAP_CONFLICT,
+//         "Memory map conflicted.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_INVALID_METADATA,
+//         "Invalid enclave metadata.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_DEVICE_BUSY,
+//         "Intel® Software Guard Extensions device was busy.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_INVALID_VERSION,
+//         "Enclave version was invalid.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_INVALID_ATTRIBUTE,
+//         "Enclave was not authorized.",
+//         NULL
+//     },
+//     {
+//         SGX_ERROR_ENCLAVE_FILE_ACCESS,
+//         "Can't open enclave file.",
+//         NULLSGX_SUCCESS
+//     },
 };
 
 /* Check error conditions for loading enclave */
-void print_error_message(sgx_status_t ret)
+void print_error_message(oe_result_t ret)
 {
     size_t idx = 0;
-    size_t ttl = sizeof sgx_errlist/sizeof sgx_errlist[0];
+    size_t ttl = sizeof oe_errlist/sizeof oe_errlist[0];
 
     for (idx = 0; idx < ttl; idx++) {
-        if(ret == sgx_errlist[idx].err) {
-            if(NULL != sgx_errlist[idx].sug)
-                fprintf(stderr, "Info: %s\n", sgx_errlist[idx].sug);
-            fprintf(stderr, "Error: %s\n", sgx_errlist[idx].msg);
+        if(ret == oe_errlist[idx].err) {
+            if(NULL != oe_errlist[idx].sug)
+                fprintf(stderr, "Info: %s\n", oe_errlist[idx].sug);
+            fprintf(stderr, "Error: %s\n", oe_errlist[idx].msg);
             break;
         }
     }
@@ -152,7 +148,7 @@ void print_error_message(sgx_status_t ret)
         printf("Error: Unexpected error occurred [0x%x].\n", ret);
 }
 
-void print_ret_error(sgx_status_t ret) {
+void print_ret_error(oe_result_t ret) {
     if (ret != OE_OK)
     {
         //fprintf(stderr, "SGX error: 0x%x\n", ret); //ToDo probably remove this as it's not important anymore
@@ -166,13 +162,12 @@ void print_ret_error(sgx_status_t ret) {
  *  call sgx_create_enclave to initialize an enclave instance and don't save the token inorder to avoid token conflict
  *
  */
-int initialize_enclave(void)SGX_SUCCESS
-    sgx_status_t ret = SGX_ERROR_UNEXPECTED;
-    int updated = 0;
+int OEinitialize_enclave(void)
+{
+    oe_result_t ret = OE_UNEXPECTED;
+    ret = oe_create_OETestEnclave_enclave("", OE_ENCLAVE_TYPE_AUTO, OE_ENCLAVE_FLAG_DEBUG, NULL, 0, &global_eid); //argv[1]
 
-    ret = sgx_create_enclave(TESTENCLAVE_FILENAME, SGX_DEBUG_FLAG, &token, &updated, &global_eid, NULL);
-
-    if (ret != SGX_SUCCESS)
+    if (ret != OE_OK)
     {
         print_error_message(ret);
         return -1;
@@ -185,7 +180,7 @@ int initialize_enclave(void)SGX_SUCCESS
 void ecallInterruptHandler(int dummy)
 {
     (void)dummy;
-    sgx_status_t ret = SGX_SUCCESS;
+    oe_result_t ret = OE_OK;
     ret = ecall_stop_bench(global_eid);
     print_ret_error(ret);
 }
@@ -221,7 +216,7 @@ void *measure_thread(void *args)
     doRuntime();                                         // do the runtime phase and store its result in the array
 
 #ifndef INCLUDE_TRANSITIONS
-    sgx_status_t ret = ecall_pause_bench(global_eid);   // pause the Benchmark to stop incrementing the counter
+    oe_result_t ret = ecall_pause_bench(global_eid);   // pause the Benchmark to stop incrementing the counter
     print_ret_error(ret);
 #else
     do_bench = PAUSED;
@@ -246,12 +241,12 @@ void *worker_thread(void *args)
         __asm__("pause");
     }
 #ifndef INCLUDE_TRANSITIONS
-    sgx_status_t ret = ecall_run_bench(global_eid, test_id, thread_id);
+    oe_result_t ret = ecall_run_bench(global_eid, test_id, thread_id);
     print_ret_error(ret);
 #else
  while(do_bench == RUNNING)
     {
-        sgx_status_t ret = ecall_run_bench_with_transitions(global_eid, test_id, thread_id);
+        oe_result_t ret = ecall_run_bench_with_transitions(global_eid, test_id, thread_id);
         print_ret_error(ret);
     }
 
@@ -329,14 +324,14 @@ static void exec_bench_setup()
     /*
      * enclave initialization should be done once
      */
-    oe_enclave_t* enclave = NULL;
-    oe_result_t ret;
-    ret = oe_create_testapp_enclave(argv[1], OE_ENCLAVE_TYPE_AUTO, OE_ENCLAVE_FLAG_DEBUG, NULL, 0, &enclave); //DEBUG MODE TOGGLE
-    if(ret != OE_OK)
+    oe_result_t ret = OE_OK;
+
+    if(OEinitialize_enclave() != 0)
     {
         printf("Enclave Initialization Error\n");
         return;
     }
+
     WORKER_THREADS = GLOBAL_CONFIG.NUM_OF_WTHREADS;
     counter = (uint64_t *) calloc(WORKER_THREADS, sizeof(uint64_t));
     /*
@@ -354,7 +349,7 @@ static void exec_bench_setup()
     print_ret_error(ret);
 
     // Destroy the enclave after all tests have been run and executed completely
-    ret = sgx_destroy_enclave(global_eid);
+    ret = oe_terminate_enclave(global_eid);
     print_ret_error(ret);
     // Print the array to an output file with some statistics information. For example, the rate of the executed tests per seconds
     print_array();

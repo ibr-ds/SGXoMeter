@@ -44,7 +44,7 @@
 #include <chrono>
 #include <csignal>
 
-#include <sgx_urts.h>
+#include <openenclave/host.h> 
 
 #include "sgx_error.h"       /* sgx_status_t */
 #include "sgx_eid.h"     /* sgx_enclave_id_t */
@@ -58,7 +58,7 @@
 #endif
 
 
-extern sgx_enclave_id_t global_eid;    /* global enclave id */
+extern oe_enclave_t* global_eid;    /* global enclave id */
 
 #if defined(__cplusplus)
 extern "C" {

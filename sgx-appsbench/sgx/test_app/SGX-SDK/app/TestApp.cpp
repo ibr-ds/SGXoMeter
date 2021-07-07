@@ -333,17 +333,6 @@ static void exec_bench_setup()
      */
     sgx_status_t ret = SGX_SUCCESS;
 
-    #ifdef OPEN_ENCLAVE_ENABLE
-    oe_enclave_t* enclave = NULL;
-    oe_result_t result;
-    result = oe_create_testapp_enclave(argv[1], OE_ENCLAVE_TYPE_AUTO, OE_ENCLAVE_FLAG_DEBUG, NULL, 0, &enclave); //DEBUG MODE TOGGLE
-    if(result != OE_OK)
-    {
-        printf("Enclave Initialization Error\n");
-        return;
-    }
-    #endif
-
     /* Initialize the enclave */
     if (initialize_enclave() != 0)
     {
