@@ -31,6 +31,8 @@
 
 #include "OETestApp.h"
 #include "OETestEnclave_u.h"
+#include <string>
+using namespace std;
 
 
 # define MAX_PATH FILENAME_MAX
@@ -165,7 +167,7 @@ void print_ret_error(oe_result_t ret) {
 int OEinitialize_enclave(void)
 {
     oe_result_t ret = OE_UNEXPECTED;
-    ret = oe_create_OETestEnclave_enclave("", OE_ENCLAVE_TYPE_AUTO, OE_ENCLAVE_FLAG_DEBUG, NULL, 0, &global_eid); //argv[1]
+    ret = oe_create_OETestEnclave_enclave("test_app/OpenEnclaveSDK/OEenclave/OEenclave.signed" , OE_ENCLAVE_TYPE_AUTO, OE_ENCLAVE_FLAG_DEBUG, NULL, 0, &global_eid); //argv[1]
 
     if (ret != OE_OK)
     {

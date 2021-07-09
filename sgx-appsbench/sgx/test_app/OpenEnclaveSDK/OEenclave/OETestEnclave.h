@@ -50,10 +50,10 @@
 extern "C" {
 #endif
 
-void printf(const char *fmt, ...);
+//void printf(const char *fmt, ...);
 
 int puts(const char* str);
-int fflush(void* stream);
+//int fflush(void* stream);
 void exit(int status);
 
 #include "testFunctionsSignatures.h"

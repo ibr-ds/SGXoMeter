@@ -35,7 +35,6 @@
 
 #include "OETestEnclave.h"
 #include "OETestEnclave_t.h"  /* print_string */
-#include "tSgxSSL_api.h"
 
 #include <openssl/ec.h>
 #include <openssl/bn.h>
@@ -53,27 +52,27 @@
  * printf: 
  *   Invokes OCALL to display the enclave buffer to the terminal.
  */
-void printf(const char *fmt, ...)
-{
-    char buf[BUFSIZ] = {'\0'};
-    va_list ap;
-    va_start(ap, fmt);
-    vsnprintf(buf, BUFSIZ, fmt, ap);
-    va_end(ap);
-    uprint(buf);
-}
+// void printf(const char *fmt, ...)
+// {
+//     char buf[BUFSIZ] = {'\0'};
+//     va_list ap;
+//     va_start(ap, fmt);
+//     vsnprintf(buf, BUFSIZ, fmt, ap);
+//     va_end(ap);
+//     uprint(buf);
+// }
 
-int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
-{
-    char buf[BUFSIZ] = {'\0'};
+// int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
+// {
+//     char buf[BUFSIZ] = {'\0'};
 
-    int res = vsnprintf(buf, BUFSIZ, fmt, arg);
-    if (res >=0) {
-        sgx_status_t sgx_ret = uprint((const char *) buf);
-        TEST_CHECK(sgx_ret);
-    }
-    return res;
-}
+//     int res = vsnprintf(buf, BUFSIZ, fmt, arg);
+//     if (res >=0) {
+//         sgx_status_t sgx_ret = uprint((const char *) buf);
+//         TEST_CHECK(sgx_ret);
+//     }
+//     return res;
+// }
 
 
 /*
@@ -287,8 +286,8 @@ extern "C" void ecall_set_config(uint64_t **ctr, void *globalConfig)
     {
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
     }
-    SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
-    OPENSSL_init_crypto(0, NULL);
+    //SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
+    //OPENSSL_init_crypto(0, NULL);
 
     /*
      * This includes all available pre function calls of the chosen modules
