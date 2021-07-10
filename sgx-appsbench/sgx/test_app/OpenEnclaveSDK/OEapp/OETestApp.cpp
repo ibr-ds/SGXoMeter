@@ -256,12 +256,13 @@ void *worker_thread(void *args)
     return nullptr;
 }
 
+#define OPEN_ENCLAVE_DATA_FILENAME  "OpenEnclaveData.txt"
 static void print_array()
 {
     //ToDo do the format of the output file
 #ifdef WRITE_LOG_FILE
     FILE *fp;
-    fp = fopen(GLOBAL_CONFIG.DATA_FILE_NAME, "a");
+    fp = fopen(OPEN_ENCLAVE_DATA_FILENAME, "a");
     if (fp == NULL)
     {
         fprintf(stderr, "Couldnt open or create a file for the plot data!\n");
@@ -274,7 +275,7 @@ static void print_array()
     #include "arrayPrintLoop.h"
 
 #ifdef WRITE_LOG_FILE
-    fprintf(stderr, "Results are saved in a text file with the name: %s\n", GLOBAL_CONFIG.DATA_FILE_NAME);
+    fprintf(stderr, "Results are saved in a text file with the name: %s\n", OPEN_ENCLAVE_DATA_FILENAME);
     fclose(fp);
 #endif
 }
