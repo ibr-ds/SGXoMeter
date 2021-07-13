@@ -32,7 +32,7 @@
 #include "TestApp.h"
 #include "TestEnclave_u.h"
 
-#ifdef OPEN_ENCLAVE_ENABLE
+#ifdef OE_ENABLE
 #include <openenclave/host.h> 
 #endif
 

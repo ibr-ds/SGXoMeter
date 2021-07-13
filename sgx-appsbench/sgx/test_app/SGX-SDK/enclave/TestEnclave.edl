@@ -35,7 +35,7 @@ enclave {
 
     from "sgx_tsgxssl.edl" import *;
 
-    #ifdef OPEN_ENCLAVE_ENABLE
+    #ifdef OE_ENABLE
     from "openenclave/edl/syscall.edl" import *;
     from "platform.edl" import *;
     #endif

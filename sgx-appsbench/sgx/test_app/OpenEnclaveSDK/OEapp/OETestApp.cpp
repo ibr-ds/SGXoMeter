@@ -69,66 +69,36 @@ static oe_errlist_t oe_errlist[] = {
         "Out of memory.",
         NULL
     },
-//    {
-//        SGX_ERROR_ENCLAVE_LOST,
-//        "Power transition occurred.",
-//        "Please refer to the sample \"PowerTransition\" for details."
-//     },
-//     {
-//         SGX_ERROR_INVALID_ENCLAVE,
-//         "Invalid enclave image.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_INVALID_ENCLAVE_ID,
-//         "Invalid enclave identification.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_INVALID_SIGNATURE,
-//         "Invalid enclave signature.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_OUT_OF_EPC,
-//         "Out of EPC memory.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_NO_DEVICE,
-//         "Invalid Intel® Software Guard Extensions device.",
-//         "Please make sure Intel® Software Guard Extensions module is enabled in the BIOS, and install Intel® Software Guard Extensions driver afterwards."
-//     },
-//     {
-//         SGX_ERROR_MEMORY_MAP_CONFLICT,
-//         "Memory map conflicted.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_INVALID_METADATA,
-//         "Invalid enclave metadata.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_DEVICE_BUSY,
-//         "Intel® Software Guard Extensions device was busy.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_INVALID_VERSION,
-//         "Enclave version was invalid.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_INVALID_ATTRIBUTE,
-//         "Enclave was not authorized.",
-//         NULL
-//     },
-//     {
-//         SGX_ERROR_ENCLAVE_FILE_ACCESS,
-//         "Can't open enclave file.",
-//         NULLSGX_SUCCESS
-//     },
+    {
+        OE_VERIFY_FAILED,
+        "A cryptographic verification failed.",
+        NULL
+    },
+    {
+        OE_PUBLIC_KEY_NOT_FOUND,
+        "The certificate does not contain a public key.",
+        NULL
+    },
+    {
+        OE_READ_FAILED,
+        "The function failed to read data from a device (such as a socket, or file).",
+        NULL
+    },
+    {
+        OE_DEBUG_DOWNGRADE,
+        "Attempted to create a debug enclave with an enclave image that does not allow it.",
+        NULL
+    },
+    {
+        OE_TCB_LEVEL_INVALID,
+        "The level of the trusted computing base (TCB) is not up to date for report verification.",
+        NULL
+    },
+    {
+        OE_CRYPTO_ERROR,
+        "An underlying crypto provider returned an error.",
+        NULL
+    },
 };
 
 /* Check error conditions for loading enclave */

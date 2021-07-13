@@ -35,19 +35,19 @@ target_include_directories(OEenclave PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Globa
 
 target_link_libraries(OEenclave openenclave::oeenclave openenclave::oecrypto${OE_CRYPTO_LIB} openenclave::oelibcxx) # use oelibc if no C++ is used
 
-add_custom_command(
-  OUTPUT private.pem public.pem
-  COMMAND openssl genrsa -out private.pem -3 3072
-  COMMAND openssl rsa -in private.pem -pubout -out public.pem
-  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-  COMMENT "SSL Done")
+# add_custom_command(
+#   OUTPUT private.pem public.pem
+#   COMMAND openssl genrsa -out private.pem -3 3072
+#   COMMAND openssl rsa -in private.pem -pubout -out public.pem
+#   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#   COMMENT "SSL Done")
 
 # Sign enclave
 add_custom_command(
     OUTPUT OEenclave.signed
-    DEPENDS OEenclave OETestEnclave.conf private.pem
+    DEPENDS OEenclave OETestEnclave.conf #private.pem
     COMMAND openenclave::oesign sign -e $<TARGET_FILE:OEenclave> -c
-        ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave.conf -k private.pem
+        ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave.conf -k ${OEENCL_DIR}/TestEnclave_private.pem
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     COMMENT "OE-Enclave signed")
     #    -out ${SIGNED_OE_ENCLAVE_NAME}

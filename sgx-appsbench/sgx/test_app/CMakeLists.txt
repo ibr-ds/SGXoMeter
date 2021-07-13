@@ -49,7 +49,7 @@ add_subdirectory(SGX-SDK/enclave)
 
 
 ########################## Build Open Enclave SDK Part #########################
-if (OPEN_ENCLAVE_ENABLE)
+if (OE_ENABLE)
     find_package(OpenEnclave CONFIG REQUIRED)
     set(OEENCL_DIR                  "${CMAKE_CURRENT_SOURCE_DIR}/OpenEnclaveSDK/OEenclave")
     set(OE_APP_NAME                 "OE${APP_NAME}") 
