@@ -1,9 +1,9 @@
 <EnclaveConfiguration>
-  <ProdID>0</ProdID>
-  <ISVSVN>0</ISVSVN>
+  <ProdID>${ENCL_PROD_ID}</ProdID>
+  <ISVSVN>${ENCL_ISVSVN}</ISVSVN>
   <StackMaxSize>${ENCL_STACK_MAXSIZE}</StackMaxSize>
   <HeapMaxSize>${ENCL_HEAP_MAXSIZE}</HeapMaxSize>
   <TCSNum>${ENCL_TCS_NUM}</TCSNum>
-  <TCSPolicy>1</TCSPolicy>
+  <TCSPolicy>${ENCL_TCS_POLICY}</TCSPolicy>
   <DisableDebug>${ENCL_DISABLE_DEBUG}</DisableDebug>
 </EnclaveConfiguration>

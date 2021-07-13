@@ -10,21 +10,21 @@ add_custom_command(
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} # unklar, funktioniert so aber 
         COMMENT "Creating OETestApp_t.c")
 
-
+set(OE_ENCL_TEST_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/OEtests)
 
 file(GLOB Trusted_Cpp_Files
-	    "${ENCL_TEST_DIR}/tests/*.cpp")
+	    "${OE_ENCL_TEST_DIR}/*.cpp")
 
 file(GLOB Trusted_C_Files
-	    "${ENCL_TEST_DIR}/tests/*.c"
-	    "../commonTestFiles/seeq/*.c")
+	    "${OE_ENCL_TEST_DIR}/*.c")
+	    #"../commonTestFiles/seeq/*.c")
 
-set(TRUSTED_TEST_SRCS           ${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_t.c)
+set(TRUSTED_TEST_SRCS           ${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${CMAKE_CURRENT_SOURCE_DIR}/OEtests/threadstest.c)
 
 #add_library(OE_TEST_LIB SHARED ${TRUSTED_TEST_SRCS})
 
 
-add_executable(OEenclave OETestEnclave.cpp   ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${CMAKE_CURRENT_SOURCE_DIR}/OEtests/threadstest.c ${CMAKE_CURRENT_SOURCE_DIR}/OEtests/marceltest.c)   
+add_executable(OEenclave OETestEnclave.cpp ${TRUSTED_TEST_SRCS})  
 #${ENCL_TEST_DIR}/marceltest.c
 
 target_compile_definitions(OEenclave PUBLIC OE_API_VERSION=2) # use latest OE API version

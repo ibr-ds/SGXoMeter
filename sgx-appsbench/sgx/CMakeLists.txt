@@ -19,9 +19,12 @@ set(OE_CRYPTO_LIB						mbedtls CACHE STRING "Crypto library used by OE-enclaves.
 
 ########################## Set Enclave Settings ############################
 
+set(ENCL_PROD_ID				0 CACHE STRING "Set ProductID of enclave")
+set(ENCL_ISVSVN					0 CACHE STRING "Set ISVSVN of enclave.")
 set(ENCL_STACK_MAXSIZE			0x90000 CACHE STRING "Set the desired maximum stack size in bytes (Hexadecimal)")
 set(ENCL_HEAP_MAXSIZE			0x2000000 CACHE STRING "Set the desired maximum heap size in bytes (Hexadecimal)")
-set(ENCL_TCS_NUM				100 CACHE STRING "Set the number of trusted threads.")
+set(ENCL_TCS_NUM				10 CACHE STRING "Set the number of trusted threads.")
+set(ENCL_TCS_POLICY				1 CACHE STRING "0 = bind TCS to untrusted thread || 1 = unbind them")
 set(ENCL_DISABLE_DEBUG			0 CACHE STRING "0 = DEBUG || 1 = NO DEBUG")
 set(ENCL_CONF_FILE				${CMAKE_CURRENT_SOURCE_DIR}/test_app/SGX-SDK/enclave/TestEnclave.config.xml)
 set(ENCL_CONF_IN_FILE			${CMAKE_CURRENT_SOURCE_DIR}/test_app/SGX-SDK/enclave/TestEnclaveIN.config.xml)
