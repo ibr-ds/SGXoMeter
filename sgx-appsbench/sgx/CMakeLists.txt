@@ -14,21 +14,52 @@ include(cmake/GitUtils.cmake)
 
 
 ########################## Set Open Enclave SDK Variables ##########################
-set(OE_ENABLE					YES CACHE BOOL "Enable Open Enclave SDK for corresponding modules")
-set(OE_CRYPTO_LIB						mbedtls CACHE STRING "Crypto library used by OE-enclaves.")
+set(OE_ENABLE					YES CACHE BOOL "Enable Open Enclave SDK for corresponding modules.")
+set(OE_CRYPTO_LIB				mbedtls CACHE STRING "Crypto library used by OE-enclaves.")
+set(OE_MIRROR_ENCLAVE			YES CACHE BOOL "Enable Enclave Configuration Mirroring between SGX SDK and Open Enclave")
 
 ########################## Set Enclave Settings ############################
 
-set(ENCL_PROD_ID				0 CACHE STRING "Set ProductID of enclave")
+set(ENCL_PROD_ID				0 CACHE STRING "Set ProductID of enclave.")
 set(ENCL_ISVSVN					0 CACHE STRING "Set ISVSVN of enclave.")
-set(ENCL_STACK_MAXSIZE			0x90000 CACHE STRING "Set the desired maximum stack size in bytes (Hexadecimal)")
-set(ENCL_HEAP_MAXSIZE			0x2000000 CACHE STRING "Set the desired maximum heap size in bytes (Hexadecimal)")
+set(ENCL_STACK_MAXSIZE			0x90000 CACHE STRING "Set the desired maximum stack size in bytes (Hexadecimal).")
+set(ENCL_HEAP_MAXSIZE			0x2000000 CACHE STRING "Set the desired maximum heap size in bytes (Hexadecimal).")
 set(ENCL_TCS_NUM				10 CACHE STRING "Set the number of trusted threads.")
-set(ENCL_TCS_POLICY				1 CACHE STRING "0 = bind TCS to untrusted thread || 1 = unbind them")
-set(ENCL_DISABLE_DEBUG			0 CACHE STRING "0 = DEBUG || 1 = NO DEBUG")
+set(ENCL_TCS_POLICY				1 CACHE STRING "0 = bind TCS to untrusted thread || 1 = unbind them.")
+set(ENCL_DISABLE_DEBUG			0 CACHE STRING "0 = DEBUG || 1 = NO DEBUG.")
 set(ENCL_CONF_FILE				${CMAKE_CURRENT_SOURCE_DIR}/test_app/SGX-SDK/enclave/TestEnclave.config.xml)
 set(ENCL_CONF_IN_FILE			${CMAKE_CURRENT_SOURCE_DIR}/test_app/SGX-SDK/enclave/TestEnclaveIN.config.xml)
 configure_file(${ENCL_CONF_IN_FILE} ${ENCL_CONF_FILE})
+
+########################## Set Open Enclave Enclave Settings ############################
+if(OE_ENABLE)
+	set(ENCL_OE_PROD_ID				0 CACHE STRING "Set ProductID of OEenclave.")
+	set(ENCL_OE_ISVSVN				0 CACHE STRING "Set Security version of OEenclave.")
+	set(ENCL_OE_STACK_PAGES			144 CACHE STRING "Set the desired number of stack pages for OEenclave.")
+	set(ENCL_OE_HEAP_PAGES			8192 CACHE STRING "Set the desired number of heap pages for OEenclave.")
+	set(ENCL_OE_TCS_NUM				10 CACHE STRING "Set the number of trusted threads for OEenclave.")
+	set(ENCL_OE_DEBUG				0 CACHE STRING "1 = DEBUG || 0 = NO DEBUG")
+
+	if(OE_MIRROR_ENCLAVE)
+
+		set(ENCL_OE_PROD_ID			${ENCL_PROD_ID})
+		set(ENCL_OE_ISVSVN			${ENCL_ISVSVN})
+		set(ENCL_OE_STACK_PAGES		144)
+		set(ENCL_OE_HEAP_PAGES		8192)
+		set(ENCL_OE_TCS_NUM			${ENCL_TCS_NUM})
+		if(ENCL_DISABLE_DEBUG)
+			set(ENCL_OE_DEBUG			0)
+		else()
+			set(ENCL_OE_DEBUG			1)
+		endif()
+	endif()
+
+	set(ENCL_OE_CONF_FILE				${CMAKE_CURRENT_SOURCE_DIR}/test_app/OpenEnclaveSDK/OEenclave/OETestEnclave.conf)
+	set(ENCL_OE_CONF_IN_FILE			${CMAKE_CURRENT_SOURCE_DIR}/test_app/OpenEnclaveSDK/OEenclave/OETestEnclaveIN.conf)
+	configure_file(${ENCL_OE_CONF_IN_FILE} ${ENCL_OE_CONF_FILE})
+
+endif()
+
 
 
 ########################## Set Environment Variables ##########################

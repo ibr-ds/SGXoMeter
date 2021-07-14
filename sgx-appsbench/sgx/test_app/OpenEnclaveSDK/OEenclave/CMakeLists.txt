@@ -12,14 +12,14 @@ add_custom_command(
 
 set(OE_ENCL_TEST_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/OEtests)
 
-file(GLOB Trusted_Cpp_Files
+file(GLOB OETrusted_Cpp_Files
 	    "${OE_ENCL_TEST_DIR}/*.cpp")
 
-file(GLOB Trusted_C_Files
+file(GLOB OETrusted_C_Files
 	    "${OE_ENCL_TEST_DIR}/*.c")
 	    #"../commonTestFiles/seeq/*.c")
 
-set(TRUSTED_TEST_SRCS           ${Trusted_Cpp_Files} ${Trusted_C_Files} ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${CMAKE_CURRENT_SOURCE_DIR}/OEtests/threadstest.c)
+set(TRUSTED_TEST_SRCS           ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${OETrusted_Cpp_Files} ${OETrusted_C_Files})
 
 #add_library(OE_TEST_LIB SHARED ${TRUSTED_TEST_SRCS})
 
