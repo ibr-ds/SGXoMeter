@@ -16,7 +16,7 @@ include(cmake/GitUtils.cmake)
 ########################## Set Open Enclave SDK Variables ##########################
 set(OE_ENABLE					YES CACHE BOOL "Enable Open Enclave SDK for corresponding modules.")
 set(OE_CRYPTO_LIB				mbedtls CACHE STRING "Crypto library used by OE-enclaves.")
-set(OE_MIRROR_ENCLAVE			YES CACHE BOOL "Enable Enclave Configuration Mirroring between SGX SDK and Open Enclave")
+set(OE_MIRROR_ENCLAVE			YES CACHE BOOL "Enable Enclave Configuration Mirroring for Open Enclave from SGX SDK.")
 
 ########################## Set Enclave Settings ############################
 
@@ -40,6 +40,7 @@ if(OE_ENABLE)
 	set(ENCL_OE_TCS_NUM				10 CACHE STRING "Set the number of trusted threads for OEenclave.")
 	set(ENCL_OE_DEBUG				0 CACHE STRING "1 = DEBUG || 0 = NO DEBUG")
 
+	################### Use SGX SDK Enclave Config for OE Enclave ###################
 	if(OE_MIRROR_ENCLAVE)
 
 		set(ENCL_OE_PROD_ID			${ENCL_PROD_ID})
