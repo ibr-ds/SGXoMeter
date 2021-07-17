@@ -52,7 +52,7 @@ set(MODULE_THREAD_TESTS										NO CACHE BOOL "YES OR NO for sgx multi-threadin
 check_add_definition(MODULE_THREAD_TESTS 					THREAD_TESTS)
 check_and_increment_counter(MODULE_THREAD_TESTS				NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_DNA_PATTERN_MATCHING								NO CACHE BOOL "YES OR NO for DNA Pattern Matching tests")
+set(MODULE_DNA_PATTERN_MATCHING								YES CACHE BOOL "YES OR NO for DNA Pattern Matching tests")
 check_add_definition(MODULE_DNA_PATTERN_MATCHING 			DNA_PATTERN_MATCHING)
 check_and_increment_counter(MODULE_DNA_PATTERN_MATCHING		NUMBER_OF_TESTS_VALUE)
 
@@ -84,7 +84,7 @@ set(MODULE_SGX_CRYPTO_DEC_ENC								NO CACHE BOOL "YES OR NO for sgx tcrypto de
 check_add_definition(MODULE_SGX_CRYPTO_DEC_ENC				SGX_DECRYPTO_ENCRYPTO)
 check_and_increment_counter(MODULE_SGX_CRYPTO_DEC_ENC		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_MARCEL_TEST										YES CACHE BOOL "YES OR NO for marcel test")
+set(MODULE_MARCEL_TEST										NO CACHE BOOL "YES OR NO for marcel test")
 check_add_definition(MODULE_MARCEL_TEST						MARCEL_TEST)
 check_and_increment_counter(MODULE_MARCEL_TEST				NUMBER_OF_TESTS_VALUE)
 

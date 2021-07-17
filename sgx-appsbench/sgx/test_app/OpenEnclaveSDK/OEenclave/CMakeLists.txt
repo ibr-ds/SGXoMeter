@@ -16,8 +16,8 @@ file(GLOB OETrusted_Cpp_Files
 	    "${OE_ENCL_TEST_DIR}/*.cpp")
 
 file(GLOB OETrusted_C_Files
-	    "${OE_ENCL_TEST_DIR}/*.c")
-	    #"../commonTestFiles/seeq/*.c")
+	    "${OE_ENCL_TEST_DIR}/*.c"
+	    "../../commonTestFiles/seeq/*.c")
 
 set(TRUSTED_TEST_SRCS           ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${OETrusted_Cpp_Files} ${OETrusted_C_Files})
 
@@ -30,7 +30,7 @@ add_executable(OEenclave OETestEnclave.cpp ${TRUSTED_TEST_SRCS})
 target_compile_definitions(OEenclave PUBLIC OE_API_VERSION=2) # use latest OE API version
 
 # Need for the generated file testapp_t.h
-target_include_directories(OEenclave PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${ENCL_TEST_DIR})
+target_include_directories(OEenclave PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${ENCL_TEST_DIR} ${PACKAGE_INC}/openssl)
 
 
 target_link_libraries(OEenclave openenclave::oeenclave openenclave::oecrypto${OE_CRYPTO_LIB} openenclave::oelibcxx) # use oelibc if no C++ is used
