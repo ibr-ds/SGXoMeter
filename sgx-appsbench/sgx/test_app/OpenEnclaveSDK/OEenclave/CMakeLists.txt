@@ -33,7 +33,7 @@ target_compile_definitions(OEenclave PUBLIC OE_API_VERSION=2) # use latest OE AP
 target_include_directories(OEenclave PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${ENCL_TEST_DIR} ${PACKAGE_INC}/openssl)
 
 
-target_link_libraries(OEenclave openenclave::oeenclave openenclave::oecrypto${OE_CRYPTO_LIB} openenclave::oelibcxx) # use oelibc if no C++ is used
+target_link_libraries(OEenclave openenclave::oeenclave openenclave::oecrypto${OE_CRYPTO_LIB} openenclave::oelibcxx openenclave::oecryptoopenssl) #"-L${OPENSSL_LIBRARY_PATH} -Wl,--whole-archive -l${OpenSSL_CRYP_LIBRARY}") # use oelibc if no C++ is used
 
 # add_custom_command(
 #   OUTPUT private.pem public.pem
