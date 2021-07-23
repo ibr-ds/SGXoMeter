@@ -99,6 +99,10 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
 #ifdef MARCEL_TEST
         , "Marcel Test"
 #endif
+
+#ifdef AEAD_AES256GCM_TEST
+        , "AEAD AES256GCM TEST"
+#endif
 };
 
 

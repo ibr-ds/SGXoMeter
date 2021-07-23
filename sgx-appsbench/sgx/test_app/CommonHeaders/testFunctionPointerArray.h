@@ -109,6 +109,10 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
 #ifdef MARCEL_TEST
                 ,TEST_NAME(marcel_test)
 #endif
+
+#ifdef AEAD_AES256GCM_TEST
+                ,TEST_NAME(aead_aes256gcm_test)
+#endif
         };
 
 #endif //SGX_APPSBENCH_TESTFUNCTIONPOINTERARRAY_H

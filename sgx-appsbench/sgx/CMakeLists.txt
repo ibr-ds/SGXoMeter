@@ -14,7 +14,7 @@ include(cmake/GitUtils.cmake)
 
 
 ########################## Set Open Enclave SDK Variables ##########################
-set(OE_ENABLE					YES CACHE BOOL "Enable Open Enclave SDK for corresponding modules.")
+set(OE_ENABLE					NO CACHE BOOL "Enable Open Enclave SDK for corresponding modules.")
 set(OE_CRYPTO_LIB				mbedtls CACHE STRING "Crypto library used by OE-enclaves.")
 set(OE_MIRROR_ENCLAVE			YES CACHE BOOL "Enable Enclave Configuration Mirroring for Open Enclave from SGX SDK.")
 
@@ -232,6 +232,7 @@ set(ARGON2_LIBRARY_PATH				${ROOT_DIR})
 set(ARGON2_LIBRARY_NAME				libargon2.a)
 
 ########################## Set LibSodium Variables ##########################
+set(LIBSODIUM_DIR					${PACKAGE_INC}/Libsodium)
 #set(sodium_USE_STATIC_LIBS ON)
 #include(cmake/Findsodium.cmake)
 #message(WARNING "sodium library is at ${sodium_LIBRARY_RELEASE}")

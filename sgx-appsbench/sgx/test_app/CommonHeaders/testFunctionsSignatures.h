@@ -84,5 +84,8 @@ void post_argon2_test();
 #ifdef MARCEL_TEST
 int marcel_test();
 #endif
+#ifdef AEAD_AES256GCM_TEST
+int aead_aes256gcm_test();
+#endif
 
 #endif //SGX_APPSBENCH_TESTFUNCTIONSSIGNATURES_H
