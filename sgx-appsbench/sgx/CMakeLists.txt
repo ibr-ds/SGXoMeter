@@ -14,7 +14,7 @@ include(cmake/GitUtils.cmake)
 
 
 ########################## Set Open Enclave SDK Variables ##########################
-set(OE_ENABLE					NO CACHE BOOL "Enable Open Enclave SDK for corresponding modules.")
+set(OE_ENABLE					YES CACHE BOOL "Enable Open Enclave SDK for corresponding modules.")
 set(OE_CRYPTO_LIB				mbedtls CACHE STRING "Crypto library used by OE-enclaves.")
 set(OE_MIRROR_ENCLAVE			YES CACHE BOOL "Enable Enclave Configuration Mirroring for Open Enclave from SGX SDK.")
 

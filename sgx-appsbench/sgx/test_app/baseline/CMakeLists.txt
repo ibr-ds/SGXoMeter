@@ -13,11 +13,16 @@ file(GLOB Tests_C_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
         "../commonTestFiles/seeq/*.c")      #ToDo move these two to the outside and adjust them accordingly in the cmakelist file used in
 
-set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${SGXSDK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/)
+file(GLOB Test_Cpp_FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
+        "${LIBSODIUM_DIR}/*.cpp")
+
+set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${SGXSDK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/ ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/6/include)
+
 #list(REMOVE_ITEM Tests_C_FILES "tests/missing_funcs.c")
 
 set(BASELINE_Link_Flags		            "${Security_Link_Flags} -L${BASELINE_OPENSSL_LIBRARY_PATH} -lcrypto -lpthread -L${SGX_LIBRARY_PATH} -lsgx_tcrypto -l${SGX_TSVC_LIB}")
-set(BASELINE_SRC_FILES 		             ../Utils/InputParser.c BaseApp.cpp  BenchThread.cpp ${Tests_C_FILES})
+set(BASELINE_SRC_FILES 		             ../Utils/InputParser.c BaseApp.cpp  BenchThread.cpp ${Tests_C_FILES} ${Test_Cpp_FILES})
 
 
 add_executable(${BASE_APP_NAME}          ${BASELINE_SRC_FILES})

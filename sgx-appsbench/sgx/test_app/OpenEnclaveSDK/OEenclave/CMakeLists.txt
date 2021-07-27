@@ -13,7 +13,8 @@ add_custom_command(
 set(OE_ENCL_TEST_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/OEtests)
 
 file(GLOB OETrusted_Cpp_Files
-	    "${OE_ENCL_TEST_DIR}/*.cpp")
+	    "${OE_ENCL_TEST_DIR}/*.cpp"
+        "${LIBSODIUM_DIR}/*.cpp")
 
 file(GLOB OETrusted_C_Files
 	    "${OE_ENCL_TEST_DIR}/*.c"
@@ -30,7 +31,7 @@ add_executable(OEenclave OETestEnclave.cpp ${TRUSTED_TEST_SRCS})
 target_compile_definitions(OEenclave PUBLIC OE_API_VERSION=2) # use latest OE API version
 
 # Need for the generated file testapp_t.h
-target_include_directories(OEenclave PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${ENCL_TEST_DIR} ${PACKAGE_INC}/openssl)
+target_include_directories(OEenclave PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${ENCL_TEST_DIR} ${PACKAGE_INC}/openssl ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/6/include)
 
 
 target_link_libraries(OEenclave openenclave::oeenclave openenclave::oecrypto${OE_CRYPTO_LIB} openenclave::oelibcxx openenclave::oecryptoopenssl) #"-L${OPENSSL_LIBRARY_PATH} -Wl,--whole-archive -l${OpenSSL_CRYP_LIBRARY}") # use oelibc if no C++ is used

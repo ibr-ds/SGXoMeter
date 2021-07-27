@@ -41,6 +41,10 @@ include(cmake/GlobalVariables.cmake)
 include(cmake/TestVariables.cmake)
 
 
+#set(EXEC_CONTEXT					1)
+#    set(RandomBytesCPPIn            ${LIBSODIUM_DIR}/randombytesIN)
+#    set(RandomBytesCPP            ${LIBSODIUM_DIR}/randombytes.cpp)
+#    configure_file(${RandomBytesCPPIn} ${RandomBytesCPP})
 ########################## Build The Untrusted SGX-SDK Part ##########################
 add_subdirectory(SGX-SDK/app)
 
@@ -52,10 +56,16 @@ add_subdirectory(SGX-SDK/enclave)
 if (OE_ENABLE)
     find_package(OpenEnclave CONFIG REQUIRED)
     set(OEENCL_DIR                  "${CMAKE_CURRENT_SOURCE_DIR}/OpenEnclaveSDK/OEenclave")
+    set_property(GLOBAL PROPERTY OE_CONTEXT true)
     set(OE_APP_NAME                 "OE${APP_NAME}") 
     set(ENCL_TEST_DIR               "${CMAKE_CURRENT_SOURCE_DIR}/SGX-SDK/enclave/tests")
     set(SIGNED_OE_ENCLAVE_NAME      "OEenclave.signed")
     add_definitions(-DOE_TESTENCLAVE_FILENAME="${SIGNED_OE_ENCLAVE_NAME}")
+
+    #set(EXEC_CONTEXT					0)
+    #set(RandomBytesCPPIn            ${LIBSODIUM_DIR}/randombytesIN)
+    #set(RandomBytesCPP            ${LIBSODIUM_DIR}/randombytes.cpp)
+    #configure_file(${RandomBytesCPPIn} ${RandomBytesCPP})
 
     ####### Open Enclave Trusted Part #######
     add_subdirectory(OpenEnclaveSDK/OEapp)
