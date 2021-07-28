@@ -28,6 +28,8 @@ set(TRUSTED_TEST_SRCS           ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${
 add_executable(OEenclave OETestEnclave.cpp ${TRUSTED_TEST_SRCS})  
 #${ENCL_TEST_DIR}/marceltest.c
 
+target_compile_definitions(OEBenchApp PUBLIC OE_ENCLAVE_CONTEXT)
+
 target_compile_definitions(OEenclave PUBLIC OE_API_VERSION=2) # use latest OE API version
 
 # Need for the generated file testapp_t.h

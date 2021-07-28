@@ -94,6 +94,7 @@ add_custom_command(
 
 add_library(${ENCLAVE_LIB_NAME} SHARED ${TRUSTED_SRCS})
 
+target_compile_definitions(${ENCLAVE_LIB_NAME} PUBLIC SGX_SDK_CONTEXT)
 
 include_directories(${Trusted_Include_Paths})
 

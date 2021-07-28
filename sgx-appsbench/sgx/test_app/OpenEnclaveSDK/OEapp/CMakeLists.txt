@@ -11,6 +11,8 @@ add_custom_command(
 
 add_executable(OEBenchApp OETestApp.cpp ../../Utils/InputParser.c OETestEnclave_u.c)
 
+target_compile_definitions(OEBenchApp PUBLIC OE_ENCLAVE_CONTEXT)
+
 set_target_properties(OEBenchApp
 	PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}

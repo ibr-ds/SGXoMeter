@@ -232,7 +232,7 @@ set(ARGON2_LIBRARY_PATH				${ROOT_DIR})
 set(ARGON2_LIBRARY_NAME				libargon2.a)
 
 ########################## Set LibSodium Variables ##########################
-set(LIBSODIUM_DIR					${PACKAGE_INC}/Libsodium)
+set(LIBSODIUM_DIR					${CMAKE_CURRENT_SOURCE_DIR}/test_app/CommonHeaders/Libsodium)
 #set(sodium_USE_STATIC_LIBS ON)
 #include(cmake/Findsodium.cmake)
 #message(WARNING "sodium library is at ${sodium_LIBRARY_RELEASE}")

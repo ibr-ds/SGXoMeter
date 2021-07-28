@@ -27,6 +27,8 @@ set(BASELINE_SRC_FILES 		             ../Utils/InputParser.c BaseApp.cpp  BenchT
 
 add_executable(${BASE_APP_NAME}          ${BASELINE_SRC_FILES})
 
+target_compile_definitions(${BASE_APP_NAME} PUBLIC BASELINE_CONTEXT)
+
 set_target_properties(${BASE_APP_NAME}
         PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY         ${CMAKE_BINARY_DIR}

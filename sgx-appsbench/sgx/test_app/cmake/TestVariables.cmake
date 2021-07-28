@@ -36,11 +36,11 @@ set(MODULE_BN_TESTS											NO CACHE BOOL "YES OR NO for openssl BN-tests")
 check_add_definition(MODULE_BN_TESTS	 					BN_TESTS)
 check_and_increment_counter(MODULE_BN_TESTS					NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_DH_TESTS											YES CACHE BOOL "YES OR NO for deffie hellman tests")
+set(MODULE_DH_TESTS											NO CACHE BOOL "YES OR NO for deffie hellman tests")
 check_add_definition(MODULE_DH_TESTS	 					DEFFIE_HELLMAN_TESTS)
 check_and_increment_counter(MODULE_DH_TESTS					NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_SHA_256											YES CACHE BOOL "YES OR NO for secure hash algorithm 256 tests")
+set(MODULE_SHA_256											NO CACHE BOOL "YES OR NO for secure hash algorithm 256 tests")
 check_add_definition(MODULE_SHA_256	 						SECURE_HASH_ALGORITHM_256)
 check_and_increment_counter(MODULE_SHA_256					NUMBER_OF_TESTS_VALUE)
 

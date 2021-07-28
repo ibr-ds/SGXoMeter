@@ -35,6 +35,8 @@ add_custom_command(
 
 add_executable(${APP_NAME} ${APP_SRC_FILES} TestEnclave_u.c)
 
+target_compile_definitions(${APP_NAME} PUBLIC SGX_SDK_CONTEXT)
+
 set_target_properties(${APP_NAME}
 	PROPERTIES
 	RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}
