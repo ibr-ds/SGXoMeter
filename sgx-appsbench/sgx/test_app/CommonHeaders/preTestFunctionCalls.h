@@ -49,5 +49,9 @@ pre_sgx_dencrypto_test(GLOBAL_CONFIG);
 pre_aead_aes256gcm_encrypt_test(GLOBAL_CONFIG);
 #endif
 
+#ifdef AEAD_AES256GCM_DECRYPT_TEST
+pre_aead_aes256gcm_decrypt_test(GLOBAL_CONFIG);
+#endif
+
 
 #endif //SGX_APPSBENCH_PRETESTFUNCTIONCALLS_H

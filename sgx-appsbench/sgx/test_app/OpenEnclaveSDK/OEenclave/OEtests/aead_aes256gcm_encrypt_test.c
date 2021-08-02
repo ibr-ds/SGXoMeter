@@ -64,4 +64,7 @@ int aead_aes256gcm_encrypt_test()
                                       plainText, plaintext_len,
                                       NULL, 0, NULL, nonce, key);
 
+    free(ciphertext);
+    return 0;
+
 }

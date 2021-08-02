@@ -129,6 +129,9 @@ GEN_TEST_MODULE_FUNCTION(aead_aes256gcm_test)
 GEN_TEST_MODULE_FUNCTION(aead_aes256gcm_encrypt_test)
 #endif
 
+#ifdef AEAD_AES256GCM_DECRYPT_TEST
+GEN_TEST_MODULE_FUNCTION(aead_aes256gcm_decrypt_test)
+#endif
 
 
 

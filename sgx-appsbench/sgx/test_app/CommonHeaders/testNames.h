@@ -108,6 +108,10 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
         , "AEAD AES256GCM ENCRYPT TEST"
 #endif
 
+#ifdef AEAD_AES256GCM_DECRYPT_TEST
+        , "AEAD AES256GCM DECRYPT TEST"
+#endif
+
 };
 
 

@@ -92,6 +92,11 @@ void pre_aead_aes256gcm_encrypt_test(globalConfig_t *globalConfig);
 int aead_aes256gcm_encrypt_test();
 void post_aead_aes256gcm_encrypt_test();
 #endif
+#ifdef AEAD_AES256GCM_DECRYPT_TEST
+void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig);
+int aead_aes256gcm_decrypt_test();
+void post_aead_aes256gcm_decrypt_test();
+#endif
 
 
 #endif //SGX_APPSBENCH_TESTFUNCTIONSSIGNATURES_H

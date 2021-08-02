@@ -117,6 +117,11 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
 #ifdef AEAD_AES256GCM_ENCRYPT_TEST
                 ,TEST_NAME(aead_aes256gcm_encrypt_test)
 #endif
+
+#ifdef AEAD_AES256GCM_DECRYPT_TEST
+                ,TEST_NAME(aead_aes256gcm_decrypt_test)
+#endif
         };
 
+        
 #endif //SGX_APPSBENCH_TESTFUNCTIONPOINTERARRAY_H

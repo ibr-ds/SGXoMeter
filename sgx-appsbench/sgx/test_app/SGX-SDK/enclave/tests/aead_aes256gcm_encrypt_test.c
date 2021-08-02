@@ -17,14 +17,16 @@ unsigned long long ciphertext_len;
 static char *plainText;
 
 
+//https://libsodium.gitbook.io/doc/secret-key_cryptography/aead/aes-256-gcm
+
 void pre_aead_aes256gcm_encrypt_test(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
     if (sodium_init() == -1) {
-        return 1;
+        return;
     }
     if (crypto_aead_aes256gcm_is_available() == 0) {
-        return 1; /* Not available on this CPU */
+        return; /* Not available on this CPU */
     }
     crypto_aead_aes256gcm_keygen(key);
     randombytes_buf(nonce, sizeof nonce);
@@ -50,10 +52,10 @@ void pre_aead_aes256gcm_encrypt_test(globalConfig_t *globalConfig)
 
 void post_aead_aes256gcm_encrypt_test()
 {
-    free(plainText);
+   free(plainText);
 }
 
-int aead_aes256gcm_encrypt_test()
+int aead_aes256gcm_encrypt_test() // Es entsteht ein Segmentation Fault, wenn man erst AEAD_AES256GCM_TEST abbricht und dann diesem Test ausführt
 {
     uint32_t plaintext_len = globConfPtr->CRYPTO_BUFLEN;
     uint32_t ciphertextSize =  plaintext_len + crypto_aead_aes256gcm_ABYTES;
@@ -63,5 +65,8 @@ int aead_aes256gcm_encrypt_test()
     crypto_aead_aes256gcm_encrypt(ciphertext, &ciphertext_len,
                                       plainText, plaintext_len,
                                       NULL, 0, NULL, nonce, key);
+
+    free(ciphertext);
+    return 0;
 
 }

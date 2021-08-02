@@ -3235,6 +3235,7 @@ tv(void)
 
 int aead_aes256gcm_test()
 {
+    //printf("OK\n");
     if (crypto_aead_aes256gcm_is_available()) {
         tv();
     }
