@@ -87,5 +87,11 @@ int marcel_test();
 #ifdef AEAD_AES256GCM_TEST
 int aead_aes256gcm_test();
 #endif
+#ifdef AEAD_AES256GCM_ENCRYPT_TEST
+void pre_aead_aes256gcm_encrypt_test(globalConfig_t *globalConfig);
+int aead_aes256gcm_encrypt_test();
+void post_aead_aes256gcm_encrypt_test();
+#endif
+
 
 #endif //SGX_APPSBENCH_TESTFUNCTIONSSIGNATURES_H

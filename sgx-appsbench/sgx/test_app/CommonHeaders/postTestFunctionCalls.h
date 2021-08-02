@@ -70,5 +70,13 @@ if(strcmp(test_names[test_id], "sgx decrypto encrypto test") == 0)
         post_sgx_dencrypto_test();
     }
 #endif
+
+#ifdef AEAD_AES256GCM_ENCRYPT_TEST
+if(strcmp(test_names[test_id], "AEAD AES256GCM ENCRYPT TEST") == 0)
+    {
+        post_aead_aes256gcm_encrypt_test();
+    }
+#endif
+
 }
 #endif //SGX_APPSBENCH_POSTTESTFUNCTIONCALLS_H
