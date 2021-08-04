@@ -31,7 +31,7 @@ ifeq ($(SGX),1)
 all: GrapheneBench.manifest.sgx GrapheneBench.sig GrapheneBench.token
 endif
 
-include $(GRAPHENEDIR)Scripts/Makefile.configs
+include $(GRAPHENEDIR)/Scripts/Makefile.configs
 
 
 ######################################## GrapheneBench MANIFEST ########################################
@@ -58,7 +58,7 @@ GrapheneBench.token: GrapheneBench.sig
 
 ########################### COPIES OF EXECUTABLES #############################
 
-#GrapheneBench: GrapheneBench
+GrapheneBench: 
 
 
 
