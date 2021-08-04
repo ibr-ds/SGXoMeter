@@ -40,8 +40,7 @@ int get_random_number_32(uint32_t *rand)
 	return -1;
 }
 
-void
-randombytes_buf(void * const buf, const size_t size)
+void randombytes_buf(void * const buf, const size_t size)
 {
     unsigned char *p = (unsigned char *) buf;
     #ifdef SGX_SDK_CONTEXT
@@ -51,7 +50,6 @@ randombytes_buf(void * const buf, const size_t size)
         oe_random(p, size);
     #endif
     #ifdef BASELINE_CONTEXT
-
         size_t         i;
         for (i = (size_t) 0U; i < size; i++) {
             p[i] = (unsigned char) randombytes_random();

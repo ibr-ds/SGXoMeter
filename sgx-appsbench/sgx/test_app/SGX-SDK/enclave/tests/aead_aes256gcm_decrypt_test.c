@@ -61,6 +61,7 @@ void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig)
 void post_aead_aes256gcm_decrypt_test()
 {
    free(plainText);
+   free(ciphertext);
 }
 
 int aead_aes256gcm_decrypt_test() 
@@ -72,7 +73,11 @@ int aead_aes256gcm_decrypt_test()
     unsigned long long decrpyted_len;
     crypto_aead_aes256gcm_decrypt(decrypted, &decrpyted_len, NULL, ciphertext, ciphertext_len, NULL, 0, nonce, key);
 
+
+    if(memcmp(plainText, decrypted, src_len) != 0)
+    {
+        return 1;
+    }
     free(ciphertext);
     return 0;
-
 }
