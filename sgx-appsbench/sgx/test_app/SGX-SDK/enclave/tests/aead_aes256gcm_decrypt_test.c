@@ -1,3 +1,5 @@
+#ifdef AEAD_AES256GCM_DECRYPT_TEST
+
 #include "sodium.h"
 
 #include <stdarg.h>
@@ -78,6 +80,7 @@ int aead_aes256gcm_decrypt_test()
     {
         return 1;
     }
-    free(ciphertext);
+    free(decrypted);
     return 0;
 }
+#endif

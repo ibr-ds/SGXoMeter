@@ -1,0 +1,67 @@
+# Libsodium manifest file
+
+################################## GRAPHENE ###################################
+
+loader.preload = "file:{{ graphene.libos }}"
+loader.log_level = "{{ log_level }}"
+
+# Binary to run
+libos.entrypoint = "/usr/baseline/GrapheneBench"
+
+
+################################## ARGUMENTS ###################################
+loader.insecure__use_cmdline_argv = true
+
+################################# ENV VARS ####################################
+
+#Specify paths to search for libraries in the graphene virtualized file system
+#Different libs are seperated by ':'
+loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}:/usr/{{ arch_libdir }}"
+
+################################# SIGNALS ####################################
+sys.enable_sigterm_injection = true
+################################# MOUNT FS  ###################################
+
+#fs.mount.lib.type = "chroot"
+#fs.mount.lib.path = "/lib"
+#fs.mount.lib.uri = "file:{{ graphene.runtimedir() }}"
+
+fs.mount.lib2.type = "chroot"
+fs.mount.lib2.path = "{{ arch_libdir }}"
+fs.mount.lib2.uri = "file:{{ arch_libdir }}"
+
+fs.mount.lib3.type = "chroot"
+fs.mount.lib3.path = "/usr/{{ arch_libdir }}"
+fs.mount.lib3.uri = "file:/usr/{{ arch_libdir }}"
+
+fs.mount.baseline.type = "chroot"
+fs.mount.baseline.path = "/usr/baseline"
+fs.mount.baseline.uri = "file:{{ libsodium_dir }}"
+
+fs.mount.baseline_tests.type = "chroot"
+fs.mount.baseline_tests.path = "/usr/baseline/tests"
+fs.mount.baseline_tests.uri = "file:{{ libsodium_dir }}/test/default"
+
+############################### SGX: GENERAL ##################################
+
+#sgx.enclave_size = "128M"
+
+# WAS MACHT DIESE ZEILE 
+#sgx.nonpie_binary = true 
+#sgx.thread_num = 16
+
+############################# SGX: TRUSTED FILES ###############################
+
+#sgx.trusted_files.runtime = "file:{{ graphene.runtimedir() }}/"
+#sgx.trusted_files.arch_libdir = "file:{{ arch_libdir }}/"
+#sgx.trusted_files.usr_arch_libdir = "file:/usr/{{ arch_libdir }}/"
+
+#sgx.trusted_files.aead_aes256gcm =  "file:{{ libsodium_dir }}/../aead_aes256gcm"
+#sgx.trusted_files.libs = "file:{{ libsodium_dir }}/../.libs"
+#sgx.trusted_files.libsodiumRes = "file:{{ libsodium_dir }}/../aead_aes256gcm.res"
+#sgx.trusted_files.libsodiumRes = "file:{{ libsodium_dir }}/../aead_aes256gcm.exp"
+
+############################# SGX: ALLOWED FILES ###############################
+
+#sgx.allowed_files.libsodium  = "file:{{ libsodium_dir }}"
+#sgx.allowed_files.libsodiumRes = "file:{{ libsodium_dir }}/../aead_aes256gcm.res"

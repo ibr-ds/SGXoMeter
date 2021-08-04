@@ -75,7 +75,10 @@ if (OE_ENABLE)
 
 endif()
 
-
+########################## Build the Graphene SGX Part ##########################
+if(GRAPHENE_ENABLE)
+    add_subdirectory(GrapheneSGX)
+endif()
 
 
 

@@ -18,6 +18,9 @@ set(OE_ENABLE					YES CACHE BOOL "Enable Open Enclave SDK for corresponding modu
 set(OE_CRYPTO_LIB				mbedtls CACHE STRING "Crypto library used by OE-enclaves.")
 set(OE_MIRROR_ENCLAVE			YES CACHE BOOL "Enable Enclave Configuration Mirroring for Open Enclave from SGX SDK.")
 
+########################## Set Open Enclave SDK Variables ##########################
+set(GRAPHENE_ENABLE				YES CACHE BOOL "Enable Graphene SGX for corresponding modules.")
+
 ########################## Set Enclave Settings ############################
 
 set(ENCL_PROD_ID				0 CACHE STRING "Set ProductID of enclave.")
