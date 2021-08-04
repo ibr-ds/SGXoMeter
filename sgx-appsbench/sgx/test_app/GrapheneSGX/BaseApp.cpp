@@ -89,7 +89,7 @@ static void print_array()
 #ifdef WRITE_LOG_FILE
     FILE *fp;
     fp = fopen(BASELINE_DATA_FILENAME, "a");
-    if (fp == NULL)
+    if (!fp)
     {
         fprintf(stderr, "Couldnt open or create a file for the plot data!\n");
     }
