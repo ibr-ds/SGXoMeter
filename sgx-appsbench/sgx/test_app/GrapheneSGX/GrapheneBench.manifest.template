@@ -42,6 +42,10 @@ fs.mount.baseline_tests.type = "chroot"
 fs.mount.baseline_tests.path = "/usr/baseline/tests"
 fs.mount.baseline_tests.uri = "file:{{ baseline_dir }}/tests"
 
+fs.mount.libsodium.type = "chroot"
+fs.mount.libsodium.path = "/usr/baseline/libsodium"
+fs.mount.libsodium.uri = "file:{{ libsodium_dir }}"
+
 ############################### SGX: GENERAL ##################################
 
 sgx.enclave_size = "256M"
@@ -58,6 +62,10 @@ sgx.trusted_files.usr_arch_libdir = "file:/usr/{{ arch_libdir }}/"
 sgx.trusted_files.GrapheneBench =  "file:{{ baseline_dir }}/GrapheneBench"
 sgx.trusted_files.tests = "file:{{ baseline_dir }}/tests"
 sgx.trusted_files.baseline = "file:{{ baseline_dir }}"
+
+sgx.trusted_files.libsodium = "file:{{ libsodium_dir }}"
+
+
 
 ############################# SGX: ALLOWED FILES ###############################
 

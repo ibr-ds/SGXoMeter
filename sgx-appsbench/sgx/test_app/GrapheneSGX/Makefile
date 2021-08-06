@@ -15,6 +15,7 @@
 GRAPHENEDIR = /opt/marcel/graphene
 SGX_SIGNER_KEY ?= $(GRAPHENEDIR)/Pal/src/host/Linux-SGX/signer/enclave-key.pem
 BASELINE_DIR = $(shell pwd)
+LIBSODIUM_DIR = $(BASELINE_DIR)/../CommonHeaders/Libsodium
 TEST_NAME = GrapheneBench 
 
 UBUNTU_VER = $(shell lsb_release --short --id)$(shell lsb_release --short --release)
@@ -41,6 +42,7 @@ GrapheneBench.manifest: GrapheneBench.manifest.template
 		-Dlog_level=$(GRAPHENE_LOG_LEVEL) \
 		-Darch_libdir=$(ARCH_LIBDIR) \
 		-Dbaseline_dir=$(BASELINE_DIR) \
+		-Dlibsodium_dir=$(LIBSODIUM_DIR) \
 		$< > $@
  
 GrapheneBench.manifest.sgx: GrapheneBench.manifest GrapheneBench
