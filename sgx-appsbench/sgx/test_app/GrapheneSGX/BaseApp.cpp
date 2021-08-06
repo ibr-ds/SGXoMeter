@@ -82,14 +82,14 @@ void *worker_thread(void *args)
     return nullptr;
 }
 
-#define BASELINE_DATA_FILENAME  "BaselineData.txt"
+#define BASELINE_DATA_FILENAME  "GrapheneData.txt"
 static void print_array()
 {
     //ToDo do the format of the output file
 #ifdef WRITE_LOG_FILE
     FILE *fp;
     fp = fopen(BASELINE_DATA_FILENAME, "a");
-    if (!fp)
+    if (fp == NULL)
     {
         fprintf(stderr, "Couldnt open or create a file for the plot data!\n");
     }

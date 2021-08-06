@@ -45,7 +45,7 @@ fs.mount.baseline_tests.uri = "file:{{ baseline_dir }}/tests"
 ############################### SGX: GENERAL ##################################
 
 sgx.enclave_size = "256M"
-
+sgx.debug = true
 sgx.nonpie_binary = true 
 sgx.thread_num = 16
 
@@ -57,9 +57,8 @@ sgx.trusted_files.usr_arch_libdir = "file:/usr/{{ arch_libdir }}/"
 
 sgx.trusted_files.GrapheneBench =  "file:{{ baseline_dir }}/GrapheneBench"
 sgx.trusted_files.tests = "file:{{ baseline_dir }}/tests"
-sgx.trusted_files.baselie = "file:{{ baseline_dir }}"
-#sgx.trusted_files.Baselinedata = "file:{{ baseline_dir }}/BaselineData.txt"
+sgx.trusted_files.baseline = "file:{{ baseline_dir }}"
 
 ############################# SGX: ALLOWED FILES ###############################
 
-sgx.allowed_files.BaselineData = "file:{{ baseline_dir }}/BaselineData.txt"
+sgx.allowed_files.GrapheneData = "file:GrapheneData.txt"
