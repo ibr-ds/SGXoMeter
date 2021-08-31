@@ -3235,7 +3235,6 @@ tv(void)
 
 int aead_aes256gcm_test()
 {
-    //printf("OK\n");
     if (crypto_aead_aes256gcm_is_available()) {
         tv();
     }
@@ -3245,7 +3244,6 @@ int aead_aes256gcm_test()
     assert(crypto_aead_aes256gcm_abytes() == crypto_aead_aes256gcm_ABYTES);
     assert(crypto_aead_aes256gcm_statebytes() >= sizeof(crypto_aead_aes256gcm_state));
     assert(crypto_aead_aes256gcm_messagebytes_max() == crypto_aead_aes256gcm_MESSAGEBYTES_MAX);
-    //printf("OK\n");
 
     return 0;
 }

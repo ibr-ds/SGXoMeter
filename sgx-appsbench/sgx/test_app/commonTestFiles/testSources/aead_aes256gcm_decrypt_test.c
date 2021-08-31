@@ -1,6 +1,5 @@
 #ifdef AEAD_AES256GCM_DECRYPT_TEST
 #include "sodium.h"
-
 #include <stdarg.h>
 #include <stdio.h>      /* vsnprintf */
 #include <string.h>
@@ -22,16 +21,12 @@ static void encrypt()
     uint32_t plaintext_len = globConfPtr->CRYPTO_BUFLEN;
     uint32_t ciphertextSize =  plaintext_len + crypto_aead_aes256gcm_ABYTES;
     ciphertext = (char *) malloc(ciphertextSize);
-    
-
     crypto_aead_aes256gcm_encrypt(ciphertext, &ciphertext_len,
                                       plainText, plaintext_len,
                                       NULL, 0, NULL, nonce, key);
 
 }
-
-
-
+// Executed before decrypt test, initialize library and encrypt message
 void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
@@ -44,12 +39,11 @@ void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig)
     crypto_aead_aes256gcm_keygen(key);
     randombytes_buf(nonce, sizeof nonce);
 
-    
     size_t plainBufferSize = globConfPtr->CRYPTO_BUFLEN * sizeof(char);
     plainText = (char *) malloc(plainBufferSize + 1);
     if(plainText == NULL)
     {
-        //fprintf(stderr, "Malloc failed!");
+        return 1; //Malloc failed
     }
     for(int i = 0; i < globConfPtr->CRYPTO_BUFLEN; i++)
     {
@@ -58,7 +52,7 @@ void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig)
     plainText[plainBufferSize] = '\0';
     encrypt();
 }
-
+//Executed after decrypt test
 void post_aead_aes256gcm_decrypt_test()
 {
    free(plainText);
@@ -70,7 +64,6 @@ int aead_aes256gcm_decrypt_test()
     unsigned char *decrypted;
     uint32_t src_len = globConfPtr->CRYPTO_BUFLEN;
     decrypted = (char *) malloc(src_len);
-    //unsigned char decrypted[globConfPtr->CRYPTO_BUFLEN];
     unsigned long long decrpyted_len;
     crypto_aead_aes256gcm_decrypt(decrypted, &decrpyted_len, NULL, ciphertext, ciphertext_len, NULL, 0, nonce, key);
 
@@ -78,7 +71,6 @@ int aead_aes256gcm_decrypt_test()
     {
         return 1;
     }
-
     free(decrypted);
     return 0;
 }

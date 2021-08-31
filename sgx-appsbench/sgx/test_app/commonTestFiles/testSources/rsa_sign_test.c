@@ -1,4 +1,4 @@
-#ifdef RSA_CRYPTO_TEST
+#ifdef RSA_SIGN_TEST
 
 #include "UtilsStructs.h"
 #include <stdio.h>
@@ -9,24 +9,39 @@
 #include <openssl/rsa.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
-#include <sgx.h>
+#ifdef SGX_SDK_CONTEXT
+    #include <sgx.h>
+    #ifndef TEST_CHECK
+    #define TEST_CHECK(status)	\
+    {    \
+        if (status != SGX_SUCCESS) {    \
+            printf("OCALL status check failed %s(%d), status = %d\n", __FUNCTION__, __LINE__, status);    \
+            abort();    \
+        }    \
+    }
+    #endif
+#endif
+#ifdef OE_ENCLAVE_CONTEXT
+    #include <openenclave/enclave.h>
+    #ifndef TEST_CHECK
+    #define TEST_CHECK(status)	\
+    {    \
+        if (status != OE_OK) {    \
+            printf("OCALL status check failed %s(%d), status = %d\n", __FUNCTION__, __LINE__, status);    \
+            abort();    \
+        }    \
+    }
+    #endif
+#endif
 
 #ifdef PRINT_CHECKS
-#define fprintf(stream, msg...) printf(msg)
+#ifndef BASELINE_CONTEXT
+    #define fprintf(stream, msg...) printf(msg)
+#endif
 #define fflush(...)
 #else
 #define fprintf(stream, msg...)
 #define fflush(...)
-#endif
-
-#ifndef TEST_CHECK
-#define TEST_CHECK(status)	\
-{    \
-    if (status != SGX_SUCCESS) {    \
-        printf("OCALL status check failed %s(%d), status = %d\n", __FUNCTION__, __LINE__, status);    \
-        abort();    \
-    }    \
-}
 #endif
 
 static globalConfig_t *globConfPtr;
@@ -35,7 +50,7 @@ RSA *keypair;
 static char *errMsg;
 
 
-void pre_rsa_crypto_test(globalConfig_t *globalConfig)
+void pre_rsa_sign_test(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
     size_t rsa_message_size = globConfPtr->RSA_MESSAGE_LEN * sizeof(unsigned char);
@@ -82,8 +97,17 @@ void pre_rsa_crypto_test(globalConfig_t *globalConfig)
  err:
     if (!ret || keypair == NULL)
     {
-        sgx_status_t sgx_ret = uprint(errMsg);
-        TEST_CHECK(sgx_ret);
+        #ifdef SGX_SDK_CONTEXT
+            sgx_status_t sgx_ret = uprint(errMsg);
+            TEST_CHECK(sgx_ret);
+        #endif
+        #ifdef OE_ENCLAVE_CONTEXT
+            oe_result_t sgx_ret = uprint(errMsg);
+            TEST_CHECK(sgx_ret);
+        #endif
+        #ifdef BASELINE_CONTEXT
+        fprintf(stderr, errMsg);
+        #endif
         if(bn != NULL)
         {
             BN_free(bn);
@@ -96,30 +120,35 @@ void pre_rsa_crypto_test(globalConfig_t *globalConfig)
         {
             free(rsa_message);
         }
+        #ifndef BASELINE_CONTEXT
         sgx_ret = usgx_exit(1);
         TEST_CHECK(sgx_ret);
         return;
+        #endif
+        #ifdef BASELINE_CONTEXT
+        exit(1);
+        #endif
     }
 
     BN_free(bn);
 }
 
 
-void post_rsa_crypto_test()
+void post_rsa_sign_test()
 {
     free(rsa_message);
     RSA_free(keypair);
 }
 
 #define ERROR -1
-int rsa_crypto_test()
+int rsa_sign_test()
 {
     int rsaMsgLen = globConfPtr->RSA_MESSAGE_LEN;
     unsigned char encodedText[(globConfPtr->RSA_BITS / 8)]; //ToDo message length should not be longer than (rsabits/8 - 11)
     unsigned char decodedText[rsaMsgLen];
     int rsa_len, out_len;
 
-    rsa_len = RSA_public_encrypt(rsaMsgLen, rsa_message, encodedText, keypair, RSA_PKCS1_PADDING);
+    rsa_len = RSA_private_encrypt(rsaMsgLen, rsa_message, encodedText, keypair, RSA_PKCS1_PADDING);
 
     if(rsa_len == ERROR)
     {
@@ -127,7 +156,7 @@ int rsa_crypto_test()
         goto error;
     }
 
-    out_len = RSA_private_decrypt(rsa_len, encodedText, decodedText, keypair, RSA_PKCS1_PADDING);
+    out_len = RSA_public_decrypt(rsa_len, encodedText, decodedText, keypair, RSA_PKCS1_PADDING);
     decodedText[out_len] = '\0';
     if(out_len != rsaMsgLen || memcmp(decodedText, rsa_message, rsaMsgLen) != 0)
     {

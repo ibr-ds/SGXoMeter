@@ -14,11 +14,13 @@ set(OE_ENCL_TEST_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/OEtests)
 
 file(GLOB OETrusted_Cpp_Files
 	    "${OE_ENCL_TEST_DIR}/*.cpp"
-        "${LIBSODIUM_DIR}/*.cpp")
+        "${LIBSODIUM_DIR}/*.cpp"
+        "${COMMON_TEST_SOURCES}/*.cpp")
 
 file(GLOB OETrusted_C_Files
 	    "${OE_ENCL_TEST_DIR}/*.c"
-	    "../../commonTestFiles/seeq/*.c")
+	    "../../commonTestFiles/seeq/*.c"
+        "${COMMON_TEST_SOURCES}/*.c")
 
 set(TRUSTED_TEST_SRCS           ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${OETrusted_Cpp_Files} ${OETrusted_C_Files})
 
@@ -28,7 +30,7 @@ set(TRUSTED_TEST_SRCS           ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${
 add_executable(OEenclave OETestEnclave.cpp ${TRUSTED_TEST_SRCS})  
 #${ENCL_TEST_DIR}/marceltest.c
 
-target_compile_definitions(OEBenchApp PUBLIC OE_ENCLAVE_CONTEXT)
+target_compile_definitions(OEenclave PUBLIC OE_ENCLAVE_CONTEXT)
 
 target_compile_definitions(OEenclave PUBLIC OE_API_VERSION=2) # use latest OE API version
 

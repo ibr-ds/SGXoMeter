@@ -11,6 +11,9 @@
 #ifdef SGX_SDK_CONTEXT
   #include <sgx_trts.h>
 #endif
+#ifdef OE_ENCLAVE_CONTEXT
+#include <openenclave/enclave.h>
+#endif
 
 #include "core.h"
 #include "randombytes.h"

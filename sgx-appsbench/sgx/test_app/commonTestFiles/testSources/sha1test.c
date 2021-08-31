@@ -59,7 +59,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "e_os.h"
+#include "../testHeaders/e_os.h"
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 

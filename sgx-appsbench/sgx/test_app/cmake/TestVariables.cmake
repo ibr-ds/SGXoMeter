@@ -68,7 +68,7 @@ set(MODULE_ARGON2_TEST												NO CACHE BOOL "YES OR NO for Argon2 tests")
 check_add_definition(MODULE_ARGON2_TEST 							ARGON2_TEST)
 check_and_increment_counter(MODULE_ARGON2_TEST						NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_SGX_CRYPTO_ENCRYPT										NO CACHE BOOL "YES OR NO for sgx tcrypto encryption tests")
+set(MODULE_SGX_CRYPTO_ENCRYPT										YES CACHE BOOL "YES OR NO for sgx tcrypto encryption tests")
 check_add_definition(MODULE_SGX_CRYPTO_ENCRYPT 						SGX_ENCRYPTO_TEST)
 check_and_increment_counter(MODULE_SGX_CRYPTO_ENCRYPT				NUMBER_OF_TESTS_VALUE)
 
@@ -96,7 +96,7 @@ set(MODULE_AEAD_AES256GCM_ENCRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_
 check_add_definition(MODULE_AEAD_AES256GCM_ENCRYPT_TEST				AEAD_AES256GCM_ENCRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_ENCRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								YES CACHE BOOL "YES OR NO for aead_aes256gcm encrypt test (libsodium)")
+set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_aes256gcm encrypt test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_DECRYPT_TEST				AEAD_AES256GCM_DECRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_DECRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 

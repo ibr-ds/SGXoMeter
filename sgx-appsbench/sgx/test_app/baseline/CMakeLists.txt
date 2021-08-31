@@ -11,11 +11,13 @@ set(CMAKE_CXX_FLAGS 		            "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++1
 #this is important in order to make the size of the enclave smaller/bigger deppending on the selected Modules
 file(GLOB Tests_C_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
-        "../commonTestFiles/seeq/*.c")      #ToDo move these two to the outside and adjust them accordingly in the cmakelist file used in
+        "../commonTestFiles/seeq/*.c"
+        "${COMMON_TEST_SOURCES}/*.cpp")      #ToDo move these two to the outside and adjust them accordingly in the cmakelist file used in
 
 file(GLOB Test_Cpp_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
-        "${LIBSODIUM_DIR}/*.cpp")
+        "${LIBSODIUM_DIR}/*.cpp"
+        "${COMMON_TEST_SOURCES}/*.c")
 
 set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${SGXSDK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/ ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/6/include)
 

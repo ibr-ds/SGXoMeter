@@ -65,13 +65,18 @@
 #include <openssl/rand.h>
 #include <openssl/bn.h>
 
-# include <openssl/rsa.h>
+#include <openssl/rsa.h>
+#ifdef SGX_SDK_CONTEXT
+    #include "../../SGX-SDK/enclave/TestEnclave.h"
+#endif
+
 
 #ifdef PRINT_CHECKS
 #define printf(msg...) printf(msg)
 #else
 #define printf(msg...)
 #endif
+
 
 # define SetKey \
     RSA_set0_key(key,                                           \

@@ -24,12 +24,14 @@ set(ENCLAVE_DIR					"${CMAKE_CURRENT_SOURCE_DIR}")
 file(GLOB Trusted_Cpp_Files
         "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 	    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
-            "${LIBSODIUM_DIR}/*.cpp")
+            "${LIBSODIUM_DIR}/*.cpp"
+            "${COMMON_TEST_SOURCES}/*.cpp")
 
 file(GLOB Trusted_C_Files
         "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
 	    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
-	    "../../commonTestFiles/seeq/*.c")
+	    "../../commonTestFiles/seeq/*.c"
+            "${COMMON_TEST_SOURCES}/*.c")
 
 set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC} ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/6/include)
 

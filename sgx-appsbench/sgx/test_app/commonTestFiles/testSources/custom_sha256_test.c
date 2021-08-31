@@ -6,10 +6,19 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <openssl/sha.h>
-#include <openssl/evp.h>
 #include <UtilsStructs.h>
-
+#ifdef SGX_SDK_CONTEXT
+    #include <openssl/sha.h>
+    #include <openssl/evp.h>
+#endif
+#ifdef OE_ENCLAVE_CONTEXT
+    #include <openssl/sha.h>
+    #include <openssl/evp.h>
+#endif
+#ifdef BASELINE_CONTEXT
+    #include "../../../../package/include/openssl/sha.h"
+    #include "../../../../package/include/openssl/evp.h"
+#endif
 
 #ifdef PRINT_CHECKS
 #else
