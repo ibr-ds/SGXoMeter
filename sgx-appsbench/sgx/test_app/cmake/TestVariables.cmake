@@ -68,7 +68,7 @@ set(MODULE_ARGON2_TEST												NO CACHE BOOL "YES OR NO for Argon2 tests")
 check_add_definition(MODULE_ARGON2_TEST 							ARGON2_TEST)
 check_and_increment_counter(MODULE_ARGON2_TEST						NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_SGX_CRYPTO_ENCRYPT										YES CACHE BOOL "YES OR NO for sgx tcrypto encryption tests")
+set(MODULE_SGX_CRYPTO_ENCRYPT										NO CACHE BOOL "YES OR NO for sgx tcrypto encryption tests")
 check_add_definition(MODULE_SGX_CRYPTO_ENCRYPT 						SGX_ENCRYPTO_TEST)
 check_and_increment_counter(MODULE_SGX_CRYPTO_ENCRYPT				NUMBER_OF_TESTS_VALUE)
 
@@ -96,7 +96,7 @@ set(MODULE_AEAD_AES256GCM_ENCRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_
 check_add_definition(MODULE_AEAD_AES256GCM_ENCRYPT_TEST				AEAD_AES256GCM_ENCRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_ENCRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_aes256gcm encrypt test (libsodium)")
+set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								YES CACHE BOOL "YES OR NO for aead_aes256gcm encrypt test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_DECRYPT_TEST				AEAD_AES256GCM_DECRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_DECRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 
@@ -121,11 +121,20 @@ if(MODULE_CUSTOM_SHA256_TEST)
 	add_definitions(-DSHA_INPUT_LEN=${VALUE_SHA_INPUT_LEN})
 endif()
 
-########################## SGX SDK Crypto Module ##########################
+########################## SGX SDK Crypto Module  ##########################
 if(MODULE_SGX_CRYPTO_ENCRYPT OR MODULE_SGX_CRYPTO_DECRYPT OR MODULE_SGX_CRYPTO_DECRYPT_EXT OR MODULE_SGX_CRYPTO_DEC_ENC)
 	set(VALUE_CRYPTO_BUFFER_LEN								16 CACHE STRING "Sets the size of the to be en/decrypted string buffer. Default size is 16 Bytes")
 	add_definitions(-DCRYPTO_BUF_LEN=${VALUE_CRYPTO_BUFFER_LEN})
 endif()
+
+########################## Libsodium AEAD_AES256GCM Module  ##########################
+if(NOT DEFINED VALUE_CRYPTO_BUFFER_LEN)
+	if(MODULE_AEAD_AES256GCM_ENCRYPT_TEST OR MODULE_AEAD_AES256GCM_DECRYPT_TEST)
+		set(VALUE_CRYPTO_BUFFER_LEN								16 CACHE STRING "Sets the size of the to be en/decrypted string buffer. Default size is 16 Bytes")
+		add_definitions(-DCRYPTO_BUF_LEN=${VALUE_CRYPTO_BUFFER_LEN})
+	endif()
+endif()
+
 
 ########################## DNA Pattern Module Configuration ##########################
 if(FEATURE_RUNTIME_PARSER AND MODULE_DNA_PATTERN_MATCHING)

@@ -7,7 +7,7 @@ add_custom_command(
         openenclave::oeedger8r --trusted ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave.edl
         --search-path ${OE_INCLUDEDIR} 
         --search-path ${OE_INCLUDEDIR}/openenclave/edl/sgx
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} # unklar, funktioniert so aber 
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
         COMMENT "Creating OETestApp_t.c")
 
 set(OE_ENCL_TEST_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/OEtests)
@@ -24,11 +24,7 @@ file(GLOB OETrusted_C_Files
 
 set(TRUSTED_TEST_SRCS           ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${OETrusted_Cpp_Files} ${OETrusted_C_Files})
 
-#add_library(OE_TEST_LIB SHARED ${TRUSTED_TEST_SRCS})
-
-
 add_executable(OEenclave OETestEnclave.cpp ${TRUSTED_TEST_SRCS})  
-#${ENCL_TEST_DIR}/marceltest.c
 
 target_compile_definitions(OEenclave PUBLIC OE_ENCLAVE_CONTEXT)
 
