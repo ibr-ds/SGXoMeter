@@ -33,13 +33,7 @@
 
 enclave {
 
-    from "sgx_tsgxssl.edl" import *;
-
-    #ifdef OE_ENABLE
-    from "openenclave/edl/syscall.edl" import *;
-    from "platform.edl" import *;
-    #endif
-
+from "sgx_tsgxssl.edl" import *;
 
      trusted {
         //public void execute_test();

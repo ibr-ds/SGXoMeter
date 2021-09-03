@@ -287,7 +287,7 @@ extern "C" void ecall_set_config(uint64_t **ctr, void *globalConfig)
         GLOBAL_CONFIG = (globalConfig_t *)globalConfig;
     }
     //SGXSSLSetPrintToStdoutStderrCB(vprintf_cb);
-    //OPENSSL_init_crypto(0, NULL);
+    OPENSSL_init_crypto(0, NULL);
 
     /*
      * This includes all available pre function calls of the chosen modules
