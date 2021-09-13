@@ -47,11 +47,11 @@ fs.mount.libsodium.uri = "file:{{ libsodium_dir }}"
 
 ############################### SGX: GENERAL ##################################
 
-sgx.isvprodid = 0
-sgx.isvsvn    = 0
-sgx.enclave_size = "256M"
-sgx.thread_num = 16
-sgx.debug = true
+sgx.isvprodid = ${ENCL_GRAPHENE_PROD_ID}
+sgx.isvsvn    = ${ENCL_GRAPHENE_ISVSVN}
+sgx.enclave_size = "${ENCL_GRAPHENE_ENCL_SIZE}M"
+sgx.thread_num = ${ENCL_GRAPHENE_TCS_NUM}
+sgx.debug = ${ENCL_GRAPHENE_DEBUG}
 #sgx.nonpie_binary = true 
 
 ############################# SGX: TRUSTED FILES ###############################

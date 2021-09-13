@@ -15,11 +15,13 @@ include(cmake/GitUtils.cmake)
 
 ########################## Set Open Enclave SDK Variables ##########################
 set(OE_ENABLE					YES CACHE BOOL "Enable Open Enclave SDK for corresponding modules.")
-set(OE_CRYPTO_LIB				mbedtls CACHE STRING "Crypto library used by OE-enclaves.")
+set(OE_CRYPTO_LIB				openssl CACHE STRING "Crypto library used by OE-enclaves. -> Either mbedtls or openssl")
 set(OE_MIRROR_ENCLAVE			YES CACHE BOOL "Enable Enclave Configuration Mirroring for Open Enclave from SGX SDK.")
 
 ########################## Set Open Enclave SDK Variables ##########################
 set(GRAPHENE_ENABLE				YES CACHE BOOL "Enable Graphene SGX for corresponding modules.")
+set(GRAPHENE_MIRROR_ENCLAVE		NO CACHE BOOL "Enable Enclave Configuration Mirroring for GrapheneSGX from SGX SDK.")
+
 
 ########################## Set Enclave Settings ############################
 
@@ -62,6 +64,28 @@ if(OE_ENABLE)
 	set(ENCL_OE_CONF_IN_FILE			${CMAKE_CURRENT_SOURCE_DIR}/test_app/OpenEnclaveSDK/OEenclave/OETestEnclaveIN.conf)
 	configure_file(${ENCL_OE_CONF_IN_FILE} ${ENCL_OE_CONF_FILE})
 
+endif()
+
+########################## Set GrapheneSGX Enclave Settings ############################
+if(GRAPHENE_ENABLE)
+	set(ENCL_GRAPHENE_PROD_ID			0 CACHE STRING "Set ProductID of GrapheneSGX enclave.")
+	set(ENCL_GRAPHENE_ISVSVN			0 CACHE STRING "Set Security version of GrapheneSGX enclave.")
+	set(ENCL_GRAPHENE_ENCL_SIZE			256 CACHE STRING "Set total enclave size in MB")
+	set(ENCL_GRAPHENE_TCS_NUM			16 CACHE STRING "Set the maximum number of trusted threads for GrapheneSGX enclave.")
+	set(ENCL_GRAPHENE_DEBUG				true CACHE STRING "true = DEBUG || false = NO DEBUG")
+	if(GRAPHENE_MIRROR_ENCLAVE)
+		set(ENCL_GRAPHENE_PROD_ID		${ENCL_PROD_ID})
+		set(ENCL_GRAPHENE_ISVSVN		${ENCL_ISVSVN})
+		set(ENCL_GRAPHENE_TCS_NUM		${ENCL_TCS_NUM})	
+		if(ENCL_DISABLE_DEBUG)
+			set(ENCL_GRAPHENE_DEBUG		false)
+		else()
+			set(ENCL_GRAPHENE_DEBUG		true)
+		endif()
+	endif()
+	set(ENCL_GRAPHENE_CONF_FILE				${CMAKE_CURRENT_SOURCE_DIR}/test_app/GrapheneSGX/GrapheneBench.manifest.template)
+	set(ENCL_GRAPHENE_CONF_IN_FILE			${CMAKE_CURRENT_SOURCE_DIR}/test_app/GrapheneSGX/manifest.templateIN)
+	configure_file(${ENCL_GRAPHENE_CONF_IN_FILE} ${ENCL_GRAPHENE_CONF_FILE})
 endif()
 
 
@@ -236,6 +260,7 @@ set(ARGON2_LIBRARY_NAME				libargon2.a)
 
 ########################## Set LibSodium Variables ##########################
 set(LIBSODIUM_DIR					${CMAKE_CURRENT_SOURCE_DIR}/test_app/CommonHeaders/Libsodium)
+set(GCC_VERSION						6 CACHE STRING "Set the installed GCC Version (required for Libsodium modules)")
 #set(sodium_USE_STATIC_LIBS ON)
 #include(cmake/Findsodium.cmake)
 #message(WARNING "sodium library is at ${sodium_LIBRARY_RELEASE}")

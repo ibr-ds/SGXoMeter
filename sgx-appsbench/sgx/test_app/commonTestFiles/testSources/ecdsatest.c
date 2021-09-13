@@ -531,8 +531,9 @@ int test_builtin(BIO *out)
 
     return ret;
 }
-
-//char* getenv(char* name);
+#ifdef SGX_SDK_CONTEXT
+    char* getenv(char* name);
+#endif
 
 int ecdsa_test()
 {

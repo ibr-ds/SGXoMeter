@@ -85,6 +85,12 @@
 # include <openssl/bn.h>
 # include <openssl/opensslconf.h>
 
+#ifdef SGX_SDK_CONTEXT
+    #include "../../SGX-SDK/enclave/TestEnclave.h"
+#endif
+#ifdef OE_ENCLAVE_CONTEXT
+    #include "../../OpenEnclaveSDK/OEenclave/OETestEnclave.h"
+#endif
 
 #ifdef PRINT_CHECKS
 #define fprintf(stream, msg...) printf(msg)
@@ -92,6 +98,13 @@
 #define fprintf(stream, msg...)
 #define BN_print_fp(stream, varName)
 
+#endif
+
+#ifndef stdout
+#define stdout ((void*)1)
+#endif
+#ifndef stderr
+#define stderr ((void*)2)
 #endif
 
 # if defined(_MSC_VER) && defined(_MIPS_) && (_MSC_VER/100==12)
@@ -1675,6 +1688,9 @@ static void nistp_tests()
 static const char rnd_seed[] =
     "string to make the random number generator think it has entropy";
 
+// #if defined(SGX_SDK_CONTEXT)
+// char* getenv(char* name);
+// #endif
 
 int ec_test()
 {

@@ -33,7 +33,9 @@ file(GLOB Trusted_C_Files
 	    "../../commonTestFiles/seeq/*.c"
             "${COMMON_TEST_SOURCES}/*.c")
 
-set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC} ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/6/include)
+
+set(LIBSODIUM_INCLUDES                 ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/${GCC_VERSION}/include)
+set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC} ${LIBSODIUM_INCLUDES})
 
 #ToDo filter the unselected source files out (newly detected flaw :/ 20.08.2019)
 #add and include(cmake/filter.cmake) that sets the TRUSTED_SRCS variable incrementally with the appropriate source files

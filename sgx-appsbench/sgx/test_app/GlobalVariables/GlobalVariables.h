@@ -28,14 +28,15 @@
             .RSA_BITS_MULTIPLICATOR = DEFAULT_RSA_BITS
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO) || defined(AEAD_AES256GCM_ENCRYPT_TEST) || defined(AEAD_AES256GCM_DECRYPT_TEST)
             ,
             .CRYPTO_BUFLEN = CRYPTO_BUF_LEN
 #endif
 
 
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
-            .RSA_MESSAGE_LEN = RSA_MSG_LEN;
+            ,
+            .RSA_MESSAGE_LEN = RSA_MSG_LEN // korrigiert, prüfen ob noch funktioniert 
 #endif
 
 #ifdef DNA_PATTERN_MATCHING
@@ -58,6 +59,12 @@
             .NON_DNA = NON_DNA_FLAG,
             .ALL = ALL_FLAG,
             .MEMORY = (size_t)MEMORY_ARG
+
+#endif
+
+#ifdef EXCEED_EPC_TEST
+            ,
+            .READ_BUFLEN = READ_BUF_LEN
 
 #endif
     };

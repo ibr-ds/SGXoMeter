@@ -1,13 +1,14 @@
-# Build Libsodium as follows:
-#
+# Build Graphene related files as follows:
+# normally:
 # - make               -- create non-SGX no-debug-log manifest
 # - make SGX=1         -- create SGX no-debug-log manifest
 # - make SGX=1 DEBUG=1 -- create SGX debug-log manifest
+# ---------------------
+# We rebuilt the Makefile to always build the GrapheneSGX files, as SGXoMeter always requires SGX execution.
 #
-# Any of these invocations downloads Libsodium and builds Libsodium in default configuration.
+# When using Graphene legacy driver, execute "sudo sysctl vm.mmap_min_addr=0" before the first run of "make".
 #
-# Use `make clean` to remove Graphene-generated files and `make distclean` to additionally remove
-# the Memcached source.
+# Use `make clean` to remove Graphene-generated files
 
 ############################################ CONSTANTS ############################################
 
@@ -27,10 +28,10 @@ GRAPHENE_LOG_LEVEL = error
 endif
 
 .PHONY: all
-all: GrapheneBench GrapheneBench.manifest
-ifeq ($(SGX),1)
+#all: GrapheneBench GrapheneBench.manifest
+#ifeq ($(SGX),1)
 all: GrapheneBench.manifest.sgx GrapheneBench.sig GrapheneBench.token
-endif
+#endif
 
 include $(GRAPHENEDIR)/Scripts/Makefile.configs
 
@@ -43,7 +44,8 @@ GrapheneBench.manifest: GrapheneBench.manifest.template
 		-Darch_libdir=$(ARCH_LIBDIR) \
 		-Dbaseline_dir=$(BASELINE_DIR) \
 		-Dlibsodium_dir=$(LIBSODIUM_DIR) \
-		$< > $@
+		$< > $@ 
+# $< --> name of first prerequisite; $@ --> file name of the target of the rule 
  
 GrapheneBench.manifest.sgx: GrapheneBench.manifest GrapheneBench
 	graphene-sgx-sign \
@@ -61,26 +63,26 @@ GrapheneBench.token: GrapheneBench.sig
 
 ########################### COPIES OF EXECUTABLES #############################
 
-GrapheneBench: 
+#GrapheneBench: 
 
 
 
 ############################## RUNNING TESTS ##################################
 
-.PHONY: start_GrapheneBench
-normal_GrapheneBench: all 
-	./GrapheneBench 
-# Anpassen auf richtigen Pfad
+# .PHONY: normal_GrapheneBench
+# normal_GrapheneBench: all 
+# 	./GrapheneBench 
+# # Anpassen auf richtigen Pfad
 
-ifeq ($(SGX),)
-GRAPHENE = graphene-direct
-else
-GRAPHENE = graphene-sgx
-endif
+# ifeq ($(SGX),)
+# GRAPHENE = graphene-direct
+# else
+# GRAPHENE = graphene-sgx
+# endif
 
-.PHONY: graphene-GrapheneBench
-graphene-GrapheneBench: all
-	$(GRAPHENE) $(TEST_NAME) 
+# .PHONY: graphene-GrapheneBench
+# graphene-GrapheneBench: all
+# 	$(GRAPHENE) $(TEST_NAME) 
 
 
 ################################## CLEANUP ####################################

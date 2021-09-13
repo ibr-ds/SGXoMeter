@@ -4,7 +4,7 @@ set(MODULE_RSA_KEY_GEN												NO CACHE BOOL "YES OR NO for RSA key generatio
 check_add_definition(MODULE_RSA_KEY_GEN								RSA_KEY_GEN)
 check_and_increment_counter(MODULE_RSA_KEY_GEN						NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_RSA_CRYPTO_TEST											YES CACHE BOOL "YES OR NO for RSA message encryption and decryption tests")
+set(MODULE_RSA_CRYPTO_TEST											NO CACHE BOOL "YES OR NO for RSA message encryption and decryption tests")
 check_add_definition(MODULE_RSA_CRYPTO_TEST							RSA_CRYPTO_TEST)
 check_and_increment_counter(MODULE_RSA_CRYPTO_TEST					NUMBER_OF_TESTS_VALUE)
 
@@ -96,9 +96,13 @@ set(MODULE_AEAD_AES256GCM_ENCRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_
 check_add_definition(MODULE_AEAD_AES256GCM_ENCRYPT_TEST				AEAD_AES256GCM_ENCRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_ENCRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_aes256gcm encrypt test (libsodium)")
+set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_aes256gcm decrypt test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_DECRYPT_TEST				AEAD_AES256GCM_DECRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_DECRYPT_TEST		NUMBER_OF_TESTS_VALUE)
+
+set(MODULE_EXCEED_EPC_TEST											NO CACHE BOOL "YES OR NO for exceed epc test")
+check_add_definition(MODULE_EXCEED_EPC_TEST							EXCEED_EPC_TEST)
+check_and_increment_counter(MODULE_EXCEED_EPC_TEST					NUMBER_OF_TESTS_VALUE)
 
 
 add_definitions(-DNUM_OF_TEST_MODULES=${NUMBER_OF_TESTS_VALUE})
@@ -130,6 +134,7 @@ endif()
 ########################## Libsodium AEAD_AES256GCM Module  ##########################
 if(NOT DEFINED VALUE_CRYPTO_BUFFER_LEN)
 	if(MODULE_AEAD_AES256GCM_ENCRYPT_TEST OR MODULE_AEAD_AES256GCM_DECRYPT_TEST)
+		set(LIBSODIUM_MODULE_SELECTED 							YES)
 		set(VALUE_CRYPTO_BUFFER_LEN								16 CACHE STRING "Sets the size of the to be en/decrypted string buffer. Default size is 16 Bytes")
 		add_definitions(-DCRYPTO_BUF_LEN=${VALUE_CRYPTO_BUFFER_LEN})
 	endif()
@@ -216,6 +221,11 @@ if(MODULE_DNA_PATTERN_MATCHING)
 	add_definitions(-DMASK_COUNT=${VALUE_MASK_COUNT})
 	add_definitions(-DMASK_INV=${VALUE_MASK_INV})
 	add_definitions(-DMEMORY_ARG=${VALUE_MEMORY_FLAG}*1024*1024)
+endif()
+########################## Exceed EPC Module Configuration ##########################
+if(MODULE_EXCEED_EPC_TEST)
+	set(VALUE_READ_BUFFER_SIZE						256 CACHE STRING "Set size of buffer in MiB (char buffer of X * 1024 entries)")
+	add_definitions(-DREAD_BUF_LEN=${VALUE_READ_BUFFER_SIZE})
 endif()
 
 

@@ -23,7 +23,7 @@ globalConfig_t GLOBAL_CONFIG = {
         .RSA_BITS = DEFAULT_RSA_BITS
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO) || defined(AEAD_AES256GCM_ENCRYPT_TEST) ||defined(AEAD_AES256GCM_DECRYPT_TEST)
         ,
         .CRYPTO_BUFLEN = CRYPTO_BUF_LEN
 #endif
@@ -55,6 +55,10 @@ globalConfig_t GLOBAL_CONFIG = {
         .MEMORY = (size_t)MEMORY_ARG 
 
 #endif
+#ifdef EXCEED_EPC_TEST
+        , 
+        .READ_BUFLEN = READ_BUF_LEN
+#endif
 };
 /* ToDo: the end of the global variables definition      */
 
@@ -79,13 +83,16 @@ static const char *TOOL_USAGE = "Tool Usage:"
                            "    -B --rsa-bits [#]                sets the value of the rsa bits [default 1024 bits]\n"
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO) || defined(AEAD_AES256GCM_DECRYPT_TEST) || defined(AEAD_AES256GCM_ENCRYPT_TEST)
                            "    -s --crypto-buflen [#]           sets the size of the to be en/decrypted string buffer [default 16 Byte]"
 #endif
 
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                            "    -N --rsa-msg-length [#]          sets the length of the en-decrypted rsa message[default 100 chars]\n"
 #endif
+#ifdef EXCEED_EPC_TEST
+                                "    -S --read-buflen [#]             sets the size of the to be read char buffer in MiByte [default 256 Byte]\n"         
+#endif 
 ;
 
 #ifdef DNA_PATTERN_MATCHING
@@ -117,6 +124,7 @@ static const char *SEEQ_USAGE = "DNA MATCHER Usage:\n"
                                 "    -z --verbose                     verbose using stderr\n";
 
 #endif
+
 
 
 void say_usage()
@@ -151,7 +159,7 @@ void parseInput(int argc, char **argv)
     int rsa_bits_flag    = FLAG_NOT_SET;
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO) || defined(AEAD_AES256GCM_ENCRYPT_TEST) || defined(AEAD_AES256GCM_DECRYPT_TEST)
     int crypto_buf_flag  = FLAG_NOT_SET;
 #endif
 
@@ -181,6 +189,11 @@ void parseInput(int argc, char **argv)
     int all_flag       = FLAG_NOT_SET;
 #endif
 
+#ifdef EXCEED_EPC_TEST
+    int read_buf_flag   = FLAG_NOT_SET;
+
+#endif
+
     int c;
     while (1) {
         int option_index = 0;
@@ -203,7 +216,7 @@ void parseInput(int argc, char **argv)
                 {"rsa-bits"                ,  required_argument,      0,      'B'},
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO) || defined(AEAD_AES256GCM_DECRYPT_TEST) || defined(AEAD_AES256GCM_ENCRYPT_TEST)
                 {"crypto-buflen"           ,  required_argument,     0,       's'},
 #endif
 
@@ -235,6 +248,10 @@ void parseInput(int argc, char **argv)
                 {"distance"                ,  required_argument,     0,       'd'},
 
 #endif
+
+#ifdef EXCEED_EPC_TEST
+                {"read-buflen"              , required_argument,     0,       'S'},
+#endif
                 {0                  ,    0      ,0,   0 }
         };
 
@@ -248,7 +265,7 @@ void parseInput(int argc, char **argv)
 #if defined(RSA_KEY_GEN) || defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                       "B:"
 #endif
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO) || defined(AEAD_AES256GCM_ENCRYPT_TEST) || defined(AEAD_AES256GCM_DECRYPT_TEST)
                       "s:"
 #endif
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
@@ -257,6 +274,9 @@ void parseInput(int argc, char **argv)
 #ifdef DNA_PATTERN_MATCHING
                                       "apmnilczfvkherby:d:x:P:D:M:"
 #endif
+#ifdef EXCEED_EPC_TEST
+                    "S:"
+#endif              
         ;
 
         c = getopt_long(argc, argv, allowedOptions, long_options, &option_index);
@@ -397,7 +417,7 @@ void parseInput(int argc, char **argv)
                 break;
 #endif
 
-#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO)
+#if defined(SGX_ENCRYPTO_TEST) || defined(SGX_DECRYPTO_TEST) || defined(SGX_DECRYPTO_EXT_TEST) || defined(SGX_DECRYPTO_ENCRYPTO) || defined(AEAD_AES256GCM_DECRYPT_TEST) || defined(AEAD_AES256GCM_ENCRYPT_TEST)
             case 's':
                 if (crypto_buf_flag == FLAG_NOT_SET) {
                     size_t buf_len = atol(optarg);
@@ -690,6 +710,26 @@ void parseInput(int argc, char **argv)
                     exit(EXIT_FAILURE);
                 }
                 break;
+
+#ifdef EXCEED_EPC_TEST
+            case 'S':
+                if (read_buf_flag == FLAG_NOT_SET) {
+                    size_t buf_len = atol(optarg);
+                    if (buf_len < 0) {
+                        fprintf(stderr, "error: Invalid string buffer size!.\n");
+                        say_help();
+                        exit(EXIT_FAILURE);
+                    }
+                    crypto_buf_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.READ_BUFLEN = buf_len;
+                }
+                else {
+                    fprintf(stderr, "error: Crypto string buffer size value is set more than once.\n");
+                    say_help();
+                    exit(EXIT_FAILURE);
+                }
+                break;
+#endif
 #endif
             case 'h':
                 say_usage();

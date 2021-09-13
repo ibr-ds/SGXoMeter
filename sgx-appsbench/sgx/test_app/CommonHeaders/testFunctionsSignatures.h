@@ -97,6 +97,11 @@ void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig);
 int aead_aes256gcm_decrypt_test();
 void post_aead_aes256gcm_decrypt_test();
 #endif
+#ifdef EXCEED_EPC_TEST
+void pre_exceed_epc_test(globalConfig_t *globalConfig);
+int exceed_epc_test();
+void post_exceed_epc_test();
+#endif
 
 
 #endif //SGX_APPSBENCH_TESTFUNCTIONSSIGNATURES_H

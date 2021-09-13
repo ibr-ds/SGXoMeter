@@ -85,5 +85,12 @@ if(strcmp(test_names[test_id], "AEAD AES256GCM DECRYPT TEST") == 0)
     }
 #endif
 
+#ifdef EXCEED_EPC_TEST
+if(strcmp(test_names[test_id], "EXCEED EPC TEST") == 0)
+    {
+        post_exceed_epc_test();
+    }
+#endif
+
 }
 #endif //SGX_APPSBENCH_POSTTESTFUNCTIONCALLS_H

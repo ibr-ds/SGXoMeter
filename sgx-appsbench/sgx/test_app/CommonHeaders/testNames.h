@@ -109,7 +109,11 @@ static char test_names[NUM_OF_TEST_MODULES + DUMMY_INDEX][MAX_TEST_NAME_LENGTH] 
 #endif
 
 #ifdef AEAD_AES256GCM_DECRYPT_TEST
-        , "AEAD AES256GCM DECRYPT TEST"
+        , "AEAD AES256GCMX DECRYPT TEST"
+#endif
+
+#ifdef EXCEED_EPC_TEST
+        , "EXCEED EPC TEST"
 #endif
 
 };

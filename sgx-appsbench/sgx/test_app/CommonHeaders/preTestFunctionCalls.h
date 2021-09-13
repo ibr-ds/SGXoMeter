@@ -53,5 +53,9 @@ pre_aead_aes256gcm_encrypt_test(GLOBAL_CONFIG);
 pre_aead_aes256gcm_decrypt_test(GLOBAL_CONFIG);
 #endif
 
+#ifdef EXCEED_EPC_TEST
+pre_exceed_epc_test(GLOBAL_CONFIG);
+#endif
+
 
 #endif //SGX_APPSBENCH_PRETESTFUNCTIONCALLS_H
