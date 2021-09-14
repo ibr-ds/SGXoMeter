@@ -12,6 +12,7 @@ set(CMAKE_CXX_FLAGS 		            "${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++1
 file(GLOB Tests_C_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
         "../commonTestFiles/seeq/*.c"
+        "${LIBSODIUM_DIR}/*.c"
         "${COMMON_TEST_SOURCES}/*.cpp")      #ToDo move these two to the outside and adjust them accordingly in the cmakelist file used in
 
 file(GLOB Test_Cpp_FILES

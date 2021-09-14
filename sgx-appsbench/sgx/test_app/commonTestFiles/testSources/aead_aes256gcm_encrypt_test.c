@@ -5,8 +5,6 @@
 #include <stdio.h>      /* vsnprintf */
 #include <string.h>
 #include <stdlib.h>
-#include <assert.h>
-#include <assert.h>
 #include "UtilsStructs.h"
 
 static globalConfig_t *globConfPtr;
@@ -25,7 +23,7 @@ void pre_aead_aes256gcm_encrypt_test(globalConfig_t *globalConfig)
         return 1;
     }
     if (crypto_aead_aes256gcm_is_available() == 0) {
-        return 1; /* Not available on this CPU */
+        //return 1; /* Not available on this CPU */
     }
     crypto_aead_aes256gcm_keygen(key);
     randombytes_buf(nonce, sizeof nonce);
@@ -58,7 +56,7 @@ int aead_aes256gcm_encrypt_test()
 
     crypto_aead_aes256gcm_encrypt(ciphertext, &ciphertext_len,
                                       plainText, plaintext_len,
-                                      NULL, 0, NULL, nonce, key);
+                                     NULL, 0, NULL, nonce, key);
 
     free(ciphertext);
     return 0;

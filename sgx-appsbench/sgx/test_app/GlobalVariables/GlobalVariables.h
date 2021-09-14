@@ -36,7 +36,7 @@
 
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
             ,
-            .RSA_MESSAGE_LEN = RSA_MSG_LEN // korrigiert, prüfen ob noch funktioniert 
+            .RSA_MESSAGE_LEN = RSA_MSG_LEN 
 #endif
 
 #ifdef DNA_PATTERN_MATCHING

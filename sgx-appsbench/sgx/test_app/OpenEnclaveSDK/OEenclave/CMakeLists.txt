@@ -13,13 +13,14 @@ set(OE_ENCL_TEST_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/OEtests)
 
 file(GLOB OETrusted_Cpp_Files
 	    "${OE_ENCL_TEST_DIR}/*.cpp"
-        "${LIBSODIUM_DIR}/*.cpp"
-        "${COMMON_TEST_SOURCES}/*.cpp")
+        "${COMMON_TEST_SOURCES}/*.cpp"
+        "${LIBSODIUM_DIR}/*.cpp")
 
 file(GLOB OETrusted_C_Files
 	    "${OE_ENCL_TEST_DIR}/*.c"
-	    "../../commonTestFiles/seeq/*.c"
-        "${COMMON_TEST_SOURCES}/*.c")
+        "${COMMON_TEST_SOURCES}/*.c"
+        "${LIBSODIUM_DIR}/*.c"
+	    "../../commonTestFiles/seeq/*.c")
 
 set(TRUSTED_TEST_SRCS           ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${OETrusted_Cpp_Files} ${OETrusted_C_Files})
 

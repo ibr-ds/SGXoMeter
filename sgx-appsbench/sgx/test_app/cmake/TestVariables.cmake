@@ -40,7 +40,7 @@ set(MODULE_DH_TESTS													NO CACHE BOOL "YES OR NO for deffie hellman test
 check_add_definition(MODULE_DH_TESTS	 							DEFFIE_HELLMAN_TESTS)
 check_and_increment_counter(MODULE_DH_TESTS							NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_SHA_256													NO CACHE BOOL "YES OR NO for secure hash algorithm 256 tests")
+set(MODULE_SHA_256													YES CACHE BOOL "YES OR NO for secure hash algorithm 256 tests")
 check_add_definition(MODULE_SHA_256	 								SECURE_HASH_ALGORITHM_256)
 check_and_increment_counter(MODULE_SHA_256							NUMBER_OF_TESTS_VALUE)
 
@@ -52,7 +52,7 @@ set(MODULE_THREAD_TESTS												NO CACHE BOOL "YES OR NO for sgx multi-thread
 check_add_definition(MODULE_THREAD_TESTS 							THREAD_TESTS)
 check_and_increment_counter(MODULE_THREAD_TESTS						NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_DNA_PATTERN_MATCHING										NO CACHE BOOL "YES OR NO for DNA Pattern Matching tests")
+set(MODULE_DNA_PATTERN_MATCHING										YES CACHE BOOL "YES OR NO for DNA Pattern Matching tests")
 check_add_definition(MODULE_DNA_PATTERN_MATCHING 					DNA_PATTERN_MATCHING)
 check_and_increment_counter(MODULE_DNA_PATTERN_MATCHING				NUMBER_OF_TESTS_VALUE)
 
@@ -84,7 +84,7 @@ set(MODULE_SGX_CRYPTO_DEC_ENC										NO CACHE BOOL "YES OR NO for sgx tcrypto 
 check_add_definition(MODULE_SGX_CRYPTO_DEC_ENC						SGX_DECRYPTO_ENCRYPTO)
 check_and_increment_counter(MODULE_SGX_CRYPTO_DEC_ENC				NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_MARCEL_TEST												NO CACHE BOOL "YES OR NO for marcel test")
+set(MODULE_MARCEL_TEST												YES CACHE BOOL "YES OR NO for marcel test")
 check_add_definition(MODULE_MARCEL_TEST								MARCEL_TEST)
 check_and_increment_counter(MODULE_MARCEL_TEST						NUMBER_OF_TESTS_VALUE)
 
@@ -92,7 +92,7 @@ set(MODULE_AEAD_AES256GCM_TEST										NO CACHE BOOL "YES OR NO for aead_aes256
 check_add_definition(MODULE_AEAD_AES256GCM_TEST						AEAD_AES256GCM_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_TEST				NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_ENCRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_aes256gcm encrypt test (libsodium)")
+set(MODULE_AEAD_AES256GCM_ENCRYPT_TEST								YES CACHE BOOL "YES OR NO for aead_aes256gcm encrypt test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_ENCRYPT_TEST				AEAD_AES256GCM_ENCRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_ENCRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 

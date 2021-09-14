@@ -36,9 +36,8 @@ void pre_seeq_test(globalConfig_t *globalConfig)
 
 }
 
-
 int seeq_test()
 {
-        return seeq(globConfPtr->PATTERN_INPUT, globConfPtr->DNA_INPUT, args);
+    return seeq(globConfPtr->PATTERN_INPUT, globConfPtr->DNA_INPUT, args);
 }
 #endif

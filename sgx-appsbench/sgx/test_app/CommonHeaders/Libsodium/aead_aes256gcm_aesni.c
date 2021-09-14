@@ -914,7 +914,7 @@ crypto_aead_aes256gcm_decrypt(unsigned char *m,
 int
 crypto_aead_aes256gcm_is_available(void)
 {
-    return sodium_runtime_has_pclmul() & sodium_runtime_has_aesni();
+    return sodium_runtime_has_aesni();//sodium_runtime_has_pclmul() & sodium_runtime_has_aesni();
 }
 
 #else
@@ -1028,11 +1028,11 @@ crypto_aead_aes256gcm_decrypt_afternm(unsigned char *m, unsigned long long *mlen
     return -1;
 }
 
-int
-crypto_aead_aes256gcm_is_available(void)
-{
-    return 0;
-}
+// int
+// crypto_aead_aes256gcm_is_available(void)
+// {
+//     return 0;
+// }
 
 #endif
 

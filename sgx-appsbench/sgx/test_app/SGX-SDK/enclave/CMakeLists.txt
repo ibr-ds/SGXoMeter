@@ -31,10 +31,11 @@ file(GLOB Trusted_C_Files
         "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
 	    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
 	    "../../commonTestFiles/seeq/*.c"
+            "${LIBSODIUM_DIR}/*.c"
             "${COMMON_TEST_SOURCES}/*.c")
 
 
-set(LIBSODIUM_INCLUDES                 ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/${GCC_VERSION}/include)
+set(LIBSODIUM_INCLUDES                 /usr/lib/gcc/x86_64-linux-gnu/6/include ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium)
 set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC} ${LIBSODIUM_INCLUDES})
 
 #ToDo filter the unselected source files out (newly detected flaw :/ 20.08.2019)
@@ -123,7 +124,7 @@ add_custom_command(TARGET ${ENCLAVE_LIB_NAME}
         COMMAND ${SGX_ENCLAVE_SIGNER} sign
         -key ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave_private.pem
         -config ${CMAKE_CURRENT_SOURCE_DIR}/TestEnclave.config.xml
-        -enclave test_app/enclave/lib${ENCLAVE_LIB_NAME}.so     #ToDo was libTestEnclave.so before. change this later to be also global variable or so
+        -enclave test_app/SGX-SDK/enclave/lib${ENCLAVE_LIB_NAME}.so     #ToDo was libTestEnclave.so before. change this later to be also global variable or so
         -out ${SIGNED_ENCLAVE_NAME}
 	    BYPRODUCTS ${SIGNED_ENCLAVE_NAME}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}

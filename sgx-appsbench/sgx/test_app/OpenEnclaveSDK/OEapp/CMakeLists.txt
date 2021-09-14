@@ -5,7 +5,7 @@ add_custom_command(
         openenclave::oeedger8r --untrusted ${OEENCL_DIR}/OETestEnclave.edl
         --search-path ${OE_INCLUDEDIR} 
         --search-path ${OE_INCLUDEDIR}/openenclave/edl/sgx
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         COMMENT "Creating OETestApp_u.c")
 
 
