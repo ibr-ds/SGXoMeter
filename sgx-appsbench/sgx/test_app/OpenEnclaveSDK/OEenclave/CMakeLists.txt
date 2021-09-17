@@ -1,6 +1,6 @@
 # Compile EDL file and generate required files for wrapper function
 add_custom_command(
-    OUTPUT OETestEnclave_t.h OETestEnclave_t.c OETestEnclave_args.h
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c OETestEnclave_t.h OETestEnclave_args.h
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave.edl
     COMMAND 
         openenclave::oeedger8r --trusted ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave.edl
@@ -22,9 +22,10 @@ file(GLOB OETrusted_C_Files
         "${LIBSODIUM_DIR}/*.c"
 	    "../../commonTestFiles/seeq/*.c")
 
-set(TRUSTED_TEST_SRCS           ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${OETrusted_Cpp_Files} ${OETrusted_C_Files})
+set(TRUSTED_TEST_SRCS            ${OETrusted_Cpp_Files} ${OETrusted_C_Files})
 
-add_executable(OEenclave OETestEnclave.cpp ${TRUSTED_TEST_SRCS})  
+add_executable(OEenclave OETestEnclave.cpp ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c ${TRUSTED_TEST_SRCS})  
+#add_dependencies(OEenclave )
 
 target_compile_definitions(OEenclave PUBLIC OE_ENCLAVE_CONTEXT)
 
