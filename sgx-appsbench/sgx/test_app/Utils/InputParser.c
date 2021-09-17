@@ -55,7 +55,7 @@ globalConfig_t GLOBAL_CONFIG = {
         .MEMORY = (size_t)MEMORY_ARG 
 
 #endif
-#ifdef EXCEED_EPC_TEST
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
         , 
         .READ_BUFLEN = READ_BUF_LEN
 #endif
@@ -90,7 +90,7 @@ static const char *TOOL_USAGE = "Tool Usage:"
 #if defined(RSA_CRYPTO_TEST) || defined(RSA_SIGN_TEST)
                            "    -N --rsa-msg-length [#]          sets the length of the en-decrypted rsa message[default 100 chars]\n"
 #endif
-#ifdef EXCEED_EPC_TEST
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
                                 "    -S --read-buflen [#]             sets the size of the to be read char buffer in MiByte [default 256 Byte]\n"         
 #endif 
 ;
@@ -189,7 +189,7 @@ void parseInput(int argc, char **argv)
     int all_flag       = FLAG_NOT_SET;
 #endif
 
-#ifdef EXCEED_EPC_TEST
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
     int read_buf_flag   = FLAG_NOT_SET;
 
 #endif
@@ -249,7 +249,7 @@ void parseInput(int argc, char **argv)
 
 #endif
 
-#ifdef EXCEED_EPC_TEST
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
                 {"read-buflen"              , required_argument,     0,       'S'},
 #endif
                 {0                  ,    0      ,0,   0 }
@@ -274,7 +274,7 @@ void parseInput(int argc, char **argv)
 #ifdef DNA_PATTERN_MATCHING
                                       "apmnilczfvkherby:d:x:P:D:M:"
 #endif
-#ifdef EXCEED_EPC_TEST
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
                     "S:"
 #endif              
         ;
@@ -711,7 +711,7 @@ void parseInput(int argc, char **argv)
                 }
                 break;
 
-#ifdef EXCEED_EPC_TEST
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
             case 'S':
                 if (read_buf_flag == FLAG_NOT_SET) {
                     size_t buf_len = atol(optarg);
@@ -796,6 +796,9 @@ void parseInput(int argc, char **argv)
         }
         GLOBAL_CONFIG.DNA_INPUT[new_dna_length] = '\0';
     }
+#endif
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
+
 #endif
 }
 

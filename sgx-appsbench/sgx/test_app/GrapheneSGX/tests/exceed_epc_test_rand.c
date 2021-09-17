@@ -1,9 +1,9 @@
-#ifdef EXCEED_EPC_TEST
+#ifdef EXCEED_EPC_TEST_RAND
 
 #include <UtilsStructs.h>
 
 static globalConfig_t *globConfPtr;
-void pre_exceed_epc_test(globalConfig_t *globalConfig)
+void pre_exceed_epc_test_rand(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
     int randomAccessArray[globConfPtr->READ_BUFLEN];
@@ -13,12 +13,12 @@ void pre_exceed_epc_test(globalConfig_t *globalConfig)
     }
 
 }
-void post_exceed_epc_test()
+void post_exceed_epc_test_rand()
 {
 
 }
 
-int exceed_epc_test()
+int exceed_epc_test_rand()
 {
     return 0;
 }

@@ -62,7 +62,7 @@
 
 #endif
 
-#ifdef EXCEED_EPC_TEST
+#ifdef EXCEED_EPC_TEST_RAND
             ,
             .READ_BUFLEN = READ_BUF_LEN
 

@@ -97,10 +97,15 @@ void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig);
 int aead_aes256gcm_decrypt_test();
 void post_aead_aes256gcm_decrypt_test();
 #endif
-#ifdef EXCEED_EPC_TEST
-void pre_exceed_epc_test(globalConfig_t *globalConfig);
-int exceed_epc_test();
-void post_exceed_epc_test();
+#ifdef EXCEED_EPC_TEST_RAND
+void pre_exceed_epc_test_rand(globalConfig_t *globalConfig);
+int exceed_epc_test_rand();
+void post_exceed_epc_test_rand();
+#endif
+#ifdef EXCEED_EPC_TEST_SEQ
+void pre_exceed_epc_test_seq(globalConfig_t *globalConfig);
+int exceed_epc_test_seq();
+void post_exceed_epc_test_seq();
 #endif
 
 

@@ -133,8 +133,12 @@ GEN_TEST_MODULE_FUNCTION(aead_aes256gcm_encrypt_test)
 GEN_TEST_MODULE_FUNCTION(aead_aes256gcm_decrypt_test)
 #endif
 
-#ifdef EXCEED_EPC_TEST
-GEN_TEST_MODULE_FUNCTION(exceed_epc_test)
+#ifdef EXCEED_EPC_TEST_RAND
+GEN_TEST_MODULE_FUNCTION(exceed_epc_test_rand)
+#endif
+
+#ifdef EXCEED_EPC_TEST_SEQ
+GEN_TEST_MODULE_FUNCTION(exceed_epc_test_seq)
 #endif
 
 

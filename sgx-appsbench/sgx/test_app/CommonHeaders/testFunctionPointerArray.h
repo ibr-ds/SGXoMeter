@@ -122,8 +122,12 @@ void (*testFuncPtr[NUM_OF_TEST_MODULES + DUMMY_INDEX])() =
                 ,TEST_NAME(aead_aes256gcm_decrypt_test)
 #endif
 
-#ifdef EXCEED_EPC_TEST
-                ,TEST_NAME(exceed_epc_test)
+#ifdef EXCEED_EPC_TEST_RAND
+                ,TEST_NAME(exceed_epc_test_rand)
+#endif
+
+#ifdef EXCEED_EPC_TEST_SEQ
+                ,TEST_NAME(exceed_epc_test_seq)
 #endif
         };
 
