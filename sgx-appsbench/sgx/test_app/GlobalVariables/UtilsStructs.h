@@ -54,8 +54,10 @@ typedef struct globalConfig{
     size_t MEMORY;
 #endif
 
-#ifdef EXCEED_EPC_TEST_RAND
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
     size_t READ_BUFLEN;
+    int* READ_ACCESS_LIST;
+
 #endif
 
 } globalConfig_t;

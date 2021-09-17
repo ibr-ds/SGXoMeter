@@ -62,9 +62,10 @@
 
 #endif
 
-#ifdef EXCEED_EPC_TEST_RAND
+#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
             ,
-            .READ_BUFLEN = READ_BUF_LEN
+            .READ_BUFLEN = READ_BUF_LEN,
+            .READ_ACCESS_LIST = NULL
 
 #endif
     };

@@ -57,7 +57,8 @@ globalConfig_t GLOBAL_CONFIG = {
 #endif
 #if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
         , 
-        .READ_BUFLEN = READ_BUF_LEN
+        .READ_BUFLEN = READ_BUF_LEN,
+        .READ_ACCESS_LIST = NULL
 #endif
 };
 /* ToDo: the end of the global variables definition      */
@@ -798,6 +799,12 @@ void parseInput(int argc, char **argv)
     }
 #endif
 #if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
+
+    GLOBAL_CONFIG.READ_ACCESS_LIST = (int*) malloc(GLOBAL_CONFIG.READ_BUFLEN * sizeof(int));
+    for(int i = 0; i < GLOBAL_CONFIG.READ_BUFLEN; i++)
+    {
+        GLOBAL_CONFIG.READ_ACCESS_LIST[i] = rand() % GLOBAL_CONFIG.READ_BUFLEN;
+    }
 
 #endif
 }
