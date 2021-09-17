@@ -33,9 +33,9 @@ void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig)
     if (sodium_init() == -1) {
         return;
     }
-    if (crypto_aead_aes256gcm_is_available() == 0) {
-        //return 1; /* Not available on this CPU */
-    }
+    // if (crypto_aead_aes256gcm_is_available() == 0) {
+    //     //return 1; /* Not available on this CPU */
+    // }
     crypto_aead_aes256gcm_keygen(key);
     randombytes_buf(nonce, sizeof nonce);
 
@@ -43,7 +43,7 @@ void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig)
     plainText = (char *) malloc(plainBufferSize + 1);
     if(plainText == NULL)
     {
-        //return 1; //Malloc failed
+        return 1; //Malloc failed
     }
     for(int i = 0; i < globConfPtr->CRYPTO_BUFLEN; i++)
     {
@@ -61,7 +61,6 @@ void post_aead_aes256gcm_decrypt_test()
 
 int aead_aes256gcm_decrypt_test() 
 {
-    return 1;
     unsigned char *decrypted;
     uint32_t src_len = globConfPtr->CRYPTO_BUFLEN;
     decrypted = (char *) malloc(src_len);

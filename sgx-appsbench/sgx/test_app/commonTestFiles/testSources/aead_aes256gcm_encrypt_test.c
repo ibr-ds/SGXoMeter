@@ -22,9 +22,9 @@ void pre_aead_aes256gcm_encrypt_test(globalConfig_t *globalConfig)
     if (sodium_init() == -1) {
         return 1;
     }
-    if (crypto_aead_aes256gcm_is_available() == 0) {
-        //return 1; /* Not available on this CPU */
-    }
+    // if (crypto_aead_aes256gcm_is_available() == 0) {
+    //     //return 1; /* Not available on this CPU */
+    // }
     crypto_aead_aes256gcm_keygen(key);
     randombytes_buf(nonce, sizeof nonce);
 
