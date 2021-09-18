@@ -96,11 +96,11 @@ set(MODULE_AEAD_AES256GCM_ENCRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_
 check_add_definition(MODULE_AEAD_AES256GCM_ENCRYPT_TEST				AEAD_AES256GCM_ENCRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_ENCRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_aes256gcm decrypt test (libsodium)")
+set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								YES CACHE BOOL "YES OR NO for aead_aes256gcm decrypt test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_DECRYPT_TEST				AEAD_AES256GCM_DECRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_DECRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_EXCEED_EPC_TEST_RAND										YES CACHE BOOL "YES OR NO for exceed epc test with random read")
+set(MODULE_EXCEED_EPC_TEST_RAND										NO CACHE BOOL "YES OR NO for exceed epc test with random read")
 check_add_definition(MODULE_EXCEED_EPC_TEST_RAND					EXCEED_EPC_TEST_RAND)
 check_and_increment_counter(MODULE_EXCEED_EPC_TEST_RAND				NUMBER_OF_TESTS_VALUE)
 
@@ -228,8 +228,8 @@ if(MODULE_DNA_PATTERN_MATCHING)
 endif()
 ########################## Exceed EPC Module Configuration ##########################
 if(MODULE_EXCEED_EPC_TEST_RAND OR MODULE_EXCEED_EPC_TEST_SEQ)
-	set(VALUE_READ_BUFFER_SIZE						256 CACHE STRING "Set size of buffer in MiB (char buffer of X * 1024 entries)")
-	add_definitions(-DREAD_BUF_LEN=${VALUE_READ_BUFFER_SIZE})
+	set(VALUE_READ_BUFFER_SIZE						300 CACHE STRING "Set size of buffer in MiB (char buffer of X * 1024 entries)")
+	add_definitions(-DREAD_BUF_LEN=${VALUE_READ_BUFFER_SIZE}*1024*1024)
 endif()
 
 
