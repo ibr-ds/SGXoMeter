@@ -3,7 +3,7 @@
 #include <UtilsStructs.h>
 
 static globalConfig_t *globConfPtr;
-int *randomAccessBuffer;
+char *randomAccessBuffer;
 char temp;
 
 void pre_exceed_epc_test_rand(globalConfig_t *globalConfig)
@@ -31,6 +31,7 @@ int exceed_epc_test_rand()
     {
         temp = randomAccessBuffer[globConfPtr->READ_ACCESS_LIST[i]];
     }
+    return 0;
 }
 
 
