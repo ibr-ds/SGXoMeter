@@ -58,7 +58,7 @@ for (int i = 0; i < NUM_OF_TEST_MODULES; ++i)
            || strcmp(test_names[i + DUMMY_INDEX], "EXCEED EPC TEST SEQ") == 0)
     {
         #if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
-        printOut("%s,%lu,%lu,%.5f,%lu,%.5f,%lu\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.READ_BUFLEN,
+        printOut("%s,%lu,%lu,%.5f,%lu,%.5f,%lu\n", test_names[i + DUMMY_INDEX], GLOBAL_CONFIG.READ_BUFLEN/(1024 * 1024),
                 array[i].warmCnt, warmRate, array[i].runCnt, runtimeRate, array[i].totalRuntime);
         #endif
     } else {
