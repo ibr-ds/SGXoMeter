@@ -92,7 +92,7 @@ static const char *TOOL_USAGE = "Tool Usage:"
                            "    -N --rsa-msg-length [#]          sets the length of the en-decrypted rsa message[default 100 chars]\n"
 #endif
 #if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
-                                "    -S --read-buflen [#]             sets the size of the to be read char buffer in MiByte [default 256 Byte]\n"         
+                                "    -S --read-buflen [#]             sets the size of the to be read char buffer in MiByte [default 50 Byte]\n"         
 #endif 
 ;
 
@@ -711,18 +711,19 @@ void parseInput(int argc, char **argv)
                     exit(EXIT_FAILURE);
                 }
                 break;
+#endif
 
 #if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
             case 'S':
                 if (read_buf_flag == FLAG_NOT_SET) {
-                    size_t buf_len = atol(optarg);
-                    if (buf_len < 0) {
+                    size_t read_buf_len = atol(optarg);
+                    if (read_buf_len < 0) {
                         fprintf(stderr, "error: Invalid string buffer size!.\n");
                         say_help();
                         exit(EXIT_FAILURE);
                     }
-                    crypto_buf_flag = FLAG_IS_SET;
-                    GLOBAL_CONFIG.READ_BUFLEN = buf_len;
+                    read_buf_flag = FLAG_IS_SET;
+                    GLOBAL_CONFIG.READ_BUFLEN = read_buf_len * 1024 * 1024;
                 }
                 else {
                     fprintf(stderr, "error: Crypto string buffer size value is set more than once.\n");
@@ -730,7 +731,6 @@ void parseInput(int argc, char **argv)
                     exit(EXIT_FAILURE);
                 }
                 break;
-#endif
 #endif
             case 'h':
                 say_usage();

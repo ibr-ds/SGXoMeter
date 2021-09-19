@@ -28,7 +28,7 @@ set(GRAPHENE_MIRROR_ENCLAVE		NO CACHE BOOL "Enable Enclave Configuration Mirrori
 set(ENCL_PROD_ID				0 CACHE STRING "Set ProductID of enclave.")
 set(ENCL_ISVSVN					0 CACHE STRING "Set ISVSVN of enclave.")
 set(ENCL_STACK_MAXSIZE			0x90000 CACHE STRING "Set the desired maximum stack size in bytes (Hexadecimal).")
-set(ENCL_HEAP_MAXSIZE			0x20000000 CACHE STRING "Set the desired maximum heap size in bytes (Hexadecimal).")
+set(ENCL_HEAP_MAXSIZE			0x300000000 CACHE STRING "Set the desired maximum heap size in bytes (Hexadecimal).")
 set(ENCL_TCS_NUM				10 CACHE STRING "Set the number of trusted threads.")
 set(ENCL_TCS_POLICY				1 CACHE STRING "0 = bind TCS to untrusted thread || 1 = unbind them.")
 set(ENCL_DISABLE_DEBUG			0 CACHE STRING "0 = DEBUG || 1 = NO DEBUG.")
