@@ -49,7 +49,7 @@ fs.mount.libsodium.uri = "file:{{ libsodium_dir }}"
 
 sgx.isvprodid = 0
 sgx.isvsvn    = 0
-sgx.enclave_size = "2048M"
+sgx.enclave_size = "8192M"
 sgx.thread_num = 16
 sgx.debug = true
 #sgx.nonpie_binary = true 

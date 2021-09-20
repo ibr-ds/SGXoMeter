@@ -798,7 +798,7 @@ void parseInput(int argc, char **argv)
         GLOBAL_CONFIG.DNA_INPUT[new_dna_length] = '\0';
     }
 #endif
-#if defined(EXCEED_EPC_TEST_RAND) || defined(EXCEED_EPC_TEST_SEQ)
+#if defined(EXCEED_EPC_TEST_RAND)
 
     GLOBAL_CONFIG.READ_ACCESS_LIST = (int*) malloc(GLOBAL_CONFIG.READ_BUFLEN * sizeof(int));
     for(int i = 0; i < GLOBAL_CONFIG.READ_BUFLEN; i++)
