@@ -60,7 +60,7 @@ set(MODULE_CUSTOM_TEST												NO CACHE BOOL "YES OR NO to enable the custom 
 check_add_definition(MODULE_CUSTOM_TEST 							CUSTOM_TEST)
 check_and_increment_counter(MODULE_CUSTOM_TEST						NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_CUSTOM_SHA256_TEST										YES CACHE BOOL "YES OR NO to enable the custom test module")
+set(MODULE_CUSTOM_SHA256_TEST										NO CACHE BOOL "YES OR NO to enable the custom test module")
 check_add_definition(MODULE_CUSTOM_SHA256_TEST 						CUSTOM_SHA256_TEST)
 check_and_increment_counter(MODULE_CUSTOM_SHA256_TEST				NUMBER_OF_TESTS_VALUE)
 
@@ -104,7 +104,7 @@ set(MODULE_EXCEED_EPC_TEST_RAND										NO CACHE BOOL "YES OR NO for exceed epc
 check_add_definition(MODULE_EXCEED_EPC_TEST_RAND					EXCEED_EPC_TEST_RAND)
 check_and_increment_counter(MODULE_EXCEED_EPC_TEST_RAND				NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_EXCEED_EPC_TEST_SEQ										NO CACHE BOOL "YES OR NO for exceed epc test with sequential read")
+set(MODULE_EXCEED_EPC_TEST_SEQ										YES CACHE BOOL "YES OR NO for exceed epc test with sequential read")
 check_add_definition(MODULE_EXCEED_EPC_TEST_SEQ						EXCEED_EPC_TEST_SEQ)
 check_and_increment_counter(MODULE_EXCEED_EPC_TEST_SEQ				NUMBER_OF_TESTS_VALUE)
 
