@@ -32,7 +32,7 @@ with open(fn_graphene,'r') as csvfile:
     for row in plots:
         graphene.append(float(row[5]))
 
-#plt.semilogy()
+plt.semilogy()
 plt.semilogx(basex=2)
 #plt.xscale('log', basex=2)
 plt.plot(x,baseline,'r',label='Baseline')
