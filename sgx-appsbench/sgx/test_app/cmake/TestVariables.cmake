@@ -88,7 +88,7 @@ set(MODULE_MARCEL_TEST												NO CACHE BOOL "YES OR NO for marcel test")
 check_add_definition(MODULE_MARCEL_TEST								MARCEL_TEST)
 check_and_increment_counter(MODULE_MARCEL_TEST						NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_TEST										NO CACHE BOOL "YES OR NO for aead_aes256gcm test (libsodium)")
+set(MODULE_AEAD_AES256GCM_TEST										YES CACHE BOOL "YES OR NO for aead_aes256gcm test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_TEST						AEAD_AES256GCM_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_TEST				NUMBER_OF_TESTS_VALUE)
 
@@ -104,7 +104,7 @@ set(MODULE_EXCEED_EPC_TEST_RAND										NO CACHE BOOL "YES OR NO for exceed epc
 check_add_definition(MODULE_EXCEED_EPC_TEST_RAND					EXCEED_EPC_TEST_RAND)
 check_and_increment_counter(MODULE_EXCEED_EPC_TEST_RAND				NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_EXCEED_EPC_TEST_SEQ										YES CACHE BOOL "YES OR NO for exceed epc test with sequential read")
+set(MODULE_EXCEED_EPC_TEST_SEQ										NO CACHE BOOL "YES OR NO for exceed epc test with sequential read")
 check_add_definition(MODULE_EXCEED_EPC_TEST_SEQ						EXCEED_EPC_TEST_SEQ)
 check_and_increment_counter(MODULE_EXCEED_EPC_TEST_SEQ				NUMBER_OF_TESTS_VALUE)
 

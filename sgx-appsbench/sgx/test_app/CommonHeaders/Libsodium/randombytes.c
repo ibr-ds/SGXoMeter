@@ -55,16 +55,10 @@ void randombytes_buf(void * const buf, const size_t size)
     #ifdef BASELINE_CONTEXT
         size_t         i;
         for (i = (size_t) 0U; i < size; i++) {
-            p[i] = (unsigned char) randombytes_random();
+            p[i] = (unsigned char) rand();
         }
     #endif 
 }
-#ifdef BASELINE_CONTEXT
-uint32_t randombytes_random(void)
-{
-    return rand();
-}
-#endif 
 
 uint32_t
 randombytes_uniform(const uint32_t upper_bound)
