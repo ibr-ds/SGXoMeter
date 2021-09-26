@@ -88,7 +88,7 @@ set(MODULE_MARCEL_TEST												NO CACHE BOOL "YES OR NO for marcel test")
 check_add_definition(MODULE_MARCEL_TEST								MARCEL_TEST)
 check_and_increment_counter(MODULE_MARCEL_TEST						NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_TEST										YES CACHE BOOL "YES OR NO for aead_aes256gcm test (libsodium)")
+set(MODULE_AEAD_AES256GCM_TEST										NO CACHE BOOL "YES OR NO for aead_aes256gcm test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_TEST						AEAD_AES256GCM_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_TEST				NUMBER_OF_TESTS_VALUE)
 
@@ -96,7 +96,7 @@ set(MODULE_AEAD_AES256GCM_ENCRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_
 check_add_definition(MODULE_AEAD_AES256GCM_ENCRYPT_TEST				AEAD_AES256GCM_ENCRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_ENCRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_aes256gcm decrypt test (libsodium)")
+set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								YES CACHE BOOL "YES OR NO for aead_aes256gcm decrypt test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_DECRYPT_TEST				AEAD_AES256GCM_DECRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_DECRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 

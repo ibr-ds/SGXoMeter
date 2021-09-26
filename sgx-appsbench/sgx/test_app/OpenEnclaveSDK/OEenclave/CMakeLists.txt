@@ -32,7 +32,7 @@ target_compile_definitions(OEenclave PUBLIC OE_ENCLAVE_CONTEXT)
 target_compile_definitions(OEenclave PUBLIC OE_API_VERSION=2) # use latest OE API version
 
 # Need for the generated file testapp_t.h
-target_include_directories(OEenclave PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${ENCL_TEST_DIR} ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/${GCC_VERSION}/include)
+target_include_directories(OEenclave PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${ENCL_TEST_DIR} ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium ${GCC_PATH})
 
 
 target_link_libraries(OEenclave openenclave::oeenclave-lvi-cfg openenclave::oecrypto${OE_CRYPTO_LIB}-lvi-cfg openenclave::oelibcxx-lvi-cfg openenclave::oecryptoopenssl-lvi-cfg) #"-L${OPENSSL_LIBRARY_PATH} -Wl,--whole-archive -l${OpenSSL_CRYP_LIBRARY}") # use oelibc if no C++ is used

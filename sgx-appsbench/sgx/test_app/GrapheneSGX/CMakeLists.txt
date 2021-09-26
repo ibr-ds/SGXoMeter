@@ -19,7 +19,7 @@ file(GLOB Test_Cpp_FILES
         "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp"
         "${LIBSODIUM_DIR}/*.cpp")
 
-set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${SGXSDK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/ ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium /usr/lib/gcc/x86_64-linux-gnu/${GCC_VERSION}/include)
+set(BASELINE_INCLUDE_PATHS              ${BASELINE_INCLUDE_PATHS} ${SGXSDK_INCLUDE_DIRS} ${CMAKE_CURRENT_SOURCE_DIR}/tests/ ../commonTestFiles/seeq/ ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium ${GCC_PATH})
 
 #list(REMOVE_ITEM Tests_C_FILES "tests/missing_funcs.c")
 

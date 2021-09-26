@@ -35,7 +35,7 @@ file(GLOB Trusted_C_Files
             "${COMMON_TEST_SOURCES}/*.c")
 
 
-set(LIBSODIUM_INCLUDES                 /usr/lib/gcc/x86_64-linux-gnu/6/include ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium)
+set(LIBSODIUM_INCLUDES                 ${GCC_PATH} ${LIBSODIUM_DIR}/include ${LIBSODIUM_DIR}/include/sodium)
 set(Trusted_Include_Paths		${ENCLAVE_DIR} ${ENCLAVE_DIR}/.. ${Global_Variables_Path} ${COMMON_TEST_HEADERS} ${COMMON_HEADERS_PATH} ${SGXSDK_INCLUDE_DIRS} ${SGXSDK_INCLUDE_DIRS}/tlibc ${SGX_LIBCXX_PATH} ${PACKAGE_INC} ${LIBSODIUM_INCLUDES})
 
 #ToDo filter the unselected source files out (newly detected flaw :/ 20.08.2019)

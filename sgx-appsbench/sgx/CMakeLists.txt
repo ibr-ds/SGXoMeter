@@ -260,7 +260,7 @@ set(ARGON2_LIBRARY_NAME				libargon2.a)
 
 ########################## Set LibSodium Variables ##########################
 set(LIBSODIUM_DIR					${CMAKE_CURRENT_SOURCE_DIR}/test_app/CommonHeaders/Libsodium)
-set(GCC_VERSION						6 CACHE STRING "Set the installed GCC Version (required for Libsodium modules)")
+set(GCC_PATH						/usr/lib/gcc/x86_64-linux-gnu/6/include CACHE STRING "Set the path to the installed GCC include directory")
 #set(sodium_USE_STATIC_LIBS ON)
 #include(cmake/Findsodium.cmake)
 #message(WARNING "sodium library is at ${sodium_LIBRARY_RELEASE}")

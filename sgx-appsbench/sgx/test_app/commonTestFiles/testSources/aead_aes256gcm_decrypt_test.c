@@ -15,6 +15,7 @@ unsigned char key[crypto_aead_aes256gcm_KEYBYTES];
 unsigned char      *ciphertext;
 unsigned long long ciphertext_len;
 static char *plainText;
+unsigned char *decrypted;
 
 static void encrypt()
 {
@@ -51,20 +52,20 @@ void pre_aead_aes256gcm_decrypt_test(globalConfig_t *globalConfig)
     }
     plainText[plainBufferSize] = '\0';
     encrypt();
+    decrypted = (char *) malloc(plainBufferSize);
 }
 //Executed after decrypt test
 void post_aead_aes256gcm_decrypt_test()
 {
    free(plainText);
    free(ciphertext);
+   free(decrypted);
 }
 
 int aead_aes256gcm_decrypt_test() 
 {
-    unsigned char *decrypted;
-    uint32_t src_len = globConfPtr->CRYPTO_BUFLEN;
-    decrypted = (char *) malloc(src_len);
     unsigned long long decrpyted_len;
+    uint32_t src_len = globConfPtr->CRYPTO_BUFLEN;
     if(crypto_aead_aes256gcm_decrypt(decrypted, &decrpyted_len, NULL, ciphertext, ciphertext_len, NULL, 0, nonce, key) == -1)
     {
         return 1;
@@ -74,7 +75,6 @@ int aead_aes256gcm_decrypt_test()
     {
         return 1;
     }
-    free(decrypted);
     return 0;
 }
 #endif
