@@ -6,6 +6,9 @@ static globalConfig_t *globConfPtr;
 char *randomAccessBuffer;
 char temp;
 
+/*
+    Prepare the random buffer for module execution
+*/
 void pre_exceed_epc_test_rand(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
@@ -19,12 +22,16 @@ void pre_exceed_epc_test_rand(globalConfig_t *globalConfig)
 
 
 }
-
+/*
+    Clean-Up atfer module execution
+*/
 void post_exceed_epc_test_rand()
 {
     free(randomAccessBuffer);
 }
-
+/*
+    Iterated main benchmark function -> Random access
+*/
 int exceed_epc_test_rand()
 {
     for(int i = 0; i < globConfPtr->READ_BUFLEN; i++)

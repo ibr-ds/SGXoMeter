@@ -28,10 +28,8 @@ GRAPHENE_LOG_LEVEL = error
 endif
 
 .PHONY: all
-#all: GrapheneBench GrapheneBench.manifest
-#ifeq ($(SGX),1)
+
 all: GrapheneBench.manifest.sgx GrapheneBench.sig GrapheneBench.token
-#endif
 
 include $(GRAPHENEDIR)/Scripts/Makefile.configs
 
@@ -45,7 +43,6 @@ GrapheneBench.manifest: GrapheneBench.manifest.template
 		-Dbaseline_dir=$(BASELINE_DIR) \
 		-Dlibsodium_dir=$(LIBSODIUM_DIR) \
 		$< > $@ 
-# $< --> name of first prerequisite; $@ --> file name of the target of the rule 
  
 GrapheneBench.manifest.sgx: GrapheneBench.manifest GrapheneBench
 	graphene-sgx-sign \
@@ -58,31 +55,6 @@ GrapheneBench.sig: GrapheneBench.manifest.sgx
 GrapheneBench.token: GrapheneBench.sig
 	graphene-sgx-get-token \
 		--output GrapheneBench.token --sig GrapheneBench.sig
-
-
-
-########################### COPIES OF EXECUTABLES #############################
-
-#GrapheneBench: 
-
-
-
-############################## RUNNING TESTS ##################################
-
-# .PHONY: normal_GrapheneBench
-# normal_GrapheneBench: all 
-# 	./GrapheneBench 
-# # Anpassen auf richtigen Pfad
-
-# ifeq ($(SGX),)
-# GRAPHENE = graphene-direct
-# else
-# GRAPHENE = graphene-sgx
-# endif
-
-# .PHONY: graphene-GrapheneBench
-# graphene-GrapheneBench: all
-# 	$(GRAPHENE) $(TEST_NAME) 
 
 
 ################################## CLEANUP ####################################

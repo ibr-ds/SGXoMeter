@@ -6,6 +6,9 @@ static globalConfig_t *globConfPtr;
 char *sequentialAccessBuffer;
 char temp;
 
+/*
+    Prepare the random buffer for module execution
+*/
 void pre_exceed_epc_test_seq(globalConfig_t *globalConfig)
 {
     globConfPtr = globalConfig;
@@ -18,12 +21,17 @@ void pre_exceed_epc_test_seq(globalConfig_t *globalConfig)
     sequentialAccessBuffer[readStrSize] = '\0';
 
 }
-
+/*
+    Cleanup after  module execution
+*/
 void post_exceed_epc_test_seq()
 {
     free(sequentialAccessBuffer);
 }
 
+/*
+    Iterated benchmark function -> Sequential Access
+*/
 int exceed_epc_test_seq()
 {
     for(int i = 0; i < globConfPtr->READ_BUFLEN; i++)

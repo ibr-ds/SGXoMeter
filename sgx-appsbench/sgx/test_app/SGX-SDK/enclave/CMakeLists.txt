@@ -30,7 +30,6 @@ file(GLOB Trusted_Cpp_Files
 file(GLOB Trusted_C_Files
         "${CMAKE_CURRENT_SOURCE_DIR}/*.c"
 	    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.c"
-	    "../../commonTestFiles/seeq/*.c"
             "${LIBSODIUM_DIR}/*.c"
             "${COMMON_TEST_SOURCES}/*.c")
 

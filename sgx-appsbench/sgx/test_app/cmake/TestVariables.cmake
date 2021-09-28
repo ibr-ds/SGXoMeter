@@ -52,7 +52,7 @@ set(MODULE_THREAD_TESTS												NO CACHE BOOL "YES OR NO for sgx multi-thread
 check_add_definition(MODULE_THREAD_TESTS 							THREAD_TESTS)
 check_and_increment_counter(MODULE_THREAD_TESTS						NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_DNA_PATTERN_MATCHING										NO CACHE BOOL "YES OR NO for DNA Pattern Matching tests")
+set(MODULE_DNA_PATTERN_MATCHING										YES CACHE BOOL "YES OR NO for DNA Pattern Matching tests")
 check_add_definition(MODULE_DNA_PATTERN_MATCHING 					DNA_PATTERN_MATCHING)
 check_and_increment_counter(MODULE_DNA_PATTERN_MATCHING				NUMBER_OF_TESTS_VALUE)
 
@@ -96,7 +96,7 @@ set(MODULE_AEAD_AES256GCM_ENCRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_
 check_add_definition(MODULE_AEAD_AES256GCM_ENCRYPT_TEST				AEAD_AES256GCM_ENCRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_ENCRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 
-set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								YES CACHE BOOL "YES OR NO for aead_aes256gcm decrypt test (libsodium)")
+set(MODULE_AEAD_AES256GCM_DECRYPT_TEST								NO CACHE BOOL "YES OR NO for aead_aes256gcm decrypt test (libsodium)")
 check_add_definition(MODULE_AEAD_AES256GCM_DECRYPT_TEST				AEAD_AES256GCM_DECRYPT_TEST)
 check_and_increment_counter(MODULE_AEAD_AES256GCM_DECRYPT_TEST		NUMBER_OF_TESTS_VALUE)
 

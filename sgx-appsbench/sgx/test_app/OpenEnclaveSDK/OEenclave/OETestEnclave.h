@@ -50,10 +50,8 @@
 extern "C" {
 #endif
 
-//void printf(const char *fmt, ...);
 
 int puts(const char* str);
-//int fflush(void* stream);
 void exit(int status);
 
 #include "testFunctionsSignatures.h"
@@ -62,4 +60,4 @@ void exit(int status);
 }
 #endif
 
-#endif /* !_TESTENCLAVE_H_ */
+#endif /* !_OETESTENCLAVE_H_ */

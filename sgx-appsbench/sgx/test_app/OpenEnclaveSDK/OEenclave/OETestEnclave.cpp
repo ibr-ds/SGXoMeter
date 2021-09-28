@@ -42,37 +42,8 @@
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <openssl/rand.h>
-//#include <sgx_tae_service.h> // not needed after sgxsdk version 2.8
-
 
 #define ADD_ENTROPY_SIZE	32
-
-
-/* 
- * printf: 
- *   Invokes OCALL to display the enclave buffer to the terminal.
- */
-// void printf(const char *fmt, ...)
-// {
-//     char buf[BUFSIZ] = {'\0'};
-//     va_list ap;
-//     va_start(ap, fmt);
-//     vsnprintf(buf, BUFSIZ, fmt, ap);
-//     va_end(ap);
-//     uprint(buf);
-// }
-
-// int vprintf_cb(Stream_t stream, const char * fmt, va_list arg)
-// {
-//     char buf[BUFSIZ] = {'\0'};
-
-//     int res = vsnprintf(buf, BUFSIZ, fmt, arg);
-//     if (res >=0) {
-//         sgx_status_t sgx_ret = uprint((const char *) buf);
-//         TEST_CHECK(sgx_ret);
-//     }
-//     return res;
-// }
 
 
 /*

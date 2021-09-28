@@ -18,7 +18,7 @@ set(COMMON_HEADERS_PATH             "${CMAKE_CURRENT_SOURCE_DIR}/CommonHeaders")
 set(LIBSODIUM_MODULE_SELECTED       NO)
 
 ##ToDo refine this and add another variable that includes only the chosen modules and both should be added below the include global and test variables
-set(COMMON_TEST_HEADERS             ${CMAKE_CURRENT_SOURCE_DIR}/commonTestFiles/testHeaders ${CMAKE_CURRENT_SOURCE_DIR}/commonTestFiles/seeq)
+set(COMMON_TEST_HEADERS             ${CMAKE_CURRENT_SOURCE_DIR}/commonTestFiles/testHeaders)
 set(COMMON_TEST_SOURCES             ${CMAKE_CURRENT_SOURCE_DIR}/commonTestFiles/testSources)
 ##
 
