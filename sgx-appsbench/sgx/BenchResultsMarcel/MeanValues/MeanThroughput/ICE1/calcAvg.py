@@ -64,4 +64,8 @@ plt.bar(context ,avgThroughput, color=['red', 'blue', 'green', 'purple'])
 plt.ylabel('#Operation Per Sec')
 plt.savefig("MeanThroughput_ICE1.pdf", bbox_inches='tight')
 
+f= open("Mean_Overhead_DSGX4.txt","w+")
+f.write("SGX: %f \n OE: %f \n Graphene: %f" % (1 - (resultSGX/resultBaseline), 1 - (resultOE/resultBaseline), 1 - (resultGraphene/resultBaseline) ))
+f.close()
+
 

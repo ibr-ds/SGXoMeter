@@ -50,6 +50,6 @@ for num, grapheneValue in enumerate(graphene, start=0):
 print (len(sgx))
 avg = (1-(resultSGX/len(sgx))) + (1-(resultOE/len(oe))) + (1-(resultGraphene/len(graphene)))
 
-f= open("EPC_SEQ_DSGX4.txt","w+")
+f= open("EPC_RAND_DSGX4.txt","w+")
 f.write("SGX: %f \n OE: %f \n Graphene: %f \n SGX-avg: %f" % (1-(resultSGX/len(sgx)), 1-(resultOE/len(oe)), 1-(resultGraphene/len(graphene)), (avg/3) ))
 f.close()
