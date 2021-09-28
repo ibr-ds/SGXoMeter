@@ -120,3 +120,11 @@ Since the start of this project till now, many changes happened (e.g. new kernel
 --------------------------------------
 A list of new features and ideas we want to extend the framework with:
 - automate the building process by shifting it to dockers 
+
+### **Addition Marcel**
+-------------------------
+GrapheneBench ausführen:
+1. Sichergehen, dass sudo sysctl vm.mmap_min_addr=0 ausgeführt wurde
+2. make (im GrapheneSGX Ordner)
+3. graphene-sgx GrapheneBench
+
