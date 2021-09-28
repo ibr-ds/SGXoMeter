@@ -1,0 +1,1 @@
+Ice is: 1.817034 faster than DSGX4 
