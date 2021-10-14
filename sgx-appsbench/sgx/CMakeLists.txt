@@ -189,7 +189,7 @@ if(NOT EXISTS "${PACKAGE_PATH}")
 	message(STATUS "building and extracting the SGXSSL library package")
 
 	execute_process(
-			COMMAND make all test
+			COMMAND make all test -j
 			WORKING_DIRECTORY ${SGXSSL_PATH}/intel-sgx-ssl/Linux
 			OUTPUT_QUIET
 	)
@@ -243,7 +243,7 @@ if(NOT EXISTS "${OPENSSL_PATH}")
 			OUTPUT_QUIET
 	)
 	execute_process(
-			COMMAND make
+			COMMAND make -j
 			WORKING_DIRECTORY ${OPENSSL_PATH}
 			OUTPUT_QUIET
 	)

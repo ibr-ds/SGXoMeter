@@ -1,3 +1,6 @@
+set(CMAKE_C_FLAGS 				"${CMAKE_C_FLAGS} -O2 -D_FORTIFY_SOURCE=2 -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security -Wno-implicit-function-declaration -std=c11")
+set(CMAKE_CXX_FLAGS 			"${CMAKE_CXX_FLAGS} -O2 -D_FORTIFY_SOURCE=2 -nostdinc -fvisibility=hidden -fpic -fpie -fstack-protector -fno-builtin-printf -Wformat -Wformat-security -std=c++11 -nostdinc++")
+
 # Compile EDL file and generate required files for wrapper function
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/OETestEnclave_t.c OETestEnclave_t.h OETestEnclave_args.h

@@ -1,3 +1,6 @@
+set(CMAKE_C_FLAGS 		    "${CMAKE_C_FLAGS} -O2 -D_FORTIFY_SOURCE=2 -fPIC -fpie -fstack-protector -Wformat -Wformat-security -Wno-attributes")
+set(CMAKE_CXX_FLAGS 		"${CMAKE_CXX_FLAGS} ${CMAKE_C_FLAGS} -std=c++11")
+
 add_custom_command(
     OUTPUT OETestEnclave_u.h OETestEnclave_u.c OETestEnclave_args.h
     DEPENDS ${OEENCL_DIR}/OETestEnclave.edl
